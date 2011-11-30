@@ -15,11 +15,15 @@ public abstract class Factory {
 		return instance;
 	}
 	
-	public abstract User newUser();
-	public abstract Interest newInterest();
-	public abstract Position newPosition();
-	public abstract Picture<?> newPicture();
+	public abstract User createUser();
+	public abstract Interest createInterest();
+	public abstract Position createPosition();
+	public abstract Picture<?> createPicture();
 	public abstract InterestQuery createInterestQuery();
 	public abstract UserQuery createUserQuery();
+
+	public abstract Neighbourhood createNeighbourhood();
+
+	public abstract Compatibility createCompatibility();
 	
 }

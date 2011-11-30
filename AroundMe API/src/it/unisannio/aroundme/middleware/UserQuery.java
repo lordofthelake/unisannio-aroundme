@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public abstract class UserQuery implements Query<User>, Entity {
 	
@@ -14,18 +15,45 @@ public abstract class UserQuery implements Query<User>, Entity {
 	 * 	<neighbourhood radius="0.0">
 	 * 		<position lat="0.0" lon="0.0" />
 	 * 	</neighbourhood>
-	 * 	<interests>
-	 * 		<interest id="123" />
-	 * 		<interest id="123" />
-	 * 	</interests>
+	 * 	<interest-ids>
+	 * 		<id>123</id>
+	 * 		<id>123</id>
+	 * 	</interest-ids>
 	 * </query>
 	 */
 	public static final Serializer<UserQuery> SERIALIZER = new Serializer<UserQuery>() {
 
 		@Override
 		public UserQuery fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
+			if(!(xml instanceof Element))
+				throw new IllegalArgumentException();
+			
+			UserQuery obj = Factory.getInstance().createUserQuery();
+			Element query = (Element) xml;
+			
+			NodeList compatibilityList = query.getElementsByTagName("compatibility");
+			if(compatibilityList.getLength() > 0) {
+				Compatibility c = Compatibility.SERIALIZER.fromXML(compatibilityList.item(0));
+				obj.setCompatibility(c);
+			}
+			
+			NodeList neighbourhoodList = query.getElementsByTagName("neighbourhood");
+			if(neighbourhoodList.getLength() > 0) {
+				Neighbourhood n = Neighbourhood.SERIALIZER.fromXML(neighbourhoodList.item(0));
+				obj.setNeighbourhood(n);
+			}
+			
+			NodeList interestsList = query.getElementsByTagName("interest-ids");
+			if(interestsList.getLength() > 0) {
+				Element interests = (Element) interestsList.item(0);
+				NodeList ids = interests.getElementsByTagName("id");
+				for(int i = 0, len = ids.getLength(); i < len; ++i) {
+					Element id = (Element) ids.item(i);
+					obj.addInterestId(Long.parseLong(id.getTextContent()));
+				}
+			}
+			
+			return obj;
 		}
 
 		@Override
@@ -44,11 +72,11 @@ public abstract class UserQuery implements Query<User>, Entity {
 			
 			Collection<Long> iids = obj.getInterestIds();
 			if(iids.size() > 0) {
-				Element interests = d.createElement("interests");
+				Element interests = d.createElement("interest-ids");
 				
 				for(long l : obj.getInterestIds()) {
-					Element e = d.createElement("interest");
-					e.setAttribute("id", String.valueOf(l));
+					Element e = d.createElement("id");
+					e.setTextContent(String.valueOf(l));
 					interests.appendChild(e);
 				}
 				

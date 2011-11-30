@@ -1,7 +1,9 @@
 package it.unisannio.aroundme.middleware;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,8 +17,20 @@ public interface Picture<T> extends Entity {
 
 		@Override
 		public Picture<?> fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
+			if(!(xml instanceof Element))
+				throw new IllegalArgumentException();
+			
+			Element picture = (Element) xml;
+			try {
+				URL url = new URL(picture.getTextContent());
+				Picture<?> obj = Factory.getInstance().createPicture();
+				obj.setURL(url);
+				
+				return obj;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 
 		@Override
@@ -32,5 +46,6 @@ public interface Picture<T> extends Entity {
 	};
 	
 	URL getURL();
+	void setURL(URL url);
 	void load(DataListener<T> l);
 }

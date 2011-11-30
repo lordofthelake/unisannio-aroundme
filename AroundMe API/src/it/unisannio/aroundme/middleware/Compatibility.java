@@ -18,8 +18,18 @@ public interface Compatibility extends Entity {
 		 * @return
 		 */
 		public Compatibility fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
+			if(!(xml instanceof Element))
+				throw new IllegalArgumentException();
+			
+			Element compatibility = (Element) xml;
+			double rank = Double.parseDouble(compatibility.getAttribute("rank"));
+			long userId = Long.parseLong(compatibility.getAttribute("userid"));
+			
+			Compatibility obj = Factory.getInstance().createCompatibility();
+			obj.setRank(rank);
+			obj.setUserId(userId);
+			
+			return obj;
 		}
 
 		@Override
@@ -36,5 +46,7 @@ public interface Compatibility extends Entity {
 	};
 	
 	long getUserId();
+	void setUserId(long userId);
+	void setRank(double rank);
 	float getRank();
 }

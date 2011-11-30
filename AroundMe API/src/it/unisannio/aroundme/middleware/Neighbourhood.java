@@ -15,8 +15,22 @@ public interface Neighbourhood extends Entity {
 
 		@Override
 		public Neighbourhood fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
+			if(!(xml instanceof Element))
+				throw new IllegalArgumentException();
+			
+			Element neighbourhood = (Element) xml;
+			if(!neighbourhood.getTagName().equals("neighbourhood")) 
+				throw new IllegalArgumentException();
+			
+			double radius = Double.parseDouble(neighbourhood.getAttribute("radius"));
+			Element position = (Element) neighbourhood.getElementsByTagName("position").item(0);
+			Position p = Position.SERIALIZER.fromXML(position);
+			
+			Neighbourhood obj = Factory.getInstance().createNeighbourhood();
+			obj.setRadius(radius);
+			obj.setPosition(p);
+			
+			return obj;
 		}
 
 		@Override
@@ -33,5 +47,7 @@ public interface Neighbourhood extends Entity {
 	};
 	
 	Position getPosition();
+	void setPosition(Position p);
+	void setRadius(double radius);
 	double getRadius();
 }

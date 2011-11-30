@@ -7,8 +7,7 @@ import org.w3c.dom.Node;
 public interface Interest extends Entity {
 	
 	/**
-	 * <interest id="123">
-	 * 	<name>Name</name>
+	 * <interest id="123" name="Name" category="Category">
 	 * 	<picture>http://url.com/123</picture>
 	 * </interest>
 	 */
@@ -16,8 +15,20 @@ public interface Interest extends Entity {
 
 		@Override
 		public Interest fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
+			if(!(xml instanceof Element)) 
+				throw new IllegalArgumentException();
+			
+			Element interest = (Element) xml;
+			long id = Long.parseLong(interest.getAttribute("id"));
+			String name = interest.getAttribute("name");
+			String category = interest.getAttribute("category");
+			
+			Interest obj = Factory.getInstance().createInterest();
+			obj.setId(id);
+			obj.setName(name);
+			obj.setCategory(category);
+			
+			return obj;
 		}
 
 		@Override
@@ -25,10 +36,8 @@ public interface Interest extends Entity {
 			Document d = SerializerUtils.newDocument();
 			Element interest = d.createElement("interest");
 			interest.setAttribute("id", String.valueOf(obj.getId()));
-			
-			Element name = d.createElement("name");
-			name.appendChild(d.createTextNode(obj.getName()));
-			interest.appendChild(name);
+			interest.setAttribute("name", obj.getName());
+			interest.setAttribute("category", obj.getCategory());
 			
 			Picture<?> p = obj.getPicture();
 			if(p != null) 
@@ -40,6 +49,10 @@ public interface Interest extends Entity {
 	};
 	
 	String getName();
+	String getCategory();
+	void setCategory(String category);
+	void setName(String name);
+	void setId(long id);
 	<U> Picture<U> getPicture();
 	long getId();
 }

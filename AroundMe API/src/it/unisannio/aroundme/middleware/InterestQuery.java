@@ -13,8 +13,8 @@ public abstract class InterestQuery implements Query<Interest>, Entity {
 	
 	/**
 	 * <query type="interest">
-	 * 	<interest id="123" />
-	 * 	<interest id="123" />
+	 * 	<id>123</id>
+	 * 	<id>123</id>
 	 * </query>
 	 */
 	public static final Serializer<InterestQuery> SERIALIZER = new Serializer<InterestQuery>() {
@@ -30,11 +30,11 @@ public abstract class InterestQuery implements Query<Interest>, Entity {
 			if(!query.getTagName().equals("query") || !"interest".equals(query.getAttribute("type"))) // FIXME check type
 				throw new IllegalArgumentException();
 			
-			NodeList list = query.getElementsByTagName("interest");
+			NodeList list = query.getElementsByTagName("id");
 			
 			for(int i = 0, len = list.getLength(); i < len; ++i) {
 				Element interest = (Element) list.item(i);
-				long id = Long.parseLong(interest.getAttribute("id"));
+				long id = Long.parseLong(interest.getTextContent());
 				obj.addInterestId(id);
 			}
 			
@@ -47,8 +47,8 @@ public abstract class InterestQuery implements Query<Interest>, Entity {
 			Element container = d.createElement("query");
 			container.setAttribute("type", "interest");
 			for(long l : obj.getInterestIds()) {
-				Element e = d.createElement("interest");
-				e.setAttribute("id", String.valueOf(l));
+				Element e = d.createElement("id");
+				e.setTextContent(String.valueOf(l));
 				container.appendChild(e);
 			}
 			

@@ -15,8 +15,18 @@ public interface Position extends Entity {
 
 		@Override
 		public Position fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
+			if(!(xml instanceof Element)) 
+				throw new IllegalArgumentException();
+			
+			Element position = (Element) xml;
+			double lat = Double.parseDouble(position.getAttribute("lat"));
+			double lon = Double.parseDouble(position.getAttribute("lon"));
+			
+			Position obj = Factory.getInstance().createPosition();
+			obj.setLatitude(lat);
+			obj.setLongitude(lon);
+			
+			return obj;
 		}
 
 		@Override
@@ -34,6 +44,10 @@ public interface Position extends Entity {
 	};
 	
 	double getDistance(Position p);
+
+	void setLongitude(double lon);
+
+	void setLatitude(double lat);
 
 	double getLatitude();
 
