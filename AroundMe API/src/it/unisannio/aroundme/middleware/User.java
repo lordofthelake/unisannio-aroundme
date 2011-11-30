@@ -5,6 +5,18 @@ import java.util.Collection;
 import org.w3c.dom.Node;
 
 public interface User extends Entity {
+	
+	/**
+	 * <user id="123">
+	 * 	<name>Name</name>
+	 * 	<position lat="0.0" lon="0.0" />
+	 * 	<picture>http://url.com/123</picture>
+	 *  <interests>
+	 *  	<interest id="123" />
+	 *  	<interest id="123" />
+	 *  </interests>
+	 * </user>
+	 */
 	public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
 		@Override

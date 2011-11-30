@@ -6,6 +6,14 @@ import java.util.Collection;
 import org.w3c.dom.Node;
 
 public interface Entity extends Serializable {
+	
+	/**
+	 * <collection entity="Class">
+	 * 	<entity />
+	 * 	<entity />
+	 * 	<entity />
+	 * </collection>
+	 */
 	public static final Serializer<? extends Collection<? extends Entity>> COLLECTION_SERIALIZER = new Serializer<Collection<? extends Entity>>() {
 
 		@Override

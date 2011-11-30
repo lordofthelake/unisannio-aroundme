@@ -5,6 +5,19 @@ import java.util.Collection;
 import org.w3c.dom.Node;
 
 public abstract class UserQuery implements Query<User>, Entity {
+	
+	/**
+	 * <query type="user">
+	 * 	<compatibility rank="0.0" userid="123" />
+	 * 	<neighbourhood radius="0.0">
+	 * 		<position lat="0.0" lon="0.0" />
+	 * 	</neighbourhood>
+	 * 	<interests>
+	 * 		<interest id="123" />
+	 * 		<interest id="123" />
+	 * 	</interests>
+	 * </query>
+	 */
 	public static final Serializer<UserQuery> SERIALIZER = new Serializer<UserQuery>() {
 
 		@Override

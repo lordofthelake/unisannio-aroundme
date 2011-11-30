@@ -5,6 +5,13 @@ import java.util.Collection;
 import org.w3c.dom.Node;
 
 public abstract class InterestQuery implements Query<Interest>, Entity {
+	
+	/**
+	 * <query type="interest">
+	 * 	<interest id="123" />
+	 * 	<interest id="123" />
+	 * </query>
+	 */
 	public static final Serializer<InterestQuery> SERIALIZER = new Serializer<InterestQuery>() {
 
 		@Override
