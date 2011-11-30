@@ -1,7 +1,5 @@
 package it.unisannio.aroundme.middleware;
 
-import javax.xml.parsers.DocumentBuilder;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,11 +21,11 @@ public interface Neighbourhood extends Entity {
 
 		@Override
 		public Node toXML(Neighbourhood obj) {
-			DocumentBuilder b = Factory.getDocumentBuilder();
-			Document d = b.newDocument();
+			Document d = SerializerUtils.newDocument();
 			
 			Element e = d.createElement("neighbourhood");
 			e.setAttribute("radius", String.valueOf(obj.getRadius()));
+			e.appendChild(SerializerUtils.toXML(obj.getPosition()));
 			
 			return e;
 		}

@@ -21,7 +21,7 @@ public interface Position extends Entity {
 
 		@Override
 		public Node toXML(Position obj) {
-			DocumentBuilder b = Factory.getDocumentBuilder();
+			DocumentBuilder b = SerializerUtils.getDocumentBuilder();
 			Document d = b.newDocument();
 			
 			Element e = d.createElement("position");

@@ -1,7 +1,5 @@
 package it.unisannio.aroundme.middleware;
 
-import javax.xml.parsers.DocumentBuilder;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,8 +24,7 @@ public interface Compatibility extends Entity {
 
 		@Override
 		public Node toXML(Compatibility obj) {
-			DocumentBuilder b = Factory.getDocumentBuilder();
-			Document d = b.newDocument();
+			Document d = SerializerUtils.newDocument();
 			
 			Element e = d.createElement("compatibility");
 			e.setAttribute("rank", String.valueOf(obj.getRank()));
