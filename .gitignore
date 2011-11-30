@@ -1,2 +1,2 @@
-Around\ Me/bin/**/*
-Around\ Me/.classpath
+*.class
+.classpath
