@@ -2,6 +2,8 @@ package it.unisannio.aroundme.middleware;
 
 import java.util.Collection;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public interface User extends Entity {
@@ -20,19 +22,42 @@ public interface User extends Entity {
 	public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
 		@Override
-		public <U extends User> U fromXML(Node xml, U obj) {
+		public User fromXML(Node xml) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public Node toXML(User obj) {
-			return null;
-			// TODO Auto-generated method stub
+			Document d = SerializerUtils.newDocument();
+			Element user = d.createElement("user");
+			user.setAttribute("id", String.valueOf(obj.getId()));
 			
+			Element name = d.createElement("name");
+			name.appendChild(d.createTextNode(obj.getName()));
+			user.appendChild(name);
+			
+			Position p = obj.getPosition();
+			if(p != null)
+				user.appendChild(SerializerUtils.toXML(obj.getPosition()));
+			
+			Collection<Long> iids = obj.getInterestIds();
+			if(iids.size() > 0) {
+				Element interests = d.createElement("interests");
+				for(long l : iids) {
+					Element interest = d.createElement("interest");
+					interest.setAttribute("id", String.valueOf(l));
+					interests.appendChild(interest);
+				}
+				user.appendChild(interests);
+			}
+			
+			return user;
 		}
 		
 	};
+	
+	long getId();
 	
 	String getName();
 	
@@ -42,6 +67,6 @@ public interface User extends Entity {
 	
 	Collection<Long> getInterestIds();
 	
-	void loadInterests(DataListener<Collection<Interest>> l);
+	void getInterests(DataListener<Collection<Interest>> l);
 	
 }

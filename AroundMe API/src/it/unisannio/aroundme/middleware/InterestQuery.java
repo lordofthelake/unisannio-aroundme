@@ -7,6 +7,7 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public abstract class InterestQuery implements Query<Interest>, Entity {
 	
@@ -19,9 +20,25 @@ public abstract class InterestQuery implements Query<Interest>, Entity {
 	public static final Serializer<InterestQuery> SERIALIZER = new Serializer<InterestQuery>() {
 
 		@Override
-		public <U extends InterestQuery> U fromXML(Node xml, U obj) {
-			// TODO Auto-generated method stub
-			return null;
+		public InterestQuery fromXML(Node xml) {
+			InterestQuery obj = Factory.getInstance().createInterestQuery();
+			if(!(xml instanceof Element))
+				throw new IllegalArgumentException();
+			
+			Element query = (Element) xml;
+			
+			if(!query.getTagName().equals("query") || !"interest".equals(query.getAttribute("type"))) // FIXME check type
+				throw new IllegalArgumentException();
+			
+			NodeList list = query.getElementsByTagName("interest");
+			
+			for(int i = 0, len = list.getLength(); i < len; ++i) {
+				Element interest = (Element) list.item(i);
+				long id = Long.parseLong(interest.getAttribute("id"));
+				obj.addInterestId(id);
+			}
+			
+			return obj;
 		}
 
 		@Override

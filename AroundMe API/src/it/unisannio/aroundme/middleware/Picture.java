@@ -14,7 +14,7 @@ public interface Picture<T> extends Entity {
 	public static final Serializer<Picture<?>> SERIALIZER = new Serializer<Picture<?>>() {
 
 		@Override
-		public <U extends Picture<?>> U fromXML(Node xml, U obj) {
+		public Picture<?> fromXML(Node xml) {
 			// TODO Auto-generated method stub
 			return null;
 		}

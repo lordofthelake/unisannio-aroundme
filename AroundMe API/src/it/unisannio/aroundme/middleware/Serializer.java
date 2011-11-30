@@ -4,6 +4,6 @@ import org.w3c.dom.Node;
 
 public interface Serializer<T> {
 	
-	<U extends T> U fromXML(Node xml, U obj);
+	T fromXML(Node xml);
 	Node toXML(T obj);
 }

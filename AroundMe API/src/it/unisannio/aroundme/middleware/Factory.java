@@ -19,5 +19,7 @@ public abstract class Factory {
 	public abstract Interest newInterest();
 	public abstract Position newPosition();
 	public abstract Picture<?> newPicture();
+	public abstract InterestQuery createInterestQuery();
+	public abstract UserQuery createUserQuery();
 	
 }

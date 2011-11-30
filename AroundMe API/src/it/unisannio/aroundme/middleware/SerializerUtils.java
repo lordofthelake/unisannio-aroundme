@@ -23,8 +23,7 @@ public class SerializerUtils {
 	public static final Serializer<? extends Collection<? extends Entity>> COLLECTION_SERIALIZER = new Serializer<Collection<? extends Entity>>() {
 
 		@Override
-		public <U extends Collection<? extends Entity>> U fromXML(Node xml,
-				U obj) {
+		public Collection<? extends Entity> fromXML(Node xml) {
 			// TODO Auto-generated method stub
 			return null;
 		}

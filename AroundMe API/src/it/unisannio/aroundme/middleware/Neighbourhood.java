@@ -14,7 +14,7 @@ public interface Neighbourhood extends Entity {
 	public static final Serializer<Neighbourhood> SERIALIZER = new Serializer<Neighbourhood>() {
 
 		@Override
-		public <U extends Neighbourhood> U fromXML(Node xml, U obj) {
+		public Neighbourhood fromXML(Node xml) {
 			// TODO Auto-generated method stub
 			return null;
 		}

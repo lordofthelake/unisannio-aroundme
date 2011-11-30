@@ -17,7 +17,7 @@ public interface Compatibility extends Entity {
 		 * @param obj
 		 * @return
 		 */
-		public <U extends Compatibility> U fromXML(Node xml, U obj) {
+		public Compatibility fromXML(Node xml) {
 			// TODO Auto-generated method stub
 			return null;
 		}

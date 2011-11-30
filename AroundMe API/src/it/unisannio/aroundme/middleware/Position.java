@@ -14,7 +14,7 @@ public interface Position extends Entity {
 	public static final Serializer<Position> SERIALIZER = new Serializer<Position>() {
 
 		@Override
-		public <U extends Position> U fromXML(Node xml, U obj) {
+		public Position fromXML(Node xml) {
 			// TODO Auto-generated method stub
 			return null;
 		}

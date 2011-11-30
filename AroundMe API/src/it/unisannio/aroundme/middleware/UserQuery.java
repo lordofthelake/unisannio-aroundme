@@ -23,7 +23,7 @@ public abstract class UserQuery implements Query<User>, Entity {
 	public static final Serializer<UserQuery> SERIALIZER = new Serializer<UserQuery>() {
 
 		@Override
-		public <U extends UserQuery> U fromXML(Node xml, U obj) {
+		public UserQuery fromXML(Node xml) {
 			// TODO Auto-generated method stub
 			return null;
 		}
