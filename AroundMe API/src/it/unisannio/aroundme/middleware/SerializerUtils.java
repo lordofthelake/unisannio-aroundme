@@ -32,7 +32,6 @@ public class SerializerUtils {
 				if(!(xml instanceof Element))
 					throw new IllegalArgumentException();
 				
-				Element collection = (Element) xml;
 				NodeList list = xml.getChildNodes();
 				for(int i = 0, len = list.getLength(); i < len; ++i) {
 					Node n = list.item(i);
