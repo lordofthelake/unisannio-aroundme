@@ -8,8 +8,10 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
 		User u = Factory.getInstance().newUser();
+		// TODO Auto-generated method stub
+		// ciao
 	}
 
 }
