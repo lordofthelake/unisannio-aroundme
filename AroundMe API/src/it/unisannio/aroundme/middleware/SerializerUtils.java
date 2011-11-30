@@ -2,6 +2,7 @@ package it.unisannio.aroundme.middleware;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -9,38 +10,52 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class SerializerUtils {
 	private SerializerUtils() {}
 	
 	/**
-	 * <collection entity="Class">
+	 * <collection>
 	 * 	<entity />
 	 * 	<entity />
 	 * 	<entity />
 	 * </collection>
 	 */
-	public static final Serializer<? extends Collection<? extends Entity>> COLLECTION_SERIALIZER = new Serializer<Collection<? extends Entity>>() {
-
-		@Override
-		public Collection<? extends Entity> fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Node toXML(Collection<? extends Entity> obj) {
-			Document d = SerializerUtils.newDocument();
-			Element container = d.createElement("collection");
-			// FIXME attribute
-			for(Entity e : obj) {
-				container.appendChild(SerializerUtils.toXML(e));
+	public static <T extends Entity> Serializer<? extends Collection<T>> getCollectionSerializer(Collection<T> collection, final Class<T> clazz) {
+		return new Serializer<Collection<T>>() {
+			@Override
+			public Collection<T> fromXML(Node xml) {
+				Collection<T> obj = new LinkedList<T>();
+				Serializer<T> serializer = SerializerUtils.getSerializer(clazz);
+				
+				if(!(xml instanceof Element))
+					throw new IllegalArgumentException();
+				
+				Element collection = (Element) xml;
+				NodeList list = xml.getChildNodes();
+				for(int i = 0, len = list.getLength(); i < len; ++i) {
+					Node n = list.item(i);
+					obj.add(serializer.fromXML(n));
+				}
+				
+				return obj;
 			}
-			
-			return container;
-		}
+	
+			@Override
+			public Node toXML(Collection<T> obj) {
+				Document d = SerializerUtils.newDocument();
+				Element container = d.createElement("collection");
+
+				for(Entity e : obj) {
+					container.appendChild(SerializerUtils.toXML(e));
+				}
+				
+				return container;
+			}
+		};
 		
-	};
+	}
 	
 
 	private static DocumentBuilder documentBuilder = null;
