@@ -1,14 +1,14 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
-public abstract class Factory {
-	private static Factory instance;
+public abstract class ModelFactory {
+	private static ModelFactory instance;
 	
 	
-	public static void setInstance(Factory e) {
+	public static void setInstance(ModelFactory e) {
 		instance = e;
 	}
 	
-	public static Factory getInstance() {
+	public static ModelFactory getInstance() {
 		if(instance == null)
 			throw new IllegalStateException("No concrete factory set.");
 		
@@ -22,8 +22,12 @@ public abstract class Factory {
 	public abstract InterestQuery createInterestQuery();
 	public abstract UserQuery createUserQuery();
 
-	public abstract Neighbourhood createNeighbourhood();
+	public Neighbourhood createNeighbourhood() {
+		return new NeighbourhoodImpl();
+	}
 
-	public abstract Compatibility createCompatibility();
+	public Compatibility createCompatibility() {
+		return new CompatibilityImpl();
+	}
 	
 }

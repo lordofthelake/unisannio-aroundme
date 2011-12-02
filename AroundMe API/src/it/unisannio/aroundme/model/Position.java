@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -6,7 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public interface Position extends Entity {
+public interface Position extends Model {
 	
 	/**
 	 * <position lat="0.0" lon="0.0" />
@@ -22,7 +22,7 @@ public interface Position extends Entity {
 			double lat = Double.parseDouble(position.getAttribute("lat"));
 			double lon = Double.parseDouble(position.getAttribute("lon"));
 			
-			Position obj = Factory.getInstance().createPosition();
+			Position obj = ModelFactory.getInstance().createPosition();
 			obj.setLatitude(lat);
 			obj.setLongitude(lon);
 			

@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,7 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public interface Picture<T> extends Entity {
+public interface Picture<T> extends Model {
 	
 	/**
 	 * <picture>http://url.com/123</picture>
@@ -23,7 +23,7 @@ public interface Picture<T> extends Entity {
 			Element picture = (Element) xml;
 			try {
 				URL url = new URL(picture.getTextContent());
-				Picture<?> obj = Factory.getInstance().createPicture();
+				Picture<?> obj = ModelFactory.getInstance().createPicture();
 				obj.setURL(url);
 				
 				return obj;

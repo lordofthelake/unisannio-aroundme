@@ -1,10 +1,10 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public interface Compatibility extends Entity {
+public interface Compatibility extends Model {
 	/**
 	 * <compatibility rank="0.0" userid="123" />
 	 */
@@ -22,10 +22,10 @@ public interface Compatibility extends Entity {
 				throw new IllegalArgumentException();
 			
 			Element compatibility = (Element) xml;
-			double rank = Double.parseDouble(compatibility.getAttribute("rank"));
+			float rank = Float.parseFloat(compatibility.getAttribute("rank"));
 			long userId = Long.parseLong(compatibility.getAttribute("userid"));
 			
-			Compatibility obj = Factory.getInstance().createCompatibility();
+			Compatibility obj = ModelFactory.getInstance().createCompatibility();
 			obj.setRank(rank);
 			obj.setUserId(userId);
 			
@@ -47,6 +47,6 @@ public interface Compatibility extends Entity {
 	
 	long getUserId();
 	void setUserId(long userId);
-	void setRank(double rank);
+	void setRank(float rank);
 	float getRank();
 }

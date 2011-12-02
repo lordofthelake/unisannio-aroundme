@@ -1,13 +1,15 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public abstract class UserQuery implements Query<User>, Entity {
+public abstract class UserQuery implements Query<User>, Model {
 	
 	/**
 	 * <query type="user">
@@ -28,7 +30,7 @@ public abstract class UserQuery implements Query<User>, Entity {
 			if(!(xml instanceof Element))
 				throw new IllegalArgumentException();
 			
-			UserQuery obj = Factory.getInstance().createUserQuery();
+			UserQuery obj = ModelFactory.getInstance().createUserQuery();
 			Element query = (Element) xml;
 			
 			NodeList compatibilityList = query.getElementsByTagName("compatibility");
@@ -88,28 +90,32 @@ public abstract class UserQuery implements Query<User>, Entity {
 		
 	};
 	
+	private Neighbourhood neighbourhood;
+	private Set<Long> interestIds = new HashSet<Long>();
+	private Compatibility compatibility;
+	
 	public Neighbourhood getNeighbourhood() {
-		return null;
+		return neighbourhood;
 	}
 	
 	public void setNeighbourhood(Neighbourhood n) {
-		
+		neighbourhood = n;
 	}
 	
 	public void addInterestId(long id) {
-		
+		interestIds.add(id);
 	}
 	
 	public Collection<Long> getInterestIds() {
-		return null;
+		return interestIds;
 	}
 	
 	public void setCompatibility(Compatibility c) {
-		
+		compatibility = c;
 	}
 	
 	public Compatibility getCompatibility() {
-		return null;
+		return compatibility;
 	}
 	
 	

@@ -1,10 +1,10 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public interface Neighbourhood extends Entity {
+public interface Neighbourhood extends Model {
 	
 	/**
 	 * <neighbourhood radius="0.0">
@@ -26,7 +26,7 @@ public interface Neighbourhood extends Entity {
 			Element position = (Element) neighbourhood.getElementsByTagName("position").item(0);
 			Position p = Position.SERIALIZER.fromXML(position);
 			
-			Neighbourhood obj = Factory.getInstance().createNeighbourhood();
+			Neighbourhood obj = ModelFactory.getInstance().createNeighbourhood();
 			obj.setRadius(radius);
 			obj.setPosition(p);
 			

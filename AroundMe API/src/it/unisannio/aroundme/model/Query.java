@@ -1,8 +1,8 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import java.util.Collection;
 
-public interface Query<T extends Entity> {
+public interface Query<T extends Model> {
 	
 	public void perform(DataListener<Collection<T>> l);
 }

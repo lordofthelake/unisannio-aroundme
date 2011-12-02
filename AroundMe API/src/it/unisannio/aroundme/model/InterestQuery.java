@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public abstract class InterestQuery implements Query<Interest>, Entity {
+public abstract class InterestQuery implements Query<Interest>, Model {
 	
 	/**
 	 * <query type="interest">
@@ -21,13 +21,13 @@ public abstract class InterestQuery implements Query<Interest>, Entity {
 
 		@Override
 		public InterestQuery fromXML(Node xml) {
-			InterestQuery obj = Factory.getInstance().createInterestQuery();
+			InterestQuery obj = ModelFactory.getInstance().createInterestQuery();
 			if(!(xml instanceof Element))
 				throw new IllegalArgumentException();
 			
 			Element query = (Element) xml;
 			
-			if(!query.getTagName().equals("query") || !"interest".equals(query.getAttribute("type"))) // FIXME check type
+			if(!query.getTagName().equals("query") || !"interest".equals(query.getAttribute("type"))) 
 				throw new IllegalArgumentException();
 			
 			NodeList list = query.getElementsByTagName("id");

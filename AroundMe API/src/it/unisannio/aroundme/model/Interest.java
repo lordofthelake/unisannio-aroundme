@@ -1,10 +1,10 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public interface Interest extends Entity {
+public interface Interest extends Model {
 	
 	/**
 	 * <interest id="123" name="Name" category="Category">
@@ -23,7 +23,7 @@ public interface Interest extends Entity {
 			String name = interest.getAttribute("name");
 			String category = interest.getAttribute("category");
 			
-			Interest obj = Factory.getInstance().createInterest();
+			Interest obj = ModelFactory.getInstance().createInterest();
 			obj.setId(id);
 			obj.setName(name);
 			obj.setCategory(category);

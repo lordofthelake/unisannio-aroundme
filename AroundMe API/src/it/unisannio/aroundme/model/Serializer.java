@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import org.w3c.dom.Node;
 

@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import java.util.Collection;
 
@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public interface User extends Entity {
+public interface User extends Model {
 	
 	/**
 	 * <user id="123" name="Name">
@@ -27,7 +27,7 @@ public interface User extends Entity {
 				throw new IllegalArgumentException();
 			
 			Element user = (Element) xml;
-			User obj = Factory.getInstance().createUser();
+			User obj = ModelFactory.getInstance().createUser();
 			
 			long id = Long.parseLong(user.getAttribute("id"));
 			String name = user.getAttribute("name");

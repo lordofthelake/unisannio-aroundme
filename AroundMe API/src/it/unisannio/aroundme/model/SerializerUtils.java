@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.middleware;
+package it.unisannio.aroundme.model;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class SerializerUtils {
 	 * 	<entity />
 	 * </collection>
 	 */
-	public static <T extends Entity> Serializer<? extends Collection<T>> getCollectionSerializer(Collection<T> collection, final Class<T> clazz) {
+	public static <T extends Model> Serializer<? extends Collection<T>> getCollectionSerializer(Collection<T> collection, final Class<T> clazz) {
 		return new Serializer<Collection<T>>() {
 			@Override
 			public Collection<T> fromXML(Node xml) {
@@ -46,7 +46,7 @@ public class SerializerUtils {
 				Document d = SerializerUtils.newDocument();
 				Element container = d.createElement("collection");
 
-				for(Entity e : obj) {
+				for(Model e : obj) {
 					container.appendChild(SerializerUtils.toXML(e));
 				}
 				
@@ -76,7 +76,7 @@ public class SerializerUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Entity> Serializer<T> getSerializer(Class<T> clazz) {
+	public static <T extends Model> Serializer<T> getSerializer(Class<T> clazz) {
 		try {
 			Field f = clazz.getDeclaredField("SERIALIZER");
 			return (Serializer<T>) f.get(null);
@@ -86,7 +86,7 @@ public class SerializerUtils {
 		}
 	}
 	
-	public static <T extends Entity> Node toXML(T e) {
+	public static <T extends Model> Node toXML(T e) {
 		@SuppressWarnings("unchecked")
 		Serializer<T> s = (Serializer<T>) SerializerUtils.getSerializer(e.getClass());
 		return s.toXML((T) e);
