@@ -12,6 +12,11 @@ import org.w3c.dom.NodeList;
 public abstract class UserQuery implements Query<User>, Model {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * <query type="user">
 	 * 	<compatibility rank="0.0" userid="123" />
 	 * 	<neighbourhood radius="0.0">

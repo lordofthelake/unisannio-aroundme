@@ -12,6 +12,11 @@ import org.w3c.dom.NodeList;
 public abstract class InterestQuery implements Query<Interest>, Model {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * <query type="interest">
 	 * 	<id>123</id>
 	 * 	<id>123</id>

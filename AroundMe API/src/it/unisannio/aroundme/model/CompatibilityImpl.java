@@ -1,6 +1,10 @@
 package it.unisannio.aroundme.model;
 
 class CompatibilityImpl implements Compatibility {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long userId;
 	private float rank;
 	

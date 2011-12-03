@@ -1,6 +1,10 @@
 package it.unisannio.aroundme.model;
 
 class NeighbourhoodImpl implements Neighbourhood {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Position position;
 	private double radius;
 	

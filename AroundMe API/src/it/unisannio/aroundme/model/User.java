@@ -38,7 +38,7 @@ public interface User extends Model {
 			if(pictureList.getLength() > 0) {
 				Element picture = (Element) pictureList.item(0);
 				Picture<?> p = Picture.SERIALIZER.fromXML(picture);
-				obj.setPicture(obj);
+				obj.setPicture(p);
 			}
 			
 			NodeList interestsList = user.getElementsByTagName("interests");
@@ -87,7 +87,7 @@ public interface User extends Model {
 
 	void setId(long id);
 
-	void setPicture(User obj);
+	void setPicture(Picture<?> p);
 
 	void addInterest(Interest interest);
 

@@ -1,9 +1,7 @@
 package it.unisannio.aroundme.model;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
