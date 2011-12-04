@@ -4,6 +4,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+
+//Prova
 public interface Compatibility extends Model {
 	/**
 	 * <compatibility rank="0.0" userid="123" />
