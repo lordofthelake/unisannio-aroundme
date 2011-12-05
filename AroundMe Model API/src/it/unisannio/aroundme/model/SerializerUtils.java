@@ -12,6 +12,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class SerializerUtils {
 	private SerializerUtils() {}
 	
@@ -22,7 +27,7 @@ public class SerializerUtils {
 	 * 	<entity />
 	 * </collection>
 	 */
-	public static <T extends Model> Serializer<? extends Collection<T>> getCollectionSerializer(Collection<T> collection, final Class<T> clazz) {
+	public static <T extends Model> Serializer<? extends Collection<T>> getCollectionSerializer(final Class<T> clazz) {
 		return new Serializer<Collection<T>>() {
 			@Override
 			public Collection<T> fromXML(Node xml) {

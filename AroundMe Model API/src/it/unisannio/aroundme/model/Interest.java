@@ -4,6 +4,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public interface Interest extends Model {
 	
 	/**

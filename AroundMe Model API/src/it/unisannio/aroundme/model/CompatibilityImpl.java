@@ -1,5 +1,10 @@
 package it.unisannio.aroundme.model;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 class CompatibilityImpl implements Compatibility {
 	/**
 	 * 

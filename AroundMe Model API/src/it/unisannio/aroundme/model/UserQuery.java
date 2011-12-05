@@ -9,11 +9,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public abstract class UserQuery implements Query<User>, Model {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**

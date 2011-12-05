@@ -5,7 +5,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 
-//Prova
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public interface Compatibility extends Model {
 	/**
 	 * <compatibility rank="0.0" userid="123" />

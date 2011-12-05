@@ -2,7 +2,7 @@ package it.unisannio.aroundme.model;
 
 /**
  * 
- * @author m
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  * @param <T>
  */
