@@ -1,5 +1,7 @@
 package it.unisannio.aroundme.client.model;
 
+import android.app.Application;
+import it.unisannio.aroundme.ClientApplication;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.InterestQuery;
 import it.unisannio.aroundme.model.ModelFactory;
@@ -14,11 +16,16 @@ import it.unisannio.aroundme.model.UserQuery;
  *
  */
 public class ModelFactoryImpl extends ModelFactory {
-	static {
-		ModelFactory.setInstance(new ModelFactoryImpl());
+	public static void install(ClientApplication app) {
+		ModelFactory.setInstance(new ModelFactoryImpl(app));
 	}
 	
-	private ModelFactoryImpl() {}
+	private ClientApplication app;
+	
+	private ModelFactoryImpl(ClientApplication app) {
+		this.app = app;
+	}
+	
 	@Override
 	public User createUser() {
 		// TODO Auto-generated method stub
@@ -45,13 +52,12 @@ public class ModelFactoryImpl extends ModelFactory {
 
 	@Override
 	public InterestQuery createInterestQuery() {
-		return new InterestQueryImpl();
+		return new InterestQueryImpl(app.getXmlClient());
 	}
 
 	@Override
 	public UserQuery createUserQuery() {
-		// TODO Auto-generated method stub
-		return null;
+		return new UserQueryImpl(app.getXmlClient());
 	}
 
 }

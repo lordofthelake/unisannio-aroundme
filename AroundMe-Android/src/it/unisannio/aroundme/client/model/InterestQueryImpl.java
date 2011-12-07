@@ -16,12 +16,16 @@ import it.unisannio.aroundme.model.SerializerUtils;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public class InterestQueryImpl extends InterestQuery {
+class InterestQueryImpl extends InterestQuery {
 
+	private XmlClient client;
+	
+	InterestQueryImpl(XmlClient client) {
+		this.client = client;
+	}
 	@Override
 	public void perform(final DataListener<Collection<Interest>> l) {
-		XmlClient service = null; // TODO unimplemented
-		service.post("/query/interest", SERIALIZER.toXML(this), new DataListener<Node>() {
+		client.post("/query/interest", SERIALIZER.toXML(this), new DataListener<Node>() {
 
 			@Override
 			public void onData(Node object) {

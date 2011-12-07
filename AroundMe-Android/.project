@@ -3,6 +3,7 @@
 	<name>AroundMe-Android</name>
 	<comment></comment>
 	<projects>
+		<project>AroundMe Model API</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

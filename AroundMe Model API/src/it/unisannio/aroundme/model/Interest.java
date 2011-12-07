@@ -9,7 +9,7 @@ import org.w3c.dom.Node;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public interface Interest extends Model {
+public interface Interest extends Model, Identifiable {
 	
 	/**
 	 * <interest id="123" name="Name" category="Category">

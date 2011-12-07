@@ -11,12 +11,17 @@ import it.unisannio.aroundme.model.SerializerUtils;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
-public class UserQueryImpl extends UserQuery {
+class UserQueryImpl extends UserQuery {
 
+	private XmlClient client;
+	
+	UserQueryImpl(XmlClient client) {
+		this.client = client;
+	}
+	
 	@Override
 	public void perform(final DataListener<Collection<User>> l) {
-		XmlClient service = null; // TODO unimplemented
-		service.post("/query/user", SERIALIZER.toXML(this), new DataListener<Node>() {
+		client.post("/query/user", SERIALIZER.toXML(this), new DataListener<Node>() {
 
 			@Override
 			public void onData(Node object) {

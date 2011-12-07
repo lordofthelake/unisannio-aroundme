@@ -64,7 +64,7 @@ public class RawClient implements Client<byte[]> {
 						    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
 						    out.write(data);
 						}
-
+						// FIXME handle 4xx, 5xx error status codes
 					    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 						ByteArrayOutputStream bout = new ByteArrayOutputStream();
 						 

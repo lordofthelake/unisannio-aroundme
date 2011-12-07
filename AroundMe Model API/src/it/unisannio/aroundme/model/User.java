@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public interface User extends Model {
+public interface User extends Model, Identifiable {
 	
 	/**
 	 * <user id="123" name="Name">
