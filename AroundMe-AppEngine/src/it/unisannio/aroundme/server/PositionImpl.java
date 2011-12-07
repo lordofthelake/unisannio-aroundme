@@ -54,11 +54,35 @@ public class PositionImpl implements Position {
 	 *  in rete sul calcolo della distaza tra due coordinate tramite Google Maps
 	 *  
 	 */
-	//FIXME
-	@Override
+	/*
 	public double getDistance(Position p) {
 		double d = Math.sqrt(Math.pow(p.getLatitude() - this.latitude, 2) +  Math.pow((p.getLongitude() - this.longitude), 2));
 		return Math.round(d * 100000);
+	}
+	*/
+	
+	
+	/*
+	 * Metodo testato e funzionante sul calcolo della distanza tra due punti.
+	 * Il risutato è concorde con le misure effettuate con altri software.
+	 * Restituisce la distanza in metri.
+	 * @see it.unisannio.aroundme.model.Position#getDistance(it.unisannio.aroundme.model.Position)
+	 */
+	public double getDistance(Position p){
+		double lat1 = deg2rad(this.latitude);
+		double lat2 = deg2rad(p.getLatitude());
+		double lon1 = deg2rad(this.longitude);
+		double lon2 = deg2rad(p.getLongitude());
+		double dist =  Math.cos(lon1 -lon2) * Math.cos(lat1) * Math.cos(lat2) +  Math.sin(lat1) * Math.sin(lat2);
+		dist = Math.acos(dist) * 6378;
+		return Math.round(dist * 1000);
+	}
+		
+	/*
+	 * Converte gradi decimali in radianti
+	 */
+	private double deg2rad(double deg) {
+		return (deg * Math.PI / 180.0);
 	}
 
 	@Override

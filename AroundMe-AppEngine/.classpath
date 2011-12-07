@@ -17,7 +17,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe Model API"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.1.jar" sourcepath="/home/danilo/git/aroundme/AroundMe-AppEngine/objectify-3.1/src">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/home/danilo/git/aroundme/AroundMe-AppEngine/objectify-3.1/javadoc/"/>
+			<attribute name="javadoc_location" value="file:/home/danilo/git/aroundme/AroundMe-AppEngine/objectify3.1/javadoc/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-api-1.0-sdk-1.6.0.jar"/>

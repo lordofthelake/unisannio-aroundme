@@ -41,7 +41,6 @@ public class InterestImpl implements Interest{
 		this.id = id;
 	}
 
-	@Override
 	public <U> Picture<U> getPicture() {
 		// TODO Auto-generated method stub
 		return null;

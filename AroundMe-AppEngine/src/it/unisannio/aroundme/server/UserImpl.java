@@ -79,7 +79,6 @@ public class UserImpl implements User{
 		return position;
 	}
 
-	@Override
 	public <U> Picture<U> getPicture() {
 		//TODO
 		return null;
