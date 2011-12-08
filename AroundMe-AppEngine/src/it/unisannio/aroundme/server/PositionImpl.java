@@ -81,7 +81,7 @@ public class PositionImpl implements Position {
 	/*
 	 * Converte gradi decimali in radianti
 	 */
-	private double deg2rad(double deg) {
+	public static double deg2rad(double deg) {
 		return (deg * Math.PI / 180.0);
 	}
 
