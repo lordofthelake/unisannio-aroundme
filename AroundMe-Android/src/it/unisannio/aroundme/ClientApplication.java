@@ -4,6 +4,11 @@ import android.app.Application;
 import it.unisannio.aroundme.client.model.*;
 import it.unisannio.aroundme.model.Model;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class ClientApplication extends Application {
 	private XmlClient xmlClient;
 	private Backend backend;
