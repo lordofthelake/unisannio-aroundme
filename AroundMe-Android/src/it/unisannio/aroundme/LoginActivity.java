@@ -10,15 +10,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 /**
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
- */
+ */ 
 public class LoginActivity extends Activity {
 	
 	private Facebook facebook = new Facebook(ApplicationConstants.FACEBOOK_APP_ID);
@@ -28,7 +26,6 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		Button btnFacebookConnect = (Button) findViewById(R.id.btnFacebookConnect);
-		final TextView txtAroundMe = (TextView) findViewById(R.id.textView1);
 		btnFacebookConnect.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -44,7 +41,6 @@ public class LoginActivity extends Activity {
 					@Override
 					public void onFacebookError(FacebookError e) {
 						Toast.makeText(getApplicationContext(), "Si è verificato un errore durante l'autorizzazione: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-						txtAroundMe.setText(e.getLocalizedMessage());
 					}
 
 					@Override
