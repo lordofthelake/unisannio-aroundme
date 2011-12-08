@@ -11,6 +11,10 @@ import it.unisannio.aroundme.model.Picture;
 @Indexed
 public class InterestImpl implements Interest{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Key private long id;
 	@Unindexed private String name;
 	@Unindexed private String category;

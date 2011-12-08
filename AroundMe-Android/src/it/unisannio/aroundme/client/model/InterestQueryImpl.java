@@ -1,7 +1,6 @@
 package it.unisannio.aroundme.client.model;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import org.w3c.dom.Node;
 
@@ -18,6 +17,10 @@ import it.unisannio.aroundme.model.SerializerUtils;
  */
 class InterestQueryImpl extends InterestQuery {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private XmlClient client;
 	
 	InterestQueryImpl(XmlClient client) {

@@ -4,15 +4,14 @@ import java.util.Collection;
 
 import org.w3c.dom.Node;
 
-import it.unisannio.aroundme.model.DataListener;
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.Serializer;
-import it.unisannio.aroundme.model.SerializerUtils;
-import it.unisannio.aroundme.model.User;
-import it.unisannio.aroundme.model.UserQuery;
+import it.unisannio.aroundme.model.*;
 
 class UserQueryImpl extends UserQuery {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private XmlClient client;
 	
 	UserQueryImpl(XmlClient client) {

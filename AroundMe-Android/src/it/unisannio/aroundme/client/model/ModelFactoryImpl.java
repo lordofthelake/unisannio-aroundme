@@ -1,6 +1,5 @@
 package it.unisannio.aroundme.client.model;
 
-import android.app.Application;
 import it.unisannio.aroundme.ClientApplication;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.InterestQuery;

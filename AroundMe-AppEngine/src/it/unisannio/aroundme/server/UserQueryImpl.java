@@ -17,6 +17,11 @@ import it.unisannio.aroundme.model.UserQuery;
  */
 public class UserQueryImpl extends UserQuery{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override 
 	public void perform(DataListener<Collection<User>> l) {
 		try{
@@ -41,6 +46,9 @@ public class UserQueryImpl extends UserQuery{
 													.filter("position.getLatitude >=", lat1)
 													.filter("position.getLatitude <=", lat2)
 													.list();
+			
+			// FIXME Filtra anche per id e per interessi
+			
 			/*
 			 * Riguardo alla query precedente, non credo che se si possa accedere alla latitudine
 			 * e alla longitudine di una posizione tramite medoto get. Gli esempi sulla documentazione
