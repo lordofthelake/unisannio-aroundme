@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="lib/c2dm-sources.jar"/>
 	<classpathentry kind="lib" path="lib/requestfactory-client-src.jar"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Facebook SDK"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
