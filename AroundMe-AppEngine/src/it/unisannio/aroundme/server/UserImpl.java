@@ -39,7 +39,7 @@ public class UserImpl implements User{
 	@Embedded
 	private Position position;	
 	
-	private ArrayList<Key<Interest>> interests; 
+	private ArrayList<Key<Interest>> interestsKeys; 
 
 	@Override
 	public long getId() {
@@ -66,7 +66,7 @@ public class UserImpl implements User{
 		Objectify ofy = ObjectifyService.begin();
 		if(ofy.get(Interest.class, interest.getId()) == null)			
 			ofy.put(interest);
-		interests.add(new Key<Interest>(Interest.class, interest.getId()));
+		interestsKeys.add(new Key<Interest>(Interest.class, interest.getId()));
 	}
 
 	@Override
@@ -79,6 +79,7 @@ public class UserImpl implements User{
 		return position;
 	}
 
+	@Override
 	public <U> Picture<U> getPicture() {
 		//TODO
 		return null;
@@ -87,7 +88,11 @@ public class UserImpl implements User{
 	@Override
 	public Collection<Interest> getInterests() {
 		Objectify ofy = ObjectifyService.begin();
-		return ofy.get(interests).values();
+		return ofy.get(interestsKeys).values();
+	}
+	
+	protected Collection<Key<Interest>> getInterestsKey(){
+		return interestsKeys;
 	}
 	
 }
