@@ -72,6 +72,9 @@ public class UserQueryImpl extends UserQuery{
 			 * Query che restituisce gli utenti che hanno tutti gli interessi dati
 			 */
 			if(this.getInterestIds() != null){
+				
+				ofy.query(Interest.class, new Key);
+				
 				ArrayList<Long> requiredInterestsKeys = new ArrayList<Long>(this.getInterestIds());
 				ArrayList<User> thisqueryResults = new ArrayList<User>();
 				

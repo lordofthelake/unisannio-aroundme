@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="hello">Hello World, AroundMeGUIActivity!</string>
+
+    <string name="list_view">Lista Persone</string>
+    <string name="Profile_view">Profilo</string>
+
+
     <!-- Menu item text [CHAR LIMIT=NONE] -->
     <string name="accounts">Accounts</string>
 
