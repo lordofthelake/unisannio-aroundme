@@ -316,12 +316,19 @@ containing a value of this type.
         public static final int actionbar_btn_normal=0x7f02002b;
         public static final int actionbar_btn_pressed=0x7f02002c;
         public static final int app_icon=0x7f02002d;
-        public static final int close=0x7f02002e;
-        public static final int facebook_icon=0x7f02002f;
-        public static final int gradient=0x7f020030;
-        public static final int ic_mailboxes_accounts=0x7f020031;
-        public static final int icon=0x7f020032;
-        public static final int status_icon=0x7f020033;
+        public static final int background=0x7f02002e;
+        public static final int close=0x7f02002f;
+        public static final int distance_shape=0x7f020030;
+        public static final int facebook_icon=0x7f020031;
+        public static final int fb_icon=0x7f020032;
+        public static final int gradient=0x7f020033;
+        public static final int ic_launcher=0x7f020034;
+        public static final int ic_mailboxes_accounts=0x7f020035;
+        public static final int ic_no_photo=0x7f020036;
+        public static final int icon=0x7f020037;
+        public static final int my_gradient=0x7f020038;
+        public static final int status_icon=0x7f020039;
+        public static final int topbarbackground=0x7f02003a;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f04001b;
@@ -353,7 +360,10 @@ containing a value of this type.
         public static final int actionbar_item=0x7f040026;
         public static final int actionbar_progress=0x7f040024;
         public static final int actionbar_title=0x7f040025;
-        public static final int btnFacebookConnect=0x7f040035;
+        public static final int barLayout=0x7f040038;
+        public static final int btnFacebookConnect=0x7f04003f;
+        public static final int btnSearch=0x7f04003c;
+        public static final int btnToMapView=0x7f04003b;
         public static final int connect=0x7f04002d;
         public static final int connect_footer=0x7f04002c;
         public static final int connect_text=0x7f040028;
@@ -365,8 +375,13 @@ containing a value of this type.
         public static final int hello_world=0x7f040033;
         public static final int hello_world_info=0x7f040031;
         public static final int homeAsUp=0x7f040006;
+        public static final int imgPhoto=0x7f040034;
+        public static final int imgfbProfile=0x7f040042;
+        public static final int linearLayout1=0x7f040041;
         public static final int listMode=0x7f040002;
+        public static final int nearByList=0x7f04003d;
         public static final int normal=0x7f040001;
+        public static final int relativeLayout1=0x7f040040;
         public static final int say_hello=0x7f040032;
         public static final int screen=0x7f04001d;
         public static final int select_account=0x7f04002b;
@@ -375,7 +390,13 @@ containing a value of this type.
         public static final int showHome=0x7f040005;
         public static final int showTitle=0x7f040007;
         public static final int tabMode=0x7f040003;
-        public static final int textView1=0x7f040034;
+        public static final int textView1=0x7f04003e;
+        public static final int txtAppTitle=0x7f040039;
+        public static final int txtCompatibility=0x7f040037;
+        public static final int txtDistance=0x7f040036;
+        public static final int txtName=0x7f040035;
+        public static final int txtPage=0x7f04003a;
+        public static final int txtToDo=0x7f040043;
         public static final int useLogo=0x7f040004;
         public static final int wrap_content=0x7f040000;
     }
@@ -401,82 +422,87 @@ containing a value of this type.
         public static final int connect=0x7f03000f;
         public static final int disconnect=0x7f030010;
         public static final int hello_world=0x7f030011;
-        public static final int login=0x7f030012;
+        public static final int list_entry=0x7f030012;
+        public static final int listview=0x7f030013;
+        public static final int login=0x7f030014;
+        public static final int profileview=0x7f030015;
     }
     public static final class menu {
         public static final int main_menu=0x7f0a0000;
     }
     public static final class string {
+        public static final int Profile_view=0x7f070005;
         public static final int abs__tab_under_ab_tag=0x7f070000;
         /**  Menu item text [CHAR LIMIT=NONE] 
          */
-        public static final int accounts=0x7f070004;
+        public static final int accounts=0x7f070006;
         public static final int actionbar_activity_not_found=0x7f070003;
         /**  Dialog button [CHAR LIMIT=NONE] 
          */
-        public static final int add_account=0x7f070005;
+        public static final int add_account=0x7f070007;
         /**   Name of the application in the launcher [CHAR LIMIT=NONE] 
          */
         public static final int app_name=0x7f070002;
         /**  Dialog title text [CHAR LIMIT=NONE] 
          */
-        public static final int attention=0x7f070006;
+        public static final int attention=0x7f070008;
         /**  Button text [CHAR LIMIT=NONE] 
          */
-        public static final int connect=0x7f070007;
+        public static final int connect=0x7f070009;
         /**  Message text for "Connect" screen [CHAR LIMIT=NONE] 
          */
-        public static final int connect_text=0x7f070008;
+        public static final int connect_text=0x7f07000a;
         /**  Header text for "Connect" screen [CHAR LIMIT=NONE] 
          */
-        public static final int connect_to_the_cloud=0x7f070009;
-        public static final int connect_with_facebook=0x7f070019;
+        public static final int connect_to_the_cloud=0x7f07000b;
+        public static final int connect_with_facebook=0x7f07001b;
         /**  Header text for "Connected" screen [CHAR LIMIT=NONE] 
          */
-        public static final int connected_to_the_cloud=0x7f07000a;
+        public static final int connected_to_the_cloud=0x7f07000c;
         /**  Message text [CHAR LIMIT=NONE] 
          */
-        public static final int contacting_server=0x7f07000b;
+        public static final int contacting_server=0x7f07000d;
         /**  Button text [CHAR LIMIT=NONE] 
          */
-        public static final int disconnect=0x7f07000c;
+        public static final int disconnect=0x7f07000e;
         /**  Informational text for "Connected" screen with placeholder for account name [CHAR LIMIT=NONE] 
          */
-        public static final int disconnect_text=0x7f07000d;
+        public static final int disconnect_text=0x7f07000f;
         /**  Footer text for "Connect" screen [CHAR LIMIT=NONE] 
          */
-        public static final int do_you_want_to_connect=0x7f07000e;
+        public static final int do_you_want_to_connect=0x7f070010;
         /**  Footer text for "Disconnect" screen [CHAR LIMIT=NONE] 
          */
-        public static final int do_you_want_to_disconnect=0x7f07000f;
+        public static final int do_you_want_to_disconnect=0x7f070011;
         public static final int hello=0x7f070001;
         /**  Initial "hello, world" informational message [CHAR LIMIT=NONE] 
          */
-        public static final int hello_world_info_text=0x7f070010;
+        public static final int hello_world_info_text=0x7f070012;
         /**  Initial "hello, world" response message [CHAR LIMIT=NONE] 
          */
-        public static final int hello_world_text=0x7f070011;
+        public static final int hello_world_text=0x7f070013;
+        public static final int list_view=0x7f070004;
         /**  Dialog message text [CHAR LIMIT=NONE] 
          */
-        public static final int needs_account=0x7f070012;
+        public static final int needs_account=0x7f070014;
         /**  Notification message [CHAR LIMIT=NONE] 
          */
-        public static final int registration_error=0x7f070013;
+        public static final int registration_error=0x7f070015;
         /**  Notification message [CHAR LIMIT=NONE] 
          */
-        public static final int registration_succeeded=0x7f070014;
+        public static final int registration_succeeded=0x7f070016;
         /**  Button text [CHAR LIMIT=NONE] 
          */
-        public static final int say_hello=0x7f070015;
+        public static final int say_hello=0x7f070017;
         /**  List view header text [CHAR LIMIT=NONE] 
          */
-        public static final int select_account=0x7f070016;
+        public static final int select_account=0x7f070018;
         /**  Dialog button text [CHAR LIMIT=NONE] 
          */
-        public static final int skip=0x7f070017;
+        public static final int skip=0x7f070019;
         /**  Notification message [CHAR LIMIT=NONE] 
          */
-        public static final int unregistration_succeeded=0x7f070018;
+        public static final int unregistration_succeeded=0x7f07001a;
     }
     public static final class style {
         public static final int ActionBar=0x7f08001e;
