@@ -12,9 +12,7 @@ import org.w3c.dom.Node;
 public interface Interest extends Model, Identifiable {
 	
 	/**
-	 * <interest id="123" name="Name" category="Category">
-	 * 	<picture>http://url.com/123</picture>
-	 * </interest>
+	 * <interest id="123" name="Name" category="Category" />
 	 */
 	public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
 
@@ -44,10 +42,6 @@ public interface Interest extends Model, Identifiable {
 			interest.setAttribute("name", obj.getName());
 			interest.setAttribute("category", obj.getCategory());
 			
-			Picture<?> p = obj.getPicture();
-			if(p != null) 
-				interest.appendChild(SerializerUtils.toXML(p));
-			
 			return interest;
 		}
 		
@@ -58,6 +52,5 @@ public interface Interest extends Model, Identifiable {
 	void setCategory(String category);
 	void setName(String name);
 	void setId(long id);
-	<U> Picture<U> getPicture();
 	long getId();
 }

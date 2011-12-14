@@ -39,13 +39,6 @@ public interface User extends Model, Identifiable {
 			obj.setId(id);
 			obj.setName(name);
 			
-			NodeList pictureList = user.getElementsByTagName("picture");
-			if(pictureList.getLength() > 0) {
-				Element picture = (Element) pictureList.item(0);
-				Picture<?> p = Picture.SERIALIZER.fromXML(picture);
-				obj.setPicture(p);
-			}
-			
 			NodeList interestsList = user.getElementsByTagName("interests");
 			if(interestsList.getLength() > 0) {
 				Element interests = (Element) interestsList.item(0);
@@ -92,15 +85,12 @@ public interface User extends Model, Identifiable {
 
 	void setId(long id);
 
-	void setPicture(Picture<?> p);
 
 	void addInterest(Interest interest);
 
 	String getName();
 	
 	Position getPosition();
-	
-	<U> Picture<U> getPicture();
 	
 	Collection<Interest> getInterests();	
 }

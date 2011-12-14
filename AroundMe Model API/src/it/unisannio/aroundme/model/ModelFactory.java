@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.model;
 
+
 /**
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
@@ -23,7 +24,6 @@ public abstract class ModelFactory {
 	public abstract User createUser();
 	public abstract Interest createInterest();
 	public abstract Position createPosition();
-	public abstract Picture<?> createPicture();
 	public abstract InterestQuery createInterestQuery();
 	public abstract UserQuery createUserQuery();
 

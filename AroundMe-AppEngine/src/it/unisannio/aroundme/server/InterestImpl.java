@@ -6,7 +6,6 @@ import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
 
 import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.Picture;
 
 @Indexed
 public class InterestImpl implements Interest{
@@ -43,11 +42,6 @@ public class InterestImpl implements Interest{
 	@Override
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public <U> Picture<U> getPicture() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

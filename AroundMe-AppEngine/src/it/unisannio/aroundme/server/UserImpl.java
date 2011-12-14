@@ -12,7 +12,6 @@ import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
 
 import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.Picture;
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.User;
 
@@ -33,8 +32,6 @@ public class UserImpl implements User{
 	@Unindexed
 	private String name;
 	
-	@Unindexed
-	private Picture<?> picture;
 	
 	@Embedded
 	private Position position;	
@@ -56,10 +53,6 @@ public class UserImpl implements User{
 		this.id = id;
 	}
 
-	@Override
-	public void setPicture(Picture<?> p) {
-		picture = p;
-	}
 
 	@Override
 	public void addInterest(Interest interest) {
@@ -79,10 +72,6 @@ public class UserImpl implements User{
 		return position;
 	}
 
-	public <U> Picture<U> getPicture() {
-		//TODO
-		return null;
-	}
 
 	@Override
 	public Collection<Interest> getInterests() {
