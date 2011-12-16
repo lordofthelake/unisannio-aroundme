@@ -9,16 +9,19 @@ import it.unisannio.aroundme.model.Position;
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
-@Indexed
-public class PositionImpl implements Position {
 
-	/**
-	 * 
-	 */
+@Indexed
+class PositionImpl extends Position {
+
 	private static final long serialVersionUID = 1L;
+	
 	private double latitude;
 	private double longitude;	
 	
+	PositionImpl(double latitude, double longitude) {
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
 	
 	/*
 	 * Calcolo della distanza in metri tra due punti per piccole distanze.
@@ -64,40 +67,6 @@ public class PositionImpl implements Position {
 		return Math.round(d * 100000);
 	}
 	*/
-	
-	
-	/*
-	 * Metodo testato e funzionante sul calcolo della distanza tra due punti.
-	 * Il risutato è concorde con le misure effettuate con altri software.
-	 * Restituisce la distanza in metri.
-	 * @see it.unisannio.aroundme.model.Position#getDistance(it.unisannio.aroundme.model.Position)
-	 */
-	public double getDistance(Position p){
-		double lat1 = deg2rad(this.latitude);
-		double lat2 = deg2rad(p.getLatitude());
-		double lon1 = deg2rad(this.longitude);
-		double lon2 = deg2rad(p.getLongitude());
-		double dist =  Math.cos(lon1 -lon2) * Math.cos(lat1) * Math.cos(lat2) +  Math.sin(lat1) * Math.sin(lat2);
-		dist = Math.acos(dist) * 6378;
-		return Math.round(dist * 1000);
-	}
-		
-	/*
-	 * Converte gradi decimali in radianti
-	 */
-	public static double deg2rad(double deg) {
-		return (deg * Math.PI / 180.0);
-	}
-
-	@Override
-	public void setLongitude(double lon) {
-		longitude = lon;
-	}
-
-	@Override
-	public void setLatitude(double lat) {
-		latitude = lat;
-	}
 
 	@Override
 	public double getLatitude() {

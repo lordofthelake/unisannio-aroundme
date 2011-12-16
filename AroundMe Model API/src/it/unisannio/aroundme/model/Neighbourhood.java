@@ -9,7 +9,7 @@ import org.w3c.dom.Node;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public interface Neighbourhood extends Model {
+public class Neighbourhood implements Model {
 	
 	/**
 	 * <neighbourhood radius="0.0">
@@ -31,7 +31,7 @@ public interface Neighbourhood extends Model {
 			Element position = (Element) neighbourhood.getElementsByTagName("position").item(0);
 			Position p = Position.SERIALIZER.fromXML(position);
 			
-			Neighbourhood obj = ModelFactory.getInstance().createNeighbourhood();
+			Neighbourhood obj = new Neighbourhood();
 			obj.setRadius(radius);
 			obj.setPosition(p);
 			
@@ -51,8 +51,24 @@ public interface Neighbourhood extends Model {
 		
 	};
 	
-	Position getPosition();
-	void setPosition(Position p);
-	void setRadius(double radius);
-	double getRadius();
+	private static final long serialVersionUID = 1L;
+	
+	private Position position;
+	private double radius;
+	
+	public Position getPosition() {
+		return position;
+	}
+	
+	public void setPosition(Position p) {
+		this.position = p;
+	}
+	
+	public double getRadius() {
+		return radius;
+	}
+	
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
 }

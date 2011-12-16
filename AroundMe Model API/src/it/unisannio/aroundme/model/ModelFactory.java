@@ -1,5 +1,7 @@
 package it.unisannio.aroundme.model;
 
+import java.util.Collection;
+
 
 /**
  * 
@@ -21,18 +23,10 @@ public abstract class ModelFactory {
 		return instance;
 	}
 	
-	public abstract User createUser();
-	public abstract Interest createInterest();
-	public abstract Position createPosition();
+	public abstract User createUser(long id, String name, Collection<Interest> interests);
+	public abstract Interest createInterest(long id, String name, String category);
+	public abstract Position createPosition(double lat, double lon);
 	public abstract InterestQuery createInterestQuery();
 	public abstract UserQuery createUserQuery();
-
-	public Neighbourhood createNeighbourhood() {
-		return new NeighbourhoodImpl();
-	}
-
-	public Compatibility createCompatibility() {
-		return new CompatibilityImpl();
-	}
 	
 }

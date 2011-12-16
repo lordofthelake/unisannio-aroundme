@@ -9,6 +9,11 @@ import it.unisannio.aroundme.model.Serializer;
 
 import org.junit.Test;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public abstract class ModelTest {
 	protected Class<? extends Model> clazz;
 	

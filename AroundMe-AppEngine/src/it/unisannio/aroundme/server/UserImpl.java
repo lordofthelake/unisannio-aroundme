@@ -11,19 +11,14 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
 
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.Position;
-import it.unisannio.aroundme.model.User;
+import it.unisannio.aroundme.model.*;
 
 /**
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
 @Indexed
-public class UserImpl implements User{	
-	/**
-	 * 
-	 */
+class UserImpl extends User {
 	private static final long serialVersionUID = 1270045595803902572L;
 
 	@Id
@@ -43,24 +38,17 @@ public class UserImpl implements User{
 		return id;
 	}
 
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public void setId(long id) {
-		this.id = id;
-	}
-
-
+	/* FIXME la parte di creazione degli interessi dovrˆ essere spostata nella factory.
+	 * 
+	 */
+	/*
 	@Override
 	public void addInterest(Interest interest) {
 		Objectify ofy = ObjectifyService.begin();
 		if(ofy.get(Interest.class, interest.getId()) == null)			
 			ofy.put(interest);
 		interestsKeys.add(new Key<Interest>(Interest.class, interest.getId()));
-	}
+	}*/
 
 	@Override
 	public String getName() {
@@ -79,8 +67,23 @@ public class UserImpl implements User{
 		return ofy.get(interestsKeys).values();
 	}
 	
-	protected Collection<Key<Interest>> getInterestsKey(){
+	protected Collection<Key<Interest>> getInterestKeys(){
 		return interestsKeys;
 	}
-	
+
+	@Override
+	public void setPosition(Position p) {
+		this.position = p;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	/*
+	 * Versione ottimizzata per l'uso sul DataStore: se entrambi gli utenti hanno la stessa implementazione basta il confronto sulle chiavi, evitando la query sugli interessi.
+	 */
+	@Override
+	public float getCompatibilityRank(User u) {
+		return (u instanceof UserImpl) ? getCompatibilityRank(getInterestKeys(), ((UserImpl) u).getInterestKeys()) : super.getCompatibilityRank(u);
+	}
 }

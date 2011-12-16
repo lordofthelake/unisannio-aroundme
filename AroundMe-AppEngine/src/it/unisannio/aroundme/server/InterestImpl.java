@@ -30,21 +30,6 @@ public class InterestImpl implements Interest{
 	}
 
 	@Override
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	@Override
 	public long getId() {
 		return id;
 	}

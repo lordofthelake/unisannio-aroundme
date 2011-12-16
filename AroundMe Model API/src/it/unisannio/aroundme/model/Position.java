@@ -11,7 +11,8 @@ import org.w3c.dom.Node;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public interface Position extends Model {
+public abstract class Position implements Model {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * <position lat="0.0" lon="0.0" />
@@ -27,9 +28,7 @@ public interface Position extends Model {
 			double lat = Double.parseDouble(position.getAttribute("lat"));
 			double lon = Double.parseDouble(position.getAttribute("lon"));
 			
-			Position obj = ModelFactory.getInstance().createPosition();
-			obj.setLatitude(lat);
-			obj.setLongitude(lon);
+			Position obj = ModelFactory.getInstance().createPosition(lat, lon);
 			
 			return obj;
 		}
@@ -48,13 +47,24 @@ public interface Position extends Model {
 		
 	};
 	
-	double getDistance(Position p);
+	/**
+	 * Metodo testato e funzionante sul calcolo della distanza tra due punti.
+	 * Il risutato è concorde con le misure effettuate con altri software.
+	 * Restituisce la distanza in metri tra due punti.
+	 * 
+	 * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+	 */
+	public double getDistance(Position p){
+		double lat1 = Math.toRadians(getLatitude());
+		double lat2 = Math.toRadians(p.getLatitude());
+		double lon1 = Math.toRadians(getLongitude());
+		double lon2 = Math.toRadians(p.getLongitude());
+		double dist =  Math.cos(lon1 -lon2) * Math.cos(lat1) * Math.cos(lat2) +  Math.sin(lat1) * Math.sin(lat2);
+		dist = Math.acos(dist) * 6378;
+		return Math.round(dist * 1000);
+	}
 
-	void setLongitude(double lon);
+	public abstract double getLatitude();
 
-	void setLatitude(double lat);
-
-	double getLatitude();
-
-	double getLongitude();
+	public abstract double getLongitude();
 }

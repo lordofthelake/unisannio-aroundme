@@ -6,6 +6,7 @@ import java.util.Collection;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Query;
 
 import it.unisannio.aroundme.model.DataListener;
 import it.unisannio.aroundme.model.Interest;
@@ -26,8 +27,7 @@ public class UserQueryImpl extends UserQuery{
 	public void perform(DataListener<Collection<User>> l) {
 		try{
 			Objectify ofy = ObjectifyService.begin();
-			//Inizializza queriedUsers aggiungendovi tutti gli User presenti sul Datastore
-			Collection<User> queriedUsers = ofy.get(User.class).values();			
+			Query<User> query = ofy.query(User.class);		
 			
 			/*
 			 * Query che restituisce gli utenti nelle vicinaze di una
@@ -43,43 +43,28 @@ public class UserQueryImpl extends UserQuery{
 				 */
 				Position myPosition = this.getNeighbourhood().getPosition();
 				double radius = this.getNeighbourhood().getRadius();
-				double aLongitudeDegree2Meters = (Math.abs(Math.cos(PositionImpl.deg2rad(myPosition.getLatitude()))*110000));
-				double lon1 = myPosition.getLongitude() - radius/ aLongitudeDegree2Meters;
-				double lon2 = myPosition.getLongitude() + radius/ aLongitudeDegree2Meters;
-				double lat1 = myPosition.getLatitude() - radius/110000;
-				double lat2 = myPosition.getLatitude() + radius/110000;
+				double aLongitudeDegree2Meters = (Math.abs(Math.cos(Math.toRadians(myPosition.getLatitude()))*110000));
 
-				ArrayList<User> thisqueryResults = new ArrayList<User>();
-				for(User u: queriedUsers){
-					Position position = u.getPosition();
-					if(position.getLongitude() >= lon1 && position.getLongitude() <= lon2 &&
-						position.getLatitude() >= lat1 && position.getLatitude() <= lat2)
-						thisqueryResults.add(u);
-				}
-				
-				queriedUsers = thisqueryResults;
-				
-				/*
-				Query<User> queriedUsers = ofy.query(User.class); 
-				queriedUsers = queriedUsers.filter("position.longitude >=", lon1)
-						.filter("position.longitude <=", lon2)
-						.filter("position.latitude >=", lat1)
-						.filter("position.latitude <=", lat2);
-						*/
+				query.filter("position.longitude >=", myPosition.getLongitude() - radius/ aLongitudeDegree2Meters)
+						.filter("position.longitude <=", myPosition.getLongitude() + radius/ aLongitudeDegree2Meters)
+						.filter("position.latitude >=", myPosition.getLatitude() - radius/110000)
+						.filter("position.latitude <=", myPosition.getLatitude() + radius/110000);
+						
 			}
+			
+			Collection<User> queriedUsers = query.list();
 			
 			/*
 			 * Query che restituisce gli utenti che hanno tutti gli interessi dati
+			 * 
+			 * TODO Query sul DataStore invece che in memory
 			 */
 			if(this.getInterestIds() != null){
 				
-				ofy.query(Interest.class, new Key);
-				
 				ArrayList<Long> requiredInterestsKeys = new ArrayList<Long>(this.getInterestIds());
-				ArrayList<User> thisqueryResults = new ArrayList<User>();
 				
 				for(User u: queriedUsers){
-					ArrayList<Key<Interest>> uInterestsKeys = new ArrayList<Key<Interest>>(((UserImpl)u).getInterestsKey());
+					ArrayList<Key<Interest>> uInterestsKeys = new ArrayList<Key<Interest>>(((UserImpl)u).getInterestKeys());
 					boolean found = true;
 					for(int i = 0; i < requiredInterestsKeys.size() && found; i++){
 						found = false;
@@ -87,54 +72,29 @@ public class UserQueryImpl extends UserQuery{
 							if (requiredInterestsKeys.get(i).longValue() == uInterestsKeys.get(j).getId())
 								found = true;
 					}
-					if (found)
-						thisqueryResults.add(u);
+					if (!found)
+						queriedUsers.remove(u);
 				}
 				
-				queriedUsers = thisqueryResults;
 			}
 			
 			/*
-			 * Query che restituisce gli utenti che hanno un certo grado di compatibilità,
+			 * Query che restituisce gli utenti che hanno un certo grado di compatibilit�,
 			 * basata sul numero di interessi in comune, con un utente dato.
 			 */
 			if(this.getCompatibility() != null){
-				UserImpl myUser = (UserImpl) ofy.get(User.class, this.getCompatibility().getUserId());
-				ArrayList<Key<Interest>> myInterestsKey = new ArrayList<Key<Interest>>(myUser.getInterestsKey());
+				float requiredRank = getCompatibility().getRank();
+				User myUser = (User) ofy.get(User.class, this.getCompatibility().getUserId());
 				
-				/*
-				 * Considerando che il rank è espresso con un float da 0,1 a 1, 
-				 * requestedRank indica il numero di interessi in comune che si devono avere
-				 * per essere considerati compatibili
-				 */
-				double requiredRank = myInterestsKey.size() * this.getCompatibility().getRank();
-				ArrayList<User> thisqueryResults = new ArrayList<User>();
 				for(User u: queriedUsers){
-					ArrayList<Key<Interest>> uInterestsKeys = new ArrayList<Key<Interest>>(((UserImpl)u).getInterestsKey());
-					int foundInterests = 0;
-					for(int i = 0; i < myInterestsKey.size() && foundInterests < requiredRank; i++){
-						boolean found = false;
-						for (int j = 0; j < uInterestsKeys.size() && !found; j++)
-							if (myInterestsKey.get(i).equals(uInterestsKeys.get(j)))
-								found = true;
-						if(found)
-							foundInterests++;
-					}
-					if (foundInterests >= requiredRank)
-						thisqueryResults.add(u);
-					/*
-					 In alternativa, ma con funzionamento non garantito:
-					uInterestsKeys.retainAll(myInterestsKey); //Lascia in uInterests solo gli interessi contenuti anche in myInterests
-					if(uInterestsKeys.size() >= requiredRank)
-						thisqueryResults.add(u);
-						*/
+					if(myUser.getCompatibilityRank(u) < requiredRank)
+						queriedUsers.remove(u);
 				}
-				queriedUsers = thisqueryResults;
 			}
 			
 			
 			l.onData(queriedUsers);
-		}catch(Exception e){
+		} catch(Exception e){
 			l.onError(e);
 		}
 	}

@@ -1,4 +1,9 @@
-package it.unisannio.aroundme;
+package it.unisannio.aroundme.client;
+
+import it.unisannio.aroundme.ApplicationConstants;
+import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.R.id;
+import it.unisannio.aroundme.R.layout;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -35,7 +40,7 @@ public class LoginActivity extends Activity {
 					@Override
 					public void onComplete(Bundle values) {
 						Toast.makeText(getApplicationContext(), "On complete", Toast.LENGTH_LONG).show();
-						
+						startActivity(new Intent(LoginActivity.this, ListViewActivity.class));
 					}
 
 					@Override

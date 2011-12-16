@@ -1,6 +1,8 @@
 package it.unisannio.aroundme.model;
 
+
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,7 +14,8 @@ import org.w3c.dom.NodeList;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public interface User extends Model, Identifiable {
+public abstract class User implements Model, Identifiable {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * <user id="123" name="Name">
@@ -32,13 +35,11 @@ public interface User extends Model, Identifiable {
 				throw new IllegalArgumentException();
 			
 			Element user = (Element) xml;
-			User obj = ModelFactory.getInstance().createUser();
 			
 			long id = Long.parseLong(user.getAttribute("id"));
 			String name = user.getAttribute("name");
-			obj.setId(id);
-			obj.setName(name);
 			
+			Collection<Interest> interestCollection = new HashSet<Interest>();
 			NodeList interestsList = user.getElementsByTagName("interests");
 			if(interestsList.getLength() > 0) {
 				Element interests = (Element) interestsList.item(0);
@@ -46,11 +47,13 @@ public interface User extends Model, Identifiable {
 				NodeList interestList = interests.getElementsByTagName("interest");
 				for(int i = 0, len = interestList.getLength(); i < len; ++i) {
 					Interest interest = Interest.SERIALIZER.fromXML(interestList.item(i));
-					obj.addInterest(interest);
+					interestCollection.add(interest);
 				}
 			}
 			
-			return obj;
+			// FIXME la posizione non viene deserializzata
+			
+			return ModelFactory.getInstance().createUser(id, name, interestCollection);
 				
 		}
 
@@ -74,23 +77,59 @@ public interface User extends Model, Identifiable {
 				user.appendChild(interests);
 			}
 			
+			// FIXME la posizione non viene serializzata
+			
 			return user;
 		}
 		
 	};
 	
-	long getId();
+	public abstract long getId();
 	
-	void setName(String name);
-
-	void setId(long id);
-
-
-	void addInterest(Interest interest);
-
-	String getName();
+	public abstract String getName();
 	
-	Position getPosition();
+	public abstract Position getPosition();
 	
-	Collection<Interest> getInterests();	
+	public abstract void setPosition(Position p);
+	
+	public abstract Collection<Interest> getInterests();	
+	
+	/**
+	 * Il rank è una misura di compatibilità tra due utenti, espresso con un numero decimale tra 0 (nessun interesse comune) e 1 (tutti gli interessi in comune).
+	 * Notare che il rank non è garantito essere simmetrico tra i due utenti.
+	 * 
+	 * @param u l'utente su cui viene fatto il confronto
+	 * @return misura del rank, con 0 <= rank <= 1
+	 * 
+	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+	 * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+	 */
+	public float getCompatibilityRank(User u) {
+		return getCompatibilityRank(getInterests(), u.getInterests());		
+	}
+	
+	protected <E> float getCompatibilityRank(Collection<E> myInterests, Collection<E> otherInterests) {
+		if(myInterests.isEmpty())
+			return 0;
+		
+		Collection<E> commonInterests = new HashSet<E>(myInterests);
+		commonInterests.retainAll(otherInterests);
+		
+		return commonInterests.size() / myInterests.size();
+	}
+	
+	/**
+	 * Calcola la distanza tra i due utenti, espressa in metri.
+	 * 
+	 * @param u l'utente da cui calcolare la distanza
+	 * @return la distanza in metri, -1 se non è possibile calcolarla
+	 * 
+	 * @see Position#getDistance(Position)
+	 */
+	public double getDistance(User u) {
+		Position mine = getPosition();
+		Position hers = u.getPosition();
+		
+		return (mine == null || hers == null) ? -1 : mine.getDistance(hers);
+	}
 }

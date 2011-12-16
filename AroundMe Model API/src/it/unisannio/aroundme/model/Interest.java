@@ -26,12 +26,7 @@ public interface Interest extends Model, Identifiable {
 			String name = interest.getAttribute("name");
 			String category = interest.getAttribute("category");
 			
-			Interest obj = ModelFactory.getInstance().createInterest();
-			obj.setId(id);
-			obj.setName(name);
-			obj.setCategory(category);
-			
-			return obj;
+			return ModelFactory.getInstance().createInterest(id, name, category);
 		}
 
 		@Override
@@ -49,8 +44,5 @@ public interface Interest extends Model, Identifiable {
 	
 	String getName();
 	String getCategory();
-	void setCategory(String category);
-	void setName(String name);
-	void setId(long id);
 	long getId();
 }

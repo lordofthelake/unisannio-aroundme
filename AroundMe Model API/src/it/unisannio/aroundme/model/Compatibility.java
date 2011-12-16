@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public interface Compatibility extends Model {
+public class Compatibility implements Model {
 	/**
 	 * <compatibility rank="0.0" userid="123" />
 	 */
@@ -31,9 +31,7 @@ public interface Compatibility extends Model {
 			float rank = Float.parseFloat(compatibility.getAttribute("rank"));
 			long userId = Long.parseLong(compatibility.getAttribute("userid"));
 			
-			Compatibility obj = ModelFactory.getInstance().createCompatibility();
-			obj.setRank(rank);
-			obj.setUserId(userId);
+			Compatibility obj = new Compatibility(userId, rank);
 			
 			return obj;
 		}
@@ -51,8 +49,21 @@ public interface Compatibility extends Model {
 		
 	};
 	
-	long getUserId();
-	void setUserId(long userId);
-	void setRank(float rank);
-	float getRank();
+	private static final long serialVersionUID = 1L;
+	
+	private long userId;
+	private float rank;
+	
+	public Compatibility(long userId, float rank) {
+		this.userId = userId;
+		this.rank = rank;
+	}
+	
+	public long getUserId() {
+		return userId;
+	}
+	
+	public float getRank() {
+		return rank;
+	}
 }

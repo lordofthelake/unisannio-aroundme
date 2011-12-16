@@ -1,14 +1,11 @@
-package it.unisannio.aroundme.client.pictures;
+package it.unisannio.aroundme.client;
 
-import it.unisannio.aroundme.http.PersistenceService;
-import it.unisannio.aroundme.http.Trasformer;
 import it.unisannio.aroundme.model.DataListener;
 
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Future;
-
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,16 +17,23 @@ import android.graphics.BitmapFactory;
  * 
  */
 public class Picture {
-	private Future<PersistenceService> service;
+	private DataService service;
 	private URL url;
 	private SoftReference<Bitmap> cache;
 	
-	public Picture(Future<PersistenceService> service, URL url) {
+	public Picture(DataService service, URL url) {
 		this.service = service;
 		this.url = url;
 	}
 	
-	URL getURL() {
+	public Picture(DataService service, long id) {
+		try {
+			this.service = service;
+			this.url = new URL("https://graph.facebook.com/" + id + "/picture");
+		} catch (MalformedURLException e) {}
+	}
+	
+	public URL getURL() {
 		return url;
 		
 	}
@@ -42,10 +46,10 @@ public class Picture {
 		}
 
 		try {
-			service.get().asyncHttpGet(url, new Trasformer<InputStream, Bitmap>() {
+			service.asyncHttpGet(url, new Transformer<InputStream, Bitmap>() {
 
 				@Override
-				public Bitmap trasform(InputStream input) throws Exception {
+				public Bitmap transform(InputStream input) throws Exception {
 					Bitmap bmp = BitmapFactory.decodeStream(input);
 					if(bmp == null) 
 						throw new RuntimeException("Cannot decode image");
@@ -59,5 +63,9 @@ public class Picture {
 		} catch (Exception e) {
 			listener.onError(e);
 		}
+	}
+	
+	public void cleanCache() {
+		this.cache = null;
 	}
 }
