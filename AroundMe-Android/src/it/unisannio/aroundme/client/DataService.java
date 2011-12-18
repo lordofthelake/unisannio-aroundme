@@ -78,6 +78,10 @@ public class DataService extends Service {
 		super.onCreate();
 	}
 	
+	public <T> Future<T> asyncDo(Callable<T> action) {
+		return asyncDo(action, null);
+	}
+	
 	public <T> Future<T> asyncDo(final Callable<T> action, final DataListener<T> listener) {
 		final Handler handler = new Handler();
 		FutureTask<T> task = new FutureTask<T>(new Callable<T>() {
@@ -113,24 +117,38 @@ public class DataService extends Service {
 		return task;
 	}
 
-	public <T, U> Future<T> asyncHttpRequest(final URL url, final String method, final Transformer<InputStream, T> dataReader, final Transformer<OutputStream, Void> dataWriter, DataListener<T> listener) {
+	public <T, U> Future<T> asyncHttpRequest(final URL url, final String method, final Transformer<InputStream, T> dataReader, final Callback<OutputStream> dataWriter, DataListener<T> listener) {
 		return asyncDo(new Callable<T>() {
 
 			@Override
 			public T call() throws Exception {
-				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-				urlConnection.setRequestMethod(method);
-				if(!method.equalsIgnoreCase("get")) {
-					urlConnection.setDoOutput(true);
-				    urlConnection.setChunkedStreamingMode(1024); // FIXME 1024 bytes? Is it optimal?
-
-				    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-				    dataWriter.transform(out);
+				HttpURLConnection urlConnection = null;
+				try {
+					urlConnection = (HttpURLConnection) url.openConnection();
+					urlConnection.setRequestMethod(method);
+					if(!method.equalsIgnoreCase("get")) {
+						urlConnection.setDoOutput(true);
+					    urlConnection.setChunkedStreamingMode(1024); // FIXME 1024 bytes? Is it optimal?
+	
+					    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream(), 1024);
+					    try {
+					    	dataWriter.handle(out);
+					    } finally {
+					    	out.close();
+					    }
+					    
+					}
+					// FIXME handle 4xx, 5xx error status codes
+				    InputStream in = new BufferedInputStream(urlConnection.getInputStream(), 1024);
 				    
+				    try {
+				    	return dataReader.transform(in);
+				    } finally {
+				    	in.close();
+				    }
+				} finally {
+					urlConnection.disconnect();
 				}
-				// FIXME handle 4xx, 5xx error status codes
-			    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-				return dataReader.transform(in);	
 			}
 			
 		}, listener);
@@ -143,7 +161,6 @@ public class DataService extends Service {
 	@Override
 	public void onDestroy() {
 		pool.shutdownNow();
-
 		super.onDestroy();
 	}
 	

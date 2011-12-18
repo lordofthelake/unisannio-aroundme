@@ -12,14 +12,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -31,7 +30,7 @@ import android.widget.Toast;
  * @author Marco Magnetti <marcomagnetti@gmail.com>
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
-public class ListViewActivity extends Activity {
+public class ListViewActivity extends FragmentActivity {
 
 	private ServiceConnection con;
 	
@@ -93,7 +92,7 @@ public class ListViewActivity extends Activity {
 		        
 		        nearbyList.setOnItemClickListener(new OnItemClickListener() {
 					public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
-						Intent intent = new Intent(ListViewActivity.this, ProfileViewActivity.class);
+						Intent intent = new Intent(ListViewActivity.this, ProfileActivity.class);
 						intent.putExtra("userId", ((User) v.getTag(R.id.tag_user)).getId());
 						startActivity(intent);				
 					}
