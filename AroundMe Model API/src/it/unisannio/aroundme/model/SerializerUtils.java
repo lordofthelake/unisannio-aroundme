@@ -27,10 +27,10 @@ public class SerializerUtils {
 	 * 	<entity />
 	 * </collection>
 	 */
-	public static <T extends Model> Serializer<? extends Collection<T>> getCollectionSerializer(final Class<T> clazz) {
-		return new Serializer<Collection<T>>() {
+	public static <T extends Model> Serializer<Collection<? extends T>> getCollectionSerializer(final Class<T> clazz) {
+		return new Serializer<Collection<? extends T>>() {
 			@Override
-			public Collection<T> fromXML(Node xml) {
+			public Collection<? extends T> fromXML(Node xml) {
 				Collection<T> obj = new LinkedList<T>();
 				Serializer<T> serializer = SerializerUtils.getSerializer(clazz);
 				
@@ -47,7 +47,7 @@ public class SerializerUtils {
 			}
 	
 			@Override
-			public Node toXML(Collection<T> obj) {
+			public Node toXML(Collection<? extends T> obj) {
 				Document d = SerializerUtils.newDocument();
 				Element container = d.createElement("collection");
 

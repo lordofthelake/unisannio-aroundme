@@ -21,7 +21,7 @@ class InterestQueryImpl extends InterestQuery {
 	}
 
 	@Override
-	public void perform(DataListener<Collection<Interest>> l) {
+	public void perform(DataListener<Collection<? extends Interest>> l) {
 		// TODO Auto-generated method stub
 
 	}
