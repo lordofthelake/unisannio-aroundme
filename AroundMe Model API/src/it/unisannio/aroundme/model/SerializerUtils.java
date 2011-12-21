@@ -1,11 +1,19 @@
 package it.unisannio.aroundme.model;
 
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -95,5 +103,20 @@ public class SerializerUtils {
 		@SuppressWarnings("unchecked")
 		Serializer<T> s = (Serializer<T>) SerializerUtils.getSerializer(e.getClass());
 		return s.toXML((T) e);
+	}
+	
+	/**
+	 * Scrive un DOM XML su un OutputStream
+	 * @param node Il DOM XML da scrivere
+	 * @param out L'OutputStream su cui scrivere
+	 * 
+	 * @throws TransformerException Se occorre un errore durante la scrittura 
+	 */
+	public static void writeXML(Node node, OutputStream out) throws TransformerException{
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(node);
+		StreamResult result = new StreamResult(out);
+		transformer.transform(source, result);
 	}
 }

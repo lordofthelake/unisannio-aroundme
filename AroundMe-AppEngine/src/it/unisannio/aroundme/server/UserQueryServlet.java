@@ -32,9 +32,7 @@ public class UserQueryServlet extends HttpServlet{
 					resp.setContentType("text/xml");
 					Node xml = SerializerUtils.getCollectionSerializer(User.class).toXML(object);
 					try {
-						PrintWriter pw = resp.getWriter();
-						pw.write(xml.getTextContent()); //XXX Is it correct?
-						pw.flush();
+						SerializerUtils.writeXML(xml, resp.getOutputStream());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
