@@ -1,9 +1,7 @@
 package it.unisannio.aroundme.server;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
@@ -23,8 +21,9 @@ public class UserQueryImpl extends UserQuery{
 
 	private static final long serialVersionUID = 1L;
 
-	@Override 
-	public void perform(DataListener<Collection<User>> l) {
+
+	@Override
+	public void perform(DataListener<Collection<? extends User>> l) {
 		try{
 			Objectify ofy = ObjectifyService.begin();
 			Query<User> query = ofy.query(User.class);		
@@ -52,34 +51,23 @@ public class UserQueryImpl extends UserQuery{
 						
 			}
 			
-			Collection<User> queriedUsers = query.list();
+			
 			
 			/*
 			 * Query che restituisce gli utenti che hanno tutti gli interessi dati
-			 * 
-			 * TODO Query sul DataStore invece che in memory
 			 */
 			if(this.getInterestIds() != null){
-				
-				ArrayList<Long> requiredInterestsKeys = new ArrayList<Long>(this.getInterestIds());
-				
-				for(User u: queriedUsers){
-					ArrayList<Key<Interest>> uInterestsKeys = new ArrayList<Key<Interest>>(((UserImpl)u).getInterestKeys());
-					boolean found = true;
-					for(int i = 0; i < requiredInterestsKeys.size() && found; i++){
-						found = false;
-						for (int j = 0; j < uInterestsKeys.size() && !found; j++)
-							if (requiredInterestsKeys.get(i).longValue() == uInterestsKeys.get(j).getId())
-								found = true;
-					}
-					if (!found)
-						queriedUsers.remove(u);
+				Collection<Interest> requiredInterests = ofy.get(Interest.class, this.getInterestIds()).values();
+				for(Interest interest: requiredInterests){
+					query.filter("interests", interest);
 				}
-				
+			
 			}
 			
+			Collection<User> queriedUsers = query.list();
+			
 			/*
-			 * Query che restituisce gli utenti che hanno un certo grado di compatibilitˆ,
+			 * Query che restituisce gli utenti che hanno un certo grado di compatibilit&agrave;,
 			 * basata sul numero di interessi in comune, con un utente dato.
 			 */
 			if(this.getCompatibility() != null){
@@ -97,6 +85,7 @@ public class UserQueryImpl extends UserQuery{
 		} catch(Exception e){
 			l.onError(e);
 		}
+		
 	}
 
 }

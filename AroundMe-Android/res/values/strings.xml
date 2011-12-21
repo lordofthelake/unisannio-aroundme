@@ -73,5 +73,7 @@
     <!-- Notification message [CHAR LIMIT=NONE] -->
     <string name="unregistration_succeeded">Unegistered %1$s for C2DM messaging.</string>
     <string name="connect_with_facebook">Connect with Facebook</string>
+    <string name="loading">Loading. Please wait...</string>
+    <string name="loadingError">Error during loading</string>
 
 </resources>

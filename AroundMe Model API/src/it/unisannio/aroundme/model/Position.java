@@ -48,9 +48,10 @@ public abstract class Position implements Model {
 	};
 	
 	/**
-	 * Metodo testato e funzionante sul calcolo della distanza tra due punti.
-	 * Il risutato è concorde con le misure effettuate con altri software.
-	 * Restituisce la distanza in metri tra due punti.
+	 * Restituisce la distanza in metri tra la Position corrente
+	 * e una una  Position data.
+	 * @param p La Position entro la quale si vuole calcolare la distanza
+	 * @return La distanza in metri tra la Position corrente e la Position p
 	 * 
 	 * @author Danilo Iannelli <daniloiannelli6@gmail.com>
 	 */

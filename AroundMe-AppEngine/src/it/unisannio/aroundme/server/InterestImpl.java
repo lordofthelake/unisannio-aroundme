@@ -7,6 +7,10 @@ import com.googlecode.objectify.annotation.Unindexed;
 
 import it.unisannio.aroundme.model.Interest;
 
+/**
+ * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+ *
+ */
 @Indexed
 public class InterestImpl implements Interest{
 	

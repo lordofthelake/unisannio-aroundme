@@ -52,8 +52,7 @@ public class ListViewActivity extends FragmentActivity {
 			public void handle(DataService service) {
 				final UserAdapter adapter = new UserAdapter(ListViewActivity.this, service.getMe(), users, service.getPictureStore());
 		        
-		        // FIXME externalize string
-		        final ProgressDialog progress = ProgressDialog.show(ListViewActivity.this, "", "Loading. Please wait...", true, true);
+		        final ProgressDialog progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
 		        
 		        // TODO Mock loader. Replace with UserQuery
 		        // TODO Make cancelable
@@ -83,8 +82,7 @@ public class ListViewActivity extends FragmentActivity {
 					@Override
 					public void onError(Exception e) {
 						progress.dismiss();
-						// FIXME externalize string
-						Toast.makeText(ListViewActivity.this, "Error during loading", Toast.LENGTH_LONG);
+						Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG);
 						
 					}
 		        	

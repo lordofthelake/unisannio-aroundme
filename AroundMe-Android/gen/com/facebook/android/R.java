@@ -479,6 +479,8 @@ containing a value of this type.
          */
         public static final int hello_world_text=0x7f060013;
         public static final int list_view=0x7f060004;
+        public static final int loading=0x7f06001c;
+        public static final int loadingError=0x7f06001d;
         /**  Dialog message text [CHAR LIMIT=NONE] 
          */
         public static final int needs_account=0x7f060014;

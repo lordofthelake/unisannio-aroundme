@@ -95,8 +95,8 @@ public abstract class User implements Model, Identifiable {
 	public abstract Collection<Interest> getInterests();	
 	
 	/**
-	 * Il rank  una misura di compatibilitˆ tra due utenti, espresso con un numero decimale tra 0 (nessun interesse comune) e 1 (tutti gli interessi in comune).
-	 * Notare che il rank non  garantito essere simmetrico tra i due utenti.
+	 * Il rank &egrave; una misura di compatibilit&agrave tra due utenti, espresso con un numero decimale tra 0 (nessun interesse comune) e 1 (tutti gli interessi in comune).
+	 * Notare che il rank non &egrave garantito essere simmetrico tra i due utenti.
 	 * 
 	 * @param u l'utente su cui viene fatto il confronto
 	 * @return misura del rank, con 0 <= rank <= 1
@@ -122,7 +122,7 @@ public abstract class User implements Model, Identifiable {
 	 * Calcola la distanza tra i due utenti, espressa in metri.
 	 * 
 	 * @param u l'utente da cui calcolare la distanza
-	 * @return la distanza in metri, -1 se non  possibile calcolarla
+	 * @return la distanza in metri, -1 se non &egrave; possibile calcolarla
 	 * 
 	 * @see Position#getDistance(Position)
 	 */

@@ -10,11 +10,15 @@ import it.unisannio.aroundme.model.DataListener;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.InterestQuery;
 
+/**
+ * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+ *
+ */
 public class InterestQueryImpl extends InterestQuery{
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;    
 
-	@Override
-	public void perform(DataListener<Collection<Interest>> l) {
+ 	@Override
+	public void perform(DataListener<Collection<? extends Interest>> l) {
 		try{
 			Objectify ofy = ObjectifyService.begin();			
 			//Inizializza queriedInterests aggiungendovi tutti gli Interest presenti sul Datastore
