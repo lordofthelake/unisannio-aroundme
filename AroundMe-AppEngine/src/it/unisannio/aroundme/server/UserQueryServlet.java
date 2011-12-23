@@ -1,13 +1,11 @@
 package it.unisannio.aroundme.server;
 
 import it.unisannio.aroundme.model.DataListener;
-import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.SerializerUtils;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 
 import javax.servlet.ServletException;
@@ -15,11 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 
 
 
+/**
+ * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+ *
+ */
 public class UserQueryServlet extends HttpServlet{
 	
 	@Override
@@ -34,7 +35,6 @@ public class UserQueryServlet extends HttpServlet{
 					try {
 						SerializerUtils.writeXML(xml, resp.getOutputStream());
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
@@ -50,11 +50,7 @@ public class UserQueryServlet extends HttpServlet{
 					}
 					
 				}
-
-				
 			});
-				
-				
 			
 		} catch (Exception e) {
 			e.printStackTrace();
