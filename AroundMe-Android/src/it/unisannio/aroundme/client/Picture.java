@@ -1,11 +1,12 @@
 package it.unisannio.aroundme.client;
 
-import it.unisannio.aroundme.model.DataListener;
-
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,19 +17,25 @@ import android.graphics.BitmapFactory;
  *
  * 
  */
-public class Picture {
-	private DataService service;
+public class Picture implements Callable<Bitmap> {
+	private static Map<Long, Picture> instances = new HashMap<Long, Picture>();
+	
+	public static Picture get(long id) {
+		if(!instances.containsKey(id)) 
+			instances.put(id, new Picture(id));
+		
+		return instances.get(id);
+	}
+	
 	private URL url;
 	private SoftReference<Bitmap> cache;
 	
-	public Picture(DataService service, URL url) {
-		this.service = service;
+	public Picture(URL url) {
 		this.url = url;
 	}
 	
-	public Picture(DataService service, long id) {
+	private Picture(long id) {
 		try {
-			this.service = service;
 			this.url = new URL("https://graph.facebook.com/" + id + "/picture");
 		} catch (MalformedURLException e) {}
 	}
@@ -38,34 +45,29 @@ public class Picture {
 		
 	}
 	
-	public void load(DataListener<Bitmap> listener) {
+	public Bitmap call() throws Exception {
 		Bitmap cachedBmp = null;
 		if(cache != null && (cachedBmp = cache.get()) != null) {
-			listener.onData(cachedBmp);
-			return;
+			return cachedBmp;
 		}
 
-		try {
-			service.asyncHttpGet(url, new Transformer<InputStream, Bitmap>() {
+		return (new HttpTask<Bitmap>("GET", url) {
 
-				@Override
-				public Bitmap transform(InputStream input) throws Exception {
-					Bitmap bmp = BitmapFactory.decodeStream(input);
-					if(bmp == null) 
-						throw new RuntimeException("Cannot decode image");
-					
-					cache = new SoftReference<Bitmap>(bmp);
-					
-					return bmp;
-				}
+			@Override
+			protected Bitmap read(InputStream in) throws Exception {
+				Bitmap bmp = BitmapFactory.decodeStream(in);
+				if(bmp == null) 
+					throw new RuntimeException("Cannot decode image");
 				
-			}, listener);
-		} catch (Exception e) {
-			listener.onError(e);
-		}
+				cache = new SoftReference<Bitmap>(bmp);
+				
+				return bmp;
+			}
+			
+		}).call();
 	}
 	
-	public void cleanCache() {
+	public void reset() {
 		this.cache = null;
 	}
 }

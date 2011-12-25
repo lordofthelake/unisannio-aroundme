@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.model;
+package it.unisannio.aroundme.client;
 
 /**
  * Oggetto che viene notificato nel momento in cui sono disponibili i dati richiesti.

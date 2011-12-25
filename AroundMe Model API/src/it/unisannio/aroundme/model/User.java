@@ -14,7 +14,7 @@ import org.w3c.dom.NodeList;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public abstract class User implements Model, Identifiable {
+public abstract class User implements Model {
 	private static final long serialVersionUID = 1L;
 	
 	/**

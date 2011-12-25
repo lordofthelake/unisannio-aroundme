@@ -26,7 +26,6 @@ public abstract class ModelFactory {
 	public abstract User createUser(long id, String name, Collection<Interest> interests);
 	public abstract Interest createInterest(long id, String name, String category);
 	public abstract Position createPosition(double lat, double lon);
-	public abstract InterestQuery createInterestQuery();
 	public abstract UserQuery createUserQuery();
 	
 }

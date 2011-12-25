@@ -3,6 +3,7 @@ package it.unisannio.aroundme.model;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,7 +15,7 @@ import org.w3c.dom.NodeList;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public abstract class UserQuery implements Query<User>, Model {
+public abstract class UserQuery implements Callable<Collection<? extends User>>, Model {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -61,6 +62,15 @@ public abstract class UserQuery implements Query<User>, Model {
 				}
 			}
 			
+			NodeList idList = query.getElementsByTagName("ids");
+			if(idList.getLength() > 0) {
+				NodeList ids = ((Element) idList.item(0)).getElementsByTagName("id");
+				for(int i = 0, len = ids.getLength(); i < len; ++i) {
+					Element id = (Element) ids.item(i);
+					obj.addId(Long.parseLong(id.getTextContent()));
+				}
+			}
+			
 			return obj;
 		}
 
@@ -91,14 +101,51 @@ public abstract class UserQuery implements Query<User>, Model {
 				container.appendChild(interests);
 			}
 			
+			Collection<Long> ids = obj.getIds();
+			if(ids.size() > 0) {
+				Element ids1 = d.createElement("ids");
+				
+				for(long l : ids) {
+					Element e = d.createElement("id");
+					e.setTextContent(String.valueOf(l));
+					ids1.appendChild(e);
+				}
+				
+				container.appendChild(ids1);
+			}
+			
 			return container;
 		}
 		
 	};
 	
+	public static UserQuery byId(long... ids) {
+		UserQuery q = ModelFactory.getInstance().createUserQuery();
+		for(long id : ids) {
+			q.addId(id);
+		}
+		
+		return q;
+	}
+	
+	public static Callable<User> single(final long id) {
+		return new Callable<User>() {
+
+			@Override
+			public User call() throws Exception {
+				Collection<? extends User> c = byId(id).call();
+				User[] u = c.toArray(new User[0]);
+				
+				return u.length == 0 ? null : u[0];
+			}
+			
+		};
+	}
+	
 	private Neighbourhood neighbourhood;
 	private Set<Long> interestIds = new HashSet<Long>();
 	private Compatibility compatibility;
+	private Set<Long> ids = new HashSet<Long>();
 	
 	public Neighbourhood getNeighbourhood() {
 		return neighbourhood;
@@ -106,6 +153,14 @@ public abstract class UserQuery implements Query<User>, Model {
 	
 	public void setNeighbourhood(Neighbourhood n) {
 		neighbourhood = n;
+	}
+	
+	public void addId(long id) {
+		ids.add(id);
+	}
+	
+	public Collection<Long> getIds() {
+		return ids;
 	}
 	
 	public void addInterestId(long id) {

@@ -2,7 +2,6 @@ package it.unisannio.aroundme.client;
 
 
 import it.unisannio.aroundme.R;
-import it.unisannio.aroundme.model.DataListener;
 import it.unisannio.aroundme.model.User;
 
 import java.util.List;
@@ -26,11 +25,11 @@ public class UserAdapter extends ArrayAdapter<User> {
 	private static final int ITEM_RESOURCE = R.layout.list_entry;
 	
 	private User me;
-	private PictureStore pictures;
+	private DataService service;
 
-	public UserAdapter(Context context, User me, List<User> users, PictureStore pictures) {
+	public UserAdapter(Context context, User me, List<User> users, DataService service) {
 		super(context, ITEM_RESOURCE, users);
-		this.pictures = pictures;
+		this.service = service;
 		this.me = me;
 	}
 	
@@ -67,12 +66,18 @@ public class UserAdapter extends ArrayAdapter<User> {
 		view.setTag(R.id.tag_user, user);
 		
 		h.txtName.setText(user.getName());
+		// TODO Externalize strings
 		h.txtDistance.setText(String.format("%.1f m", me.getDistance(user)));
 		h.txtCompatibility.setText(String.format("%d%%", Math.round(me.getCompatibilityRank(user) * 100)));
 		
+		// FIXME Va resettata con un'immagine di default
 		final ImageView imgPhoto = h.imgPhoto;
 		
-		pictures.get(user.getId()).load(new DataListener<Bitmap>() {
+		/* FIXME Potenziale problema di concorrenza
+		 * Le viste vengono riciclate, quindi il download dell'immagine potrebbe finire
+		 * quando la vista è già stata riciclata e dovrebbe visualizzare qualche altra cosa.
+		 */
+		service.asyncDo(Picture.get(user.getId()), new DataListener<Bitmap>() {
 
 			@Override
 			public void onData(Bitmap object) {

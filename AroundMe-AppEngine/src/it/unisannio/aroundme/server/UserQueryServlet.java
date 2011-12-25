@@ -27,34 +27,14 @@ public class UserQueryServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp)	throws ServletException, IOException {
 		try {
 			UserQuery query = UserQuery.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
-			query.perform(new DataListener<Collection<? extends User>>() {
-				@Override
-				public void onData(Collection<? extends User> object) {
-					resp.setContentType("text/xml");
-					Node xml = SerializerUtils.getCollectionSerializer(User.class).toXML(object);
-					try {
-						SerializerUtils.writeXML(xml, resp.getOutputStream());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-				}
-				
-				@Override
-				public void onError(Exception e) {
-					try {
-						resp.sendError(500);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-				}
-			});
-			
+			Collection<? extends User> object = query.call();
+			resp.setContentType("text/xml");
+			Node xml = SerializerUtils.getCollectionSerializer(User.class).toXML(object);
+			SerializerUtils.writeXML(xml, resp.getOutputStream());
 		} catch (Exception e) {
-			e.printStackTrace();
+			resp.sendError(500);
 		}
+					
 	}
 }
 

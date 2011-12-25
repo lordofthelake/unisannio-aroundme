@@ -148,7 +148,7 @@ public class DeviceInfo {
         try {
           // Canonicalize user name
           user = user.toLowerCase(Locale.ENGLISH);
-          Query query = pm.newQuery(DeviceInfo.class);
+          UserQuery query = pm.newQuery(DeviceInfo.class);
           query.setFilter("key >= '" +
               user + "' && key < '" + user + "$'");
           List<DeviceInfo> qresult = (List<DeviceInfo>) query.execute();
