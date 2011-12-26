@@ -31,10 +31,6 @@ public class C2DMNotificationSender {
 	
 	private static final Logger log = Logger.getLogger(C2DMNotificationSender.class.getName());
 
-
-	
-
-
 	/**
 	 * Crea un {@link C2DMNotificationSender} che utilizza le impostazioni
 	 * gestite da un {@link C2DMConfigLoader}
@@ -89,7 +85,7 @@ public class C2DMNotificationSender {
 
 		if (responseCode == 401 || responseCode == 403) {
 			log.severe("Unauthorized - need token");
-			throw new IOException();
+			throw new IOException("Unauthorized token");
 		}
 
 		/*

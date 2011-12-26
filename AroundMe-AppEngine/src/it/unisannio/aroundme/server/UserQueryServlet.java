@@ -1,6 +1,5 @@
 package it.unisannio.aroundme.server;
 
-import it.unisannio.aroundme.model.DataListener;
 import it.unisannio.aroundme.model.SerializerUtils;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
@@ -22,14 +21,15 @@ import org.w3c.dom.Node;
  *
  */
 public class UserQueryServlet extends HttpServlet{
-	
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp)	throws ServletException, IOException {
 		try {
 			UserQuery query = UserQuery.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
-			Collection<? extends User> object = query.call();
+			Collection<? extends User> users = query.call();
 			resp.setContentType("text/xml");
-			Node xml = SerializerUtils.getCollectionSerializer(User.class).toXML(object);
+			Node xml = SerializerUtils.getCollectionSerializer(User.class).toXML(users);
 			SerializerUtils.writeXML(xml, resp.getOutputStream());
 		} catch (Exception e) {
 			resp.sendError(500);

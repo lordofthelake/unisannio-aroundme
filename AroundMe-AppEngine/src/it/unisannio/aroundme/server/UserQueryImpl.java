@@ -24,7 +24,19 @@ public class UserQueryImpl extends UserQuery {
 		Objectify ofy = ObjectifyService.begin();
 		Query<User> query = ofy.query(User.class);		
 		
-		// FIXME Query by user id
+		/*
+		 * Query che ristituisce gli utenti con gli id forniti
+		 */
+		if(this.getIds() != null){
+			for(Long id: this.getIds())
+				query.filter("id", id.longValue());
+			/*XXX In questo modo si continua la lavorare su un oggetto Query<User>.
+			 * Se ciò non è necessario (se non conta l'ordine in cui questa query viene eseguita
+			 * rispetto alle altre) si può utilizzare il più cionveniente get:
+			 * Collection<User> users = ofy.get(User.class, this.getIds()); 		
+			 */
+		}
+		
 		/*
 		 * Query che restituisce gli utenti nelle vicinaze di una
 		 * data posizione entro un certo raggio.
@@ -47,8 +59,6 @@ public class UserQueryImpl extends UserQuery {
 					.filter("position.latitude <=", myPosition.getLatitude() + radius/110000);
 					
 		}
-		
-		
 		
 		/*
 		 * Query che restituisce gli utenti che hanno tutti gli interessi dati
@@ -76,7 +86,6 @@ public class UserQueryImpl extends UserQuery {
 					queriedUsers.remove(u);
 			}
 		}
-		
 		
 		return queriedUsers;
 	

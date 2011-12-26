@@ -1,6 +1,6 @@
 package it.unisannio.aroundme.server;
 
-import it.unisannio.aroundme.model.DataListener;
+import it.unisannio.aroundme.model.Compatibility;
 import it.unisannio.aroundme.model.Neighbourhood;
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.SerializerUtils;
@@ -17,13 +17,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 /**
  * 
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  */
 public class PositionReceiverServlet extends HttpServlet{
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
@@ -35,39 +34,28 @@ public class PositionReceiverServlet extends HttpServlet{
 			Neighbourhood neighbourhood = new Neighbourhood();
 			neighbourhood.setPosition(position);
 			neighbourhood.setRadius(100); //TODO Retrieve radius
+			Compatibility compatibility = new Compatibility(user.getId(), 60);//TODO Retrieve compatibility
 
 			UserQuery query = new UserQueryImpl();
 			query.setNeighbourhood(neighbourhood);
-			query.perform(new DataListener<Collection<? extends User>>() {
+			query.setCompatibility(compatibility);
+			Collection<? extends User> users = query.call();
 
-				@Override
-				public void onData(Collection<? extends User> users) {
-					//Creazione dell'oggetto che gestisce l'invio delle notifiche ai device
-					C2DMNotificationSender notificationSender = new C2DMNotificationSender(new C2DMConfigLoader());
-					try {
-						for(User u: users){
-							notificationSender.sendNotification("registrationId di u", user.getId());
-							notificationSender.sendNotification("registrationId di user", u.getId());
-							//TODO ottenere i registrationId per poter effettuare l'invio
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+			//Creazione dell'oggetto che gestisce l'invio delle notifiche ai device
+			C2DMNotificationSender notificationSender = new C2DMNotificationSender(new C2DMConfigLoader());
 
-				@Override
-				public void onError(Exception e) {
-					try {
-						resp.sendError(500);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+			for(User u: users){
+				notificationSender.sendNotification("registrationId di u", user.getId());
+				notificationSender.sendNotification("registrationId di user", u.getId());
+				//TODO ottenere i registrationId per poter effettuare l'invio
+			}
 
-				}
-
-			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				resp.sendError(500);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		} 
 	}
 }
