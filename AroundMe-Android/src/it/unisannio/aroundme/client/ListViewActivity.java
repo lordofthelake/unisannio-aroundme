@@ -55,7 +55,6 @@ public class ListViewActivity extends DataActivity
         // TODO Make cancelable
         service.asyncDo(
         		new Callable<Collection<User>>() {
-
 					@Override
 					public Collection<User> call() throws Exception {
 						ArrayList<User> users = new ArrayList<User>();
