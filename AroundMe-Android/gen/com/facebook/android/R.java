@@ -328,7 +328,6 @@ containing a value of this type.
         public static final int icon=0x7f020037;
         public static final int my_gradient=0x7f020038;
         public static final int status_icon=0x7f020039;
-        public static final int topbarbackground=0x7f02003a;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f08001d;
