@@ -38,7 +38,7 @@ class UserImpl extends User {
 		return id;
 	}
 
-	/* FIXME la parte di creazione degli interessi dovrˆ essere spostata nella factory.
+	/* FIXME la parte di creazione degli interessi dovrï¿½ essere spostata nella factory.
 	 * 
 	 */
 	/*
@@ -71,7 +71,6 @@ class UserImpl extends User {
 		return interestsKeys;
 	}
 
-	@Override
 	public void setPosition(Position p) {
 		this.position = p;
 	}

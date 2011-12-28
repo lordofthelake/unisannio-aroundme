@@ -12,9 +12,12 @@
 	</classpathentry>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe Model API"/>
 	<classpathentry kind="lib" path="lib/c2dm-sources.jar"/>
 	<classpathentry kind="lib" path="lib/requestfactory-client-src.jar"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="/Facebook SDK/bin/facebook sdk.jar"/>
+	<classpathentry kind="lib" path="/ActionBarSherlock library/bin/actionbarsherlock library.jar"/>
+	<classpathentry kind="lib" path="/Android ActionBar/bin/android actionbar.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe Model API"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

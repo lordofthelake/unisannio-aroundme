@@ -5,14 +5,20 @@ import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.User;
+import it.unisannio.aroundme.model.UserQuery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -51,8 +57,8 @@ public class ListViewActivity extends DataActivity
     
     	list.setAdapter(adapter = new UserAdapter(ListViewActivity.this, service.getMe(), users, service));
         
-        // TODO Mock loader. Replace with UserQuery
         // TODO Make cancelable
+<<<<<<< Updated upstream
         service.asyncDo(
         		new Callable<Collection<User>>() {
 					@Override
@@ -68,6 +74,10 @@ public class ListViewActivity extends DataActivity
 				        return users;
 					}
 				}, this);
+=======
+        service.asyncDo(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), this);
+        
+>>>>>>> Stashed changes
     }
     
     @Override
@@ -76,6 +86,29 @@ public class ListViewActivity extends DataActivity
 		users.clear();
 		users.addAll(object);
 		adapter.notifyDataSetChanged();
+		
+		AlertDialog.Builder b = new AlertDialog.Builder(this);
+		String[] items = new String[100];
+		boolean[] checked = new boolean[100];
+		Arrays.fill(items, "Interesse");
+		Arrays.fill(checked, true);
+		b.setTitle("Seleziona interessi");
+		b.setPositiveButton("Filtra", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}});
+		b.setMultiChoiceItems(items, checked, new OnMultiChoiceClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				
+			}});
+		b.create().show();
 	}
 
 	@Override

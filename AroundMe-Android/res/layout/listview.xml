@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@drawable/background">
-	<View
-        android:layout_height="2dip"
-        android:layout_width="match_parent"
-        android:background="#FF909090" />
     <ListView
         android:id="@+id/nearByList"
         android:layout_width="match_parent"
@@ -18,4 +14,38 @@
         android:divider="#000000"
         android:dividerHeight="1dp" >
     </ListView>
+
+    <SlidingDrawer
+        android:id="@+id/slidingDrawer1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:content="@+id/content"
+        android:handle="@+id/handle" >
+
+        <Button
+            android:id="@+id/handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter" />
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" 
+            android:background="@drawable/my_gradient">
+
+            <SeekBar
+                android:id="@+id/seekBar1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <SeekBar
+                android:id="@+id/seekBar2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </SlidingDrawer>
+
 </LinearLayout>

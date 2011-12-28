@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public abstract class UserQuery implements Callable<Collection<? extends User>>, Model {
+public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -120,12 +120,11 @@ public abstract class UserQuery implements Callable<Collection<? extends User>>,
 	};
 	
 	public static UserQuery byId(long... ids) {
-		UserQuery q = ModelFactory.getInstance().createUserQuery();
-		for(long id : ids) {
-			q.addId(id);
-		}
-		
-		return q;
+		return ModelFactory.getInstance().createUserQuery().addId(ids);
+	}
+	
+	public static UserQuery byId(Collection<Long> ids) {
+		return ModelFactory.getInstance().createUserQuery().addId(ids);
 	}
 	
 	public static Callable<User> single(final long id) {
@@ -151,28 +150,50 @@ public abstract class UserQuery implements Callable<Collection<? extends User>>,
 		return neighbourhood;
 	}
 	
-	public void setNeighbourhood(Neighbourhood n) {
+	public UserQuery setNeighbourhood(Neighbourhood n) {
 		neighbourhood = n;
+		
+		return this;
 	}
 	
-	public void addId(long id) {
-		ids.add(id);
+	public UserQuery addId(long... id) {
+		for(long i : id)
+			ids.add(i);
+		
+		return this;
+	}
+	
+	public UserQuery addId(Collection<Long> id) {
+		ids.addAll(id);
+		
+		return this;
 	}
 	
 	public Collection<Long> getIds() {
 		return ids;
 	}
 	
-	public void addInterestId(long id) {
-		interestIds.add(id);
+	public UserQuery addInterestId(long... id) {
+		for(long i : id)
+			interestIds.add(i);
+		
+		return this;
+	}
+	
+	public UserQuery addInterestId(Collection<Long> id) {
+		interestIds.addAll(id);
+		
+		return this;
 	}
 	
 	public Collection<Long> getInterestIds() {
 		return interestIds;
 	}
 	
-	public void setCompatibility(Compatibility c) {
+	public UserQuery setCompatibility(Compatibility c) {
 		compatibility = c;
+		
+		return this;
 	}
 	
 	public Compatibility getCompatibility() {

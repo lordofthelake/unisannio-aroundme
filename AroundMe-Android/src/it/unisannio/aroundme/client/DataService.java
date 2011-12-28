@@ -66,7 +66,7 @@ public class DataService extends Service {
 			public T call() throws Exception {
 				try {
 					final T result = action.call();
-
+					// FIXME Handle cancellation
 					handler.post(new Runnable() { 
 						public void run() {
 							listener.onData(result); 
