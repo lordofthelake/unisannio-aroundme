@@ -31,7 +31,6 @@ public class ListViewActivity extends DataActivity
 	private UserAdapter adapter;
 	private List<User> users;
 	private ListView list;
-	
 	private ProgressDialog progress;
     
     public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
@@ -57,14 +56,14 @@ public class ListViewActivity extends DataActivity
         		new Callable<Collection<User>>() {
 					@Override
 					public Collection<User> call() throws Exception {
+						//FIXME mock method
 						ArrayList<User> users = new ArrayList<User>();
 				        ModelFactory f = ModelFactory.getInstance();
 				        Collection<Interest> empty = Collections.emptySet();
 				        users.add(f.createUser(1, "Tizio Caio", empty));
 				        users.add(f.createUser(1, "Caio Sempronio", empty));
-				        
-				        Thread.sleep(2000);
-				        
+				        users.add(f.createUser(100001053949157L, "Marco Magnetti", empty));
+				        Thread.sleep(2000);    
 				        return users;
 					}
 				}, this);
