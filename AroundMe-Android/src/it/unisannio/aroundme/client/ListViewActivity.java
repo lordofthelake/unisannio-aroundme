@@ -60,10 +60,10 @@ public class ListViewActivity extends DataActivity
 						ArrayList<User> users = new ArrayList<User>();
 				        ModelFactory f = ModelFactory.getInstance();
 				        Collection<Interest> empty = Collections.emptySet();
-				        users.add(f.createUser(1, "Tizio Caio", empty));
-				        users.add(f.createUser(1, "Caio Sempronio", empty));
+				        users.add(f.createUser(100000268830695L, "Danilo Iannelli", empty));
+				        users.add(f.createUser(1321813090L, "Michele Piccirillo", empty));
 				        users.add(f.createUser(100001053949157L, "Marco Magnetti", empty));
-				        Thread.sleep(2000);    
+				        //Thread.sleep(2000);    
 				        return users;
 					}
 				}, this);
@@ -80,6 +80,6 @@ public class ListViewActivity extends DataActivity
 	@Override
 	public void onError(Exception e) {
 		progress.dismiss();
-		Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG);	
+		Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG);
 	}
 }
