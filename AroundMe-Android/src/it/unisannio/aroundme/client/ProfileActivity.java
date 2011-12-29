@@ -18,6 +18,7 @@ import android.support.v4.view.Menu;
 import android.view.MenuInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -26,41 +27,55 @@ import android.widget.TextView;
  *
  */
 public class ProfileActivity extends DataActivity{
-	public void onCreate(Bundle savedInstanceState){
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.profileview);
-		/*ottengo l'user ID dell' utente da visualizzare*/
-		this.userId= Long.parseLong((String) getIntent().getExtras().get("userId"));
-		this.txtName=(TextView) findViewById(R.id.txtName);
-		this.image=(ImageView) findViewById(R.id.imgPhoto);	
-		this.compatibility= (TextView)findViewById(R.id.txtCompatibility);
-		this.distance=(TextView)findViewById(R.id.txtDistance);
-		
-	}
 	@Override
     protected void onServiceConnected(final DataService service) {
+		setContentView(R.layout.profileview);
+		/*ottengo l'user ID dell' utente da visualizzare*/
+		userId= (Long) getIntent().getExtras().get("userId");
+		Toast toast = Toast.makeText(ProfileActivity.this,"Id: "+userId, Toast.LENGTH_SHORT);	
+		toast.show();
+		txtName=(TextView) findViewById(R.id.txtName);
+		image=(ImageView) findViewById(R.id.imgPhoto);	
+		compatibility= (TextView)findViewById(R.id.txtCompatibility);
+		distance=(TextView)findViewById(R.id.txtDistance);
         progress = ProgressDialog.show(ProfileActivity.this, "", ProfileActivity.this.getString(R.string.loading), true, true);
-      //Return a collection with only one element
-       service.asyncDo(UserQuery.single(this.userId),new DataListener<User>(){
+        
+        service.asyncDo(/*UserQuery.single(this.userId)*/
+    		   new Callable<User>() {
+					@Override
+					public User call() throws Exception {
+						//FIXME mock method
+				        ModelFactory f = ModelFactory.getInstance();
+				        Collection<Interest> empty = Collections.emptySet();
+				        User user=f.createUser(100001053949157L, "Marco Magnetti", empty);
+				        Thread.sleep(2000);
+				        return user;
+					}
+				},new DataListener<User>(){
 		@Override
 		public void onData(User user) {
+			progress.dismiss();
+			Toast toast = Toast.makeText(ProfileActivity.this, user.getName()+" Caricato!", Toast.LENGTH_SHORT);	
+			toast.show();
 			loadedUser=user;
 			txtName.setText(user.getName());
 			//TODO creare utente Me
-			distance.setText(String.format("%.1f m", user.getDistance(user)));
-			compatibility.setText(user.getCompatibilityRank(user)+" %");
+			//distance.setText(String.format("%.1f m", user.getDistance(user)));
+			//compatibility.setText(user.getCompatibilityRank(user)+" %");
+			   service.asyncDo(Picture.get(loadedUser.getId()), new DataListener<Bitmap>() {
+					@Override
+					public void onData(Bitmap object) {
+						image.setImageBitmap(object);
+					}
+					@Override
+					public void onError(Exception e) {}	
+				});
 		}
 		@Override
-		public void onError(Exception e) {}   
+		public void onError(Exception e) {
+			Toast toast = Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT);	
+		}   
        });
-       service.asyncDo(Picture.get(loadedUser.getId()), new DataListener<Bitmap>() {
-			@Override
-			public void onData(Bitmap object) {
-				image.setImageBitmap(object);
-			}
-			@Override
-			public void onError(Exception e) {}	
-		});
     }	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

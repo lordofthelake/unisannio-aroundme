@@ -58,6 +58,7 @@ public class ListViewActivity extends DataActivity
     
     	list.setAdapter(adapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, service));
         
+        // TODO Mock loader. Replace with UserQuery
         // TODO Make cancelable
 
         service.asyncDo(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), this);
