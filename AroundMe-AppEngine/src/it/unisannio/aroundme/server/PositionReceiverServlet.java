@@ -27,7 +27,7 @@ public class PositionReceiverServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			final User user = new UserImpl();//TODO Recuperare User tramite id indicato nel path della request
+			final UserImpl user = new UserImpl();//TODO Recuperare User tramite id indicato nel path della request
 			Position position = Position.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
 			user.setPosition(position);
 

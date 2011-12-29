@@ -25,7 +25,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 	private static final int ITEM_RESOURCE = R.layout.list_entry;
 	
 	private User me;
-	private DataService service;
+	private DataService service; // FIXME Context leak?
 
 	public UserAdapter(Context context, User me, List<User> users, DataService service) {
 		super(context, ITEM_RESOURCE, users);
@@ -67,7 +67,10 @@ public class UserAdapter extends ArrayAdapter<User> {
 		
 		h.txtName.setText(user.getName());
 		// TODO Externalize strings
+		// FIXME -1 => setText("N/A")
 		h.txtDistance.setText(String.format("%.1f m", me.getDistance(user)));
+		
+		// FIXME rank = -1 => setText("N/A")
 		h.txtCompatibility.setText(String.format("%d%%", Math.round(me.getCompatibilityRank(user) * 100)));
 		
 		// FIXME Va resettata con un'immagine di default
@@ -85,7 +88,9 @@ public class UserAdapter extends ArrayAdapter<User> {
 			}
 
 			@Override
-			public void onError(Exception e) {}
+			public void onError(Exception e) {
+				e.printStackTrace();
+			}
 			
 		});
 		

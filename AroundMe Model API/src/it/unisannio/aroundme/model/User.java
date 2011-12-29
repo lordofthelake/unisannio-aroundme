@@ -90,16 +90,13 @@ public abstract class User implements Model {
 	
 	public abstract Position getPosition();
 	
-	public abstract void setPosition(Position p);
-	
 	public abstract Collection<Interest> getInterests();	
 	
 	/**
 	 * Il rank &egrave; una misura di compatibilit&agrave tra due utenti, espresso con un numero decimale tra 0 (nessun interesse comune) e 1 (tutti gli interessi in comune).
-	 * Notare che il rank non &egrave garantito essere simmetrico tra i due utenti.
 	 * 
 	 * @param u l'utente su cui viene fatto il confronto
-	 * @return misura del rank, con 0 <= rank <= 1
+	 * @return misura del rank, con 0 <= rank <= 1 o -1 se entrambi i set sono vuoti
 	 * 
 	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
 	 * @author Danilo Iannelli <daniloiannelli6@gmail.com>
@@ -109,13 +106,13 @@ public abstract class User implements Model {
 	}
 	
 	protected <E> float getCompatibilityRank(Collection<E> myInterests, Collection<E> otherInterests) {
-		if(myInterests.isEmpty())
-			return 0;
+		if(myInterests.isEmpty() && otherInterests.isEmpty())
+			return -1;
 		
 		Collection<E> commonInterests = new HashSet<E>(myInterests);
 		commonInterests.retainAll(otherInterests);
 		
-		return commonInterests.size() / myInterests.size();
+		return commonInterests.size() / (myInterests.size() + otherInterests.size());
 	}
 	
 	/**
