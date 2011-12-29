@@ -27,5 +27,6 @@ public abstract class ModelFactory {
 	public abstract Interest createInterest(long id, String name, String category);
 	public abstract Position createPosition(double lat, double lon);
 	public abstract UserQuery createUserQuery();
+	public abstract Preferences createPreferences();
 	
 }

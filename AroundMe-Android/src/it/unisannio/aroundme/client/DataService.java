@@ -98,11 +98,4 @@ public class DataService extends Service {
 	public IBinder onBind(Intent intent) {
 		return binder;
 	}
-
-
-	public User getMe() {
-		// FIXME Mock method
-		return ModelFactory.getInstance().createUser(1000, "Me", Collections.<Interest>emptySet());
-	}
-
 }

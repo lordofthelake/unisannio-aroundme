@@ -1,10 +1,11 @@
 package it.unisannio.aroundme.model;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * 
@@ -18,20 +19,65 @@ public abstract class Preferences implements Model {
 
 		@Override
 		public Preferences fromXML(Node xml) {
-			// TODO Auto-generated method stub
-			return null;
+			if(!(xml instanceof Element))
+				throw new IllegalArgumentException();
+			
+			Element preferences = (Element) xml;
+			if(!preferences.getTagName().equals("preferences")) 
+				throw new IllegalArgumentException();
+			
+			Preferences obj = ModelFactory.getInstance().createPreferences();
+			
+			NodeList entries = preferences.getChildNodes();
+			for(int i = 0; i < entries.getLength(); i++) {
+				if(!(entries.item(i) instanceof Element)) continue;
+				
+				Element entry = (Element) entries.item(i);
+				String key = entry.getTagName();
+				String content = entry.getTextContent();
+				String type = entry.getAttribute("type");
+				
+				if(type.equals("string")) obj.put(key, content);
+				else if(type.equals("float")) obj.put(key, Float.valueOf(content));
+				else if(type.equals("double")) obj.put(key, Double.valueOf(content));
+				else if(type.equals("int")) obj.put(key, Integer.valueOf(content));
+				else if(type.equals("long")) obj.put(key, Long.valueOf(content));
+				else if(type.equals("boolean")) obj.put(key, Boolean.valueOf(content));
+				else throw new ClassCastException();
+			}
+			
+			return obj;
 		}
 
 		@Override
 		public Node toXML(Preferences obj) {
-			// TODO Auto-generated method stub
-			return null;
+			Map<String, ?> map = obj.getAll();
+			Document d = SerializerUtils.newDocument();
+			
+			Element preferences = d.createElement("preferences");
+			for(Map.Entry<String, ?> e : map.entrySet()) {
+				Element entry = d.createElement(e.getKey());
+				entry.setTextContent(e.getValue().toString());
+				Class<?> clazz = e.getValue().getClass();
+				String type = null;
+				
+				if(clazz.equals(String.class)) type = "string";
+				else if(clazz.equals(Float.class)) type = "float";
+				else if(clazz.equals(Double.class)) type = "double";
+				else if(clazz.equals(Integer.class)) type = "int";
+				else if(clazz.equals(Long.class)) type = "long";
+				else if(clazz.equals(Boolean.class)) type = "boolean";
+				else throw new ClassCastException();
+				
+				entry.setAttribute("type", type);
+				preferences.appendChild(entry);
+			}
+			
+			return preferences;
 		}
 		
 	};
 
-	public abstract long getUserId();
-	
 	public abstract Map<String, ?> getAll();
 	
 	public abstract boolean contains(String key);

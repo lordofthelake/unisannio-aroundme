@@ -3,10 +3,14 @@ package it.unisannio.aroundme.client;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.SoftReference;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
 import org.w3c.dom.Node;
+
+import android.support.v4.util.LruCache;
+import android.util.Log;
 
 import it.unisannio.aroundme.model.*;
 
@@ -16,23 +20,14 @@ import it.unisannio.aroundme.model.*;
  *
  */
 public class Application extends android.app.Application {
-	private static final Map<Long, SoftReference<User>> cache = new HashMap<Long, SoftReference<User>>();
+	private static final LruCache<Long, User> cache = new LruCache<Long, User>(Constants.CACHE_USER_SIZE);
 	
 	public void addToCache(User u) {
-		cache.put(u.getId(), new SoftReference<User>(u));
+		cache.put(u.getId(), u);
 	}
 	
 	@Override
 	public void onCreate() {
-		/* FIXME Aggiunti utenti alla cache in modo che non vengano fatte 
-		 * query via network. Mock da rimuovere.
-		 */
-		ModelFactory f = ModelFactory.getInstance();
-		Collection<Interest> empty = Collections.<Interest>emptySet();
-		addToCache(f.createUser(1321813090L, "Michele Piccirillo", empty));
-		addToCache(f.createUser(100000268830695L, "Danilo Iannelli", empty));
-		addToCache(f.createUser(100001053949157L, "Marco Magnetti", empty));
-		addToCache(f.createUser(100000293335056L, "Giuseppe Fusco", empty));
 		
 		ModelFactory.setInstance(new ModelFactory() {
 			
@@ -114,29 +109,32 @@ public class Application extends android.app.Application {
 			public UserQuery createUserQuery() {
 				return new UserQuery() {
 					private static final long serialVersionUID = 1L;
-					private URL endpoint = null; // FIXME
+					
 					private final UserQuery self = this;
-
 					@Override
 					public Collection<User> call() throws Exception {
+						
 						if(getNeighbourhood() == null 
 								&& getCompatibility() == null 
 								&& getInterestIds().isEmpty()) {
+							
+							
 							// Query by Id: ottimizziamo utilizzando la cache
 							Collection<Long> ids = getIds();
 							Collection<User> cached = new HashSet<User>();
-							for(long id : ids) {
-								if(!cache.containsKey(id)) continue;
-								User u = cache.get(id).get();
+							for(Iterator<Long> i = ids.iterator(); i.hasNext();) {
+								User u = cache.get(i.next());
 								if(u != null) {
 									cached.add(u);
-									ids.remove(id);
+									i.remove();
 								}
 							}
-							
+
 							if(ids.isEmpty()) {
 								return cached;
-							} else {
+							} 
+							
+							if(!cached.isEmpty()){
 								Collection<User> results = UserQuery.byId(ids).call();
 								for(User u : cached)
 									results.add(u);
@@ -144,7 +142,7 @@ public class Application extends android.app.Application {
 							}
 						}
 
-						return (new HttpTask<Collection<User>>("POST", endpoint) { 
+						return (new HttpTask<Collection<User>>("POST", Constants.MODEL_HOST + Constants.MODEL_PATH_USER) { 
 							
 								protected Collection<User> read(InputStream input) throws Exception {
 									Node xml = SerializerUtils.getDocumentBuilder().parse(input); 
@@ -167,7 +165,55 @@ public class Application extends android.app.Application {
 				};
 			}
 
+			@Override
+			public Preferences createPreferences() {
+				return new Preferences() {
+					private static final long serialVersionUID = 1L;
+					
+					private final Map<String, Object> map = new HashMap<String, Object>();
+
+					@Override
+					public Map<String, ?> getAll() {
+						return Collections.unmodifiableMap(map);
+					}
+
+					@Override
+					public boolean contains(String key) {
+						return map.containsKey(key);
+					}
+
+					@Override
+					protected Object get(String key) {
+						return map.get(key);
+					}
+
+					@Override
+					protected void put(String key, Object value) {
+						map.put(key, value);
+					}
+					
+				};
+			}
+
 		});
+		
+		
+		/* FIXME Aggiunti utenti alla cache in modo che non vengano fatte 
+		 * query via network. Mock da rimuovere.
+		 */
+		ModelFactory f = ModelFactory.getInstance();
+		
+		// FIXME Mock identity
+		Collection<Interest> empty = Collections.<Interest>emptySet();
+		User jessica = f.createUser(100003074784184L, "Jessica Rossi", empty);
+		addToCache(f.createUser(1321813090L, "Michele Piccirillo", empty));
+		addToCache(f.createUser(100000268830695L, "Danilo Iannelli", empty));
+		addToCache(f.createUser(100001053949157L, "Marco Magnetti", empty));
+		addToCache(f.createUser(100000293335056L, "Giuseppe Fusco", empty));
+		addToCache(jessica);
+		
+		Identity.set(jessica, "");
+		
 		super.onCreate();
 	}
 }

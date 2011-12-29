@@ -2,14 +2,13 @@ package it.unisannio.aroundme.client;
 
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 /**
  * 
@@ -27,22 +26,19 @@ public class Picture implements Callable<Bitmap> {
 		return instances.get(id);
 	}
 	
-	private URL url;
+	private String url;
 	private SoftReference<Bitmap> cache;
 	
-	public Picture(URL url) {
+	public Picture(String url) {
 		this.url = url;
 	}
 	
 	private Picture(long id) {
-		try {
-			this.url = new URL("https://graph.facebook.com/" + id + "/picture");
-		} catch (MalformedURLException e) {}
+		this(String.format(Constants.PICTURE_SRC, id));
 	}
 	
-	public URL getURL() {
+	public String getURL() {
 		return url;
-		
 	}
 	
 	public Bitmap call() throws Exception {
@@ -50,8 +46,8 @@ public class Picture implements Callable<Bitmap> {
 		if(cache != null && (cachedBmp = cache.get()) != null) {
 			return cachedBmp;
 		}
-
-		return (new HttpTask<Bitmap>("GET", url) {
+		Log.d("Picture", url);
+		return (new HttpTask<Bitmap>("GET", url, null) {
 
 			@Override
 			protected Bitmap read(InputStream in) throws Exception {

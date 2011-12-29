@@ -20,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -55,38 +56,27 @@ public class ListViewActivity extends DataActivity
         
         progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
     
-    	list.setAdapter(adapter = new UserAdapter(ListViewActivity.this, service.getMe(), users, service));
+    	list.setAdapter(adapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, service));
         
         // TODO Make cancelable
-<<<<<<< Updated upstream
-        service.asyncDo(
-        		new Callable<Collection<User>>() {
-					@Override
-					public Collection<User> call() throws Exception {
-						ArrayList<User> users = new ArrayList<User>();
-				        ModelFactory f = ModelFactory.getInstance();
-				        Collection<Interest> empty = Collections.emptySet();
-				        users.add(f.createUser(1, "Tizio Caio", empty));
-				        users.add(f.createUser(1, "Caio Sempronio", empty));
-				        
-				        Thread.sleep(2000);
-				        
-				        return users;
-					}
-				}, this);
-=======
+
         service.asyncDo(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), this);
         
->>>>>>> Stashed changes
     }
     
     @Override
 	public void onData(Collection<User> object) {
+    	Log.i("LIST", String.valueOf(object.size()));
 		progress.dismiss();
 		users.clear();
 		users.addAll(object);
 		adapter.notifyDataSetChanged();
 		
+	}
+    
+    // Prototipo
+    private void createInterestDialog() {
+
 		AlertDialog.Builder b = new AlertDialog.Builder(this);
 		String[] items = new String[100];
 		boolean[] checked = new boolean[100];
@@ -109,11 +99,13 @@ public class ListViewActivity extends DataActivity
 				
 			}});
 		b.create().show();
-	}
+    }
 
 	@Override
 	public void onError(Exception e) {
 		progress.dismiss();
-		Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG);	
+		Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG).show();	
+		e.printStackTrace();
+	
 	}
 }
