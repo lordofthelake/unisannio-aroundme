@@ -66,7 +66,7 @@ public class DataService extends Service {
 			public T call() throws Exception {
 				try {
 					final T result = action.call();
-
+					// FIXME Handle cancellation
 					handler.post(new Runnable() { 
 						public void run() {
 							listener.onData(result); 
@@ -98,11 +98,4 @@ public class DataService extends Service {
 	public IBinder onBind(Intent intent) {
 		return binder;
 	}
-
-
-	public User getMe() {
-		// FIXME Mock method
-		return ModelFactory.getInstance().createUser(1000, "Me", Collections.<Interest>emptySet());
-	}
-
 }

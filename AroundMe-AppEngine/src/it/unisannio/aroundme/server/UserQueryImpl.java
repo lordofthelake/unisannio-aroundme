@@ -19,7 +19,7 @@ public class UserQueryImpl extends UserQuery {
 
 
 	@Override
-	public Collection<? extends User> call() throws Exception {
+	public Collection<User> call() throws Exception {
 	
 		Objectify ofy = ObjectifyService.begin();
 		Query<User> query = ofy.query(User.class);		

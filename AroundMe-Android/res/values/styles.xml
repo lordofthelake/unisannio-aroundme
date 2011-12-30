@@ -2,7 +2,5 @@
 <resources>
     <style parent="Theme.Sherlock.Light" name="AroundMe">
         <item name="abBackground">@drawable/my_gradient</item>
-    </style>
-
-    
+    </style>    
 </resources>
