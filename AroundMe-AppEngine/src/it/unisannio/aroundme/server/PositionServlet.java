@@ -2,7 +2,6 @@ package it.unisannio.aroundme.server;
 
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.SerializerUtils;
-import it.unisannio.aroundme.model.User;
 
 import java.io.IOException;
 
@@ -30,11 +29,11 @@ public class PositionServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try{
-			String userId = req.getRequestURI().split("user/(.*?)/position")[0];
+			String userId = req.getRequestURI().split("user/(.*?)/position")[0]; //FIXME Usare un altro modo per ottenere l'userId
 			Objectify ofy = ObjectifyService.begin();
-			User user = (UserImpl) ofy.get(User.class, Long.parseLong(userId));
+			UserImpl user = ofy.get(UserImpl.class, Long.parseLong(userId));
 			Position position = Position.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
-			((UserImpl)user).setPosition(position);
+			user.setPosition(position);
 			ofy.put(user);
 			Queue queue = QueueFactory.getDefaultQueue();
 			TaskOptions url = TaskOptions.Builder.withUrl("/task/positionquery")
@@ -50,9 +49,9 @@ public class PositionServlet extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)	throws ServletException, IOException {
-		String userId = req.getRequestURI().substring(req.getRequestURI().indexOf("user/")+5, req.getRequestURI().indexOf("/position"));
+		String userId = req.getRequestURI().split("user/(.*?)/position")[0];
 		Objectify ofy = ObjectifyService.begin();
-		User user = ofy.get(User.class, Long.parseLong(userId));
+		UserImpl user = ofy.get(UserImpl.class, Long.parseLong(userId));
 		if(user != null){
 			try {
 				resp.setContentType("text/xml");

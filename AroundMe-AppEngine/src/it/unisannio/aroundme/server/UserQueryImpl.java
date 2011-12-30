@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.server;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.googlecode.objectify.Objectify;
@@ -22,18 +23,13 @@ public class UserQueryImpl extends UserQuery {
 	public Collection<User> call() throws Exception {
 	
 		Objectify ofy = ObjectifyService.begin();
-		Query<User> query = ofy.query(User.class);		
+		Query<UserImpl> query = ofy.query(UserImpl.class);		
 		
 		/*
 		 * Query che ristituisce gli utenti con gli id forniti
 		 */
 		if(this.getIds() != null){
 			query.filter("id", this.getIds());
-			/*XXX In questo modo si continua la lavorare su un oggetto Query<User>.
-			 * Se ciò non è necessario (se non conta l'ordine in cui questa query viene eseguita
-			 * rispetto alle altre) si può utilizzare il più cionveniente get:
-			 * Collection<User> users = ofy.get(User.class, this.getIds()); 		
-			 */
 		}
 		
 		/*
@@ -63,11 +59,11 @@ public class UserQueryImpl extends UserQuery {
 		 * Query che restituisce gli utenti che hanno tutti gli interessi dati
 		 */
 		if(this.getInterestIds() != null){
-			Collection<Interest> requiredInterests = ofy.get(Interest.class, this.getInterestIds()).values();
+			Collection<InterestImpl> requiredInterests = ofy.get(InterestImpl.class, this.getInterestIds()).values();
 			query.filter("interests in", requiredInterests);		
 		}
 		
-		Collection<User> queriedUsers = query.list();
+		Collection<UserImpl> queriedUsers = query.list();
 		
 		/*
 		 * Query che restituisce gli utenti che hanno un certo grado di compatibilit&agrave;,
@@ -75,15 +71,18 @@ public class UserQueryImpl extends UserQuery {
 		 */
 		if(this.getCompatibility() != null){
 			float requiredRank = getCompatibility().getRank();
-			User myUser = (User) ofy.get(User.class, this.getCompatibility().getUserId());
+			UserImpl myUser = ofy.get(UserImpl.class, this.getCompatibility().getUserId());
 			
-			for(User u: queriedUsers){
+			for(UserImpl u: queriedUsers){
 				if(myUser.getCompatibilityRank(u) < requiredRank)
 					queriedUsers.remove(u);
 			}
 		}
 		
-		return queriedUsers;
+		Collection<User> results = new ArrayList<User>();
+		results.addAll(queriedUsers);
+		
+		return results;
 	
 	}
 
