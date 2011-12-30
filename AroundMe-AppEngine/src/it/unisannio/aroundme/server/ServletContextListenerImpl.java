@@ -12,9 +12,6 @@ import it.unisannio.aroundme.model.UserQuery;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
-
 public class ServletContextListenerImpl implements ServletContextListener{
 
 	@Override
