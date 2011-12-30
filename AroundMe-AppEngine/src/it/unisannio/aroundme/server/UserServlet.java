@@ -43,7 +43,7 @@ public class UserServlet extends HttpServlet{
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			User user = (UserImpl) User.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
+			UserImpl user = (UserImpl) User.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
 			Objectify ofy = ObjectifyService.begin();
 			ofy.put(user);
 		} catch (SAXException e) {

@@ -8,14 +8,23 @@ import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
+import it.unisannio.aroundme.server.c2dm.C2DMConfig;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import com.googlecode.objectify.ObjectifyService;
 
 public class ServletContextListenerImpl implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
+		// Registro le classi User, Interest e C2DMConfig come entity per il Datastore
+		ObjectifyService.register(UserImpl.class);
+		ObjectifyService.register(InterestImpl.class);
+		ObjectifyService.register(C2DMConfig.class);
+		
+		
 		ModelFactory.setInstance(new ModelFactory() {
 			
 			@Override

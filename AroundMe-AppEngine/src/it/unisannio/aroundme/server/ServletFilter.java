@@ -1,7 +1,5 @@
 package it.unisannio.aroundme.server;
 
-import it.unisannio.aroundme.model.User;
-
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -29,8 +27,10 @@ public class ServletFilter implements Filter {
 			else {
 				String facebookAuthToken = request.getHeader("X-AccessToken");
 				Objectify ofy = ObjectifyService.begin();
-				if(ofy.query(User.class).filter("authToken", facebookAuthToken).count()==1)
+				if(ofy.query(UserImpl.class).filter("authToken", facebookAuthToken).count()==1)
 					chain.doFilter(req, res);
+				else
+					System.out.println("Filtered request: "+ request.getPathInfo() + " method: "+ request.getMethod());
 			}
 		}
 	}
