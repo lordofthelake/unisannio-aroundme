@@ -128,7 +128,7 @@ public class ListViewActivity extends DataActivity
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case R.id.toMap:
-	        startActivity(new Intent(this, MapActivity.class));
+	        startActivity(new Intent(this, MapViewActivity.class));
 	        return true;
 	    default:
 	        return super.onOptionsItemSelected(item);

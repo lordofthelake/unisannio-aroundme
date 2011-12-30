@@ -14,17 +14,17 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
-        public static int abBackground=0x7f01001e;
+        public static int abBackground=0x7f010020;
         /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
-        public static int abBackgroundStacked=0x7f01001f;
+        public static int abBackgroundStacked=0x7f010021;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abCustomNavigationLayout=0x7f010020;
+        public static int abCustomNavigationLayout=0x7f010022;
         /** <p>Must be one or more (separated by '|') of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -38,32 +38,32 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>showCustom</code></td><td>0x10</td><td></td></tr>
 </table>
          */
-        public static int abDisplayOptions=0x7f010016;
+        public static int abDisplayOptions=0x7f010018;
         /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
-        public static int abDivider=0x7f01001d;
+        public static int abDivider=0x7f01001f;
         /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
          */
-        public static int abHeight=0x7f010021;
+        public static int abHeight=0x7f010023;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abHomeLayout=0x7f010022;
+        public static int abHomeLayout=0x7f010024;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abIcon=0x7f01001b;
+        public static int abIcon=0x7f01001d;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abIndeterminateProgressStyle=0x7f010024;
+        public static int abIndeterminateProgressStyle=0x7f010026;
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -73,11 +73,11 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int abItemPadding=0x7f010026;
+        public static int abItemPadding=0x7f010028;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abLogo=0x7f01001c;
+        public static int abLogo=0x7f01001e;
         /** <p>Must be one of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -89,7 +89,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>tabMode</code></td><td>2</td><td></td></tr>
 </table>
          */
-        public static int abNavigationMode=0x7f010015;
+        public static int abNavigationMode=0x7f010017;
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -99,11 +99,11 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int abProgressBarPadding=0x7f010025;
+        public static int abProgressBarPadding=0x7f010027;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abProgressBarStyle=0x7f010023;
+        public static int abProgressBarStyle=0x7f010025;
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -111,11 +111,11 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int abSubtitle=0x7f010018;
+        public static int abSubtitle=0x7f01001a;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abSubtitleTextStyle=0x7f01001a;
+        public static int abSubtitleTextStyle=0x7f01001c;
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -123,11 +123,11 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int abTitle=0x7f010017;
+        public static int abTitle=0x7f010019;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static int abTitleTextStyle=0x7f010019;
+        public static int abTitleTextStyle=0x7f01001b;
         /** attr name="actionBarStyle" format="reference" /
          <p>May be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
@@ -234,7 +234,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int windowActionBar=0x7f010013;
+        public static int windowActionBar=0x7f010014;
         /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -242,13 +242,48 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int windowActionModeOverlay=0x7f010014;
+        public static int windowActionBarOverlay=0x7f010015;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static int windowActionModeOverlay=0x7f010016;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static int windowNoTitle=0x7f010013;
+    }
+    public static final class bool {
+        /**  Whether action menu items should obey the "withText" showAsAction
+         flag. This may be set to false for situations where space is
+         extremely limited. 
+ Whether action menu items should obey the "withText" showAsAction
+         flag. This may be set to false for situations where space is
+         extremely limited. 
+         */
+        public static int abs__config_allowActionMenuItemTextWithIcon=0x7f050000;
     }
     public static final class color {
-        public static int abs__item_bg=0x7f050001;
-        public static int abs__item_focused=0x7f050000;
-        public static int abs__tab_text_color_dark=0x7f050002;
-        public static int abs__tab_text_color_light=0x7f050003;
+        public static int abs__item_bg=0x7f060001;
+        public static int abs__item_focused=0x7f060000;
+        public static int abs__tab_text_color_dark=0x7f060002;
+        public static int abs__tab_text_color_light=0x7f060003;
+    }
+    public static final class dimen {
+        /**  Default height of an action bar. 
+ Default height of an action bar. 
+ Default height of an action bar. 
+ Default height of an action bar. 
+ Default height of an action bar. 
+         */
+        public static int abs__action_bar_default_height=0x7f090000;
     }
     public static final class drawable {
         public static int abs__ab_stacked_transparent_dark_holo=0x7f020000;
@@ -295,24 +330,24 @@ containing a value of this type.
     public static final class id {
         public static int abs__action_bar=0x7f04001b;
         public static int abs__action_bar_container=0x7f04001a;
-        public static int abs__action_bar_subtitle=0x7f040019;
-        public static int abs__action_bar_title=0x7f040018;
-        public static int abs__actions=0x7f04000a;
+        public static int abs__action_bar_subtitle=0x7f040017;
+        public static int abs__action_bar_title=0x7f040016;
+        public static int abs__action_menu_presenter=0x7f040009;
+        public static int abs__actions=0x7f04000b;
         public static int abs__content=0x7f04001c;
-        public static int abs__custom=0x7f04000d;
-        public static int abs__home=0x7f040010;
-        public static int abs__home_wrapper=0x7f040009;
-        public static int abs__iprogress=0x7f04000b;
-        public static int abs__item_custom=0x7f040014;
-        public static int abs__item_icon=0x7f040012;
-        public static int abs__item_text=0x7f040013;
-        public static int abs__nav_list=0x7f04000c;
-        public static int abs__nav_tabs=0x7f04000e;
-        public static int abs__nav_tabs_layout=0x7f040011;
-        public static int abs__tab=0x7f040016;
-        public static int abs__tab_custom=0x7f040017;
-        public static int abs__tab_icon=0x7f040015;
-        public static int abs__up=0x7f04000f;
+        public static int abs__custom=0x7f04000e;
+        public static int abs__home=0x7f040011;
+        public static int abs__home_wrapper=0x7f04000a;
+        public static int abs__imageButton=0x7f040018;
+        public static int abs__iprogress=0x7f04000c;
+        public static int abs__nav_list=0x7f04000d;
+        public static int abs__nav_tabs=0x7f04000f;
+        public static int abs__nav_tabs_layout=0x7f040012;
+        public static int abs__tab=0x7f040014;
+        public static int abs__tab_custom=0x7f040015;
+        public static int abs__tab_icon=0x7f040013;
+        public static int abs__textButton=0x7f040019;
+        public static int abs__up=0x7f040010;
         public static int homeAsUp=0x7f040006;
         public static int listMode=0x7f040002;
         public static int normal=0x7f040001;
@@ -324,56 +359,55 @@ containing a value of this type.
         public static int wrap_content=0x7f040000;
     }
     public static final class integer {
-        public static int abs__max_action_buttons=0x7f060000;
+        public static int abs__max_action_buttons=0x7f070000;
     }
     public static final class layout {
         public static int abs__action_bar=0x7f030000;
         public static int abs__action_bar_home=0x7f030001;
         public static int abs__action_bar_inline=0x7f030002;
-        public static int abs__action_bar_item_layout=0x7f030003;
-        public static int abs__action_bar_tab_layout=0x7f030004;
-        public static int abs__action_bar_title_item=0x7f030005;
-        public static int abs__screen_action_bar=0x7f030006;
-        public static int abs__screen_action_bar_inline=0x7f030007;
-        public static int abs__screen_action_bar_inline_overlay=0x7f030008;
-        public static int abs__screen_action_bar_overlay=0x7f030009;
-        public static int abs__screen_simple=0x7f03000a;
-        public static int abs__simple_spinner_item=0x7f03000b;
+        public static int abs__action_bar_tab_layout=0x7f030003;
+        public static int abs__action_bar_title_item=0x7f030004;
+        public static int abs__action_menu_item_layout=0x7f030005;
+        public static int abs__action_menu_layout=0x7f030006;
+        public static int abs__screen_action_bar=0x7f030007;
+        public static int abs__screen_action_bar_overlay=0x7f030008;
+        public static int abs__screen_simple=0x7f030009;
+        public static int abs__simple_spinner_item=0x7f03000a;
     }
     public static final class string {
-        public static int abs__tab_under_ab_tag=0x7f070000;
+        public static int abs__tab_under_ab_tag=0x7f080000;
     }
     public static final class style {
-        public static int Internal_Widget_Sherlock_ActionBar=0x7f08001c;
-        public static int Internal_Widget_Sherlock_Light_ActionBar=0x7f08001d;
-        public static int TextAppearance_Widget_Subtitle=0x7f08001b;
-        public static int TextAppearance_Widget_Title=0x7f08001a;
-        public static int Theme_Sherlock=0x7f080000;
-        public static int Theme_Sherlock_Light=0x7f08000d;
-        public static int Widget_Sherlock_ActionBar_TabBar=0x7f080001;
-        public static int Widget_Sherlock_ActionBar_TabText=0x7f080003;
-        public static int Widget_Sherlock_ActionBar_TabView=0x7f080002;
-        public static int Widget_Sherlock_ActionButton=0x7f080004;
-        public static int Widget_Sherlock_ActionButton_CloseMode=0x7f080006;
-        public static int Widget_Sherlock_ActionButton_Home=0x7f080007;
-        public static int Widget_Sherlock_ActionButton_Overflow=0x7f080008;
-        public static int Widget_Sherlock_Light_ActionBar_TabBar=0x7f08000e;
-        public static int Widget_Sherlock_Light_ActionBar_TabText=0x7f080010;
-        public static int Widget_Sherlock_Light_ActionBar_TabView=0x7f08000f;
-        public static int Widget_Sherlock_Light_ActionButton=0x7f080011;
-        public static int Widget_Sherlock_Light_ActionButton_CloseMode=0x7f080016;
-        public static int Widget_Sherlock_Light_ActionButton_Home=0x7f080012;
-        public static int Widget_Sherlock_Light_ActionButton_Overflow=0x7f080013;
-        public static int Widget_Sherlock_Light_ListPopupWindow=0x7f080018;
-        public static int Widget_Sherlock_Light_ListView_DropDown=0x7f080017;
-        public static int Widget_Sherlock_Light_PopupMenu=0x7f080019;
-        public static int Widget_Sherlock_Light_Spinner=0x7f080015;
-        public static int Widget_Sherlock_Light_TextView_SpinnerItem_ActionBar=0x7f080014;
-        public static int Widget_Sherlock_ListPopupWindow=0x7f08000a;
-        public static int Widget_Sherlock_ListView_DropDown=0x7f08000b;
-        public static int Widget_Sherlock_PopupMenu=0x7f08000c;
-        public static int Widget_Sherlock_Spinner=0x7f080005;
-        public static int Widget_Sherlock_TextView_SpinnerItem_ActionBar=0x7f080009;
+        public static int Internal_Widget_Sherlock_ActionBar=0x7f0a001c;
+        public static int Internal_Widget_Sherlock_Light_ActionBar=0x7f0a001d;
+        public static int TextAppearance_Widget_Subtitle=0x7f0a001b;
+        public static int TextAppearance_Widget_Title=0x7f0a001a;
+        public static int Theme_Sherlock=0x7f0a0000;
+        public static int Theme_Sherlock_Light=0x7f0a000d;
+        public static int Widget_Sherlock_ActionBar_TabBar=0x7f0a0001;
+        public static int Widget_Sherlock_ActionBar_TabText=0x7f0a0003;
+        public static int Widget_Sherlock_ActionBar_TabView=0x7f0a0002;
+        public static int Widget_Sherlock_ActionButton=0x7f0a0004;
+        public static int Widget_Sherlock_ActionButton_CloseMode=0x7f0a0006;
+        public static int Widget_Sherlock_ActionButton_Home=0x7f0a0007;
+        public static int Widget_Sherlock_ActionButton_Overflow=0x7f0a0008;
+        public static int Widget_Sherlock_Light_ActionBar_TabBar=0x7f0a000e;
+        public static int Widget_Sherlock_Light_ActionBar_TabText=0x7f0a0010;
+        public static int Widget_Sherlock_Light_ActionBar_TabView=0x7f0a000f;
+        public static int Widget_Sherlock_Light_ActionButton=0x7f0a0011;
+        public static int Widget_Sherlock_Light_ActionButton_CloseMode=0x7f0a0016;
+        public static int Widget_Sherlock_Light_ActionButton_Home=0x7f0a0012;
+        public static int Widget_Sherlock_Light_ActionButton_Overflow=0x7f0a0013;
+        public static int Widget_Sherlock_Light_ListPopupWindow=0x7f0a0018;
+        public static int Widget_Sherlock_Light_ListView_DropDown=0x7f0a0017;
+        public static int Widget_Sherlock_Light_PopupMenu=0x7f0a0019;
+        public static int Widget_Sherlock_Light_Spinner=0x7f0a0015;
+        public static int Widget_Sherlock_Light_TextView_SpinnerItem_ActionBar=0x7f0a0014;
+        public static int Widget_Sherlock_ListPopupWindow=0x7f0a000a;
+        public static int Widget_Sherlock_ListView_DropDown=0x7f0a000b;
+        public static int Widget_Sherlock_PopupMenu=0x7f0a000c;
+        public static int Widget_Sherlock_Spinner=0x7f0a0005;
+        public static int Widget_Sherlock_TextView_SpinnerItem_ActionBar=0x7f0a0009;
     }
     public static final class styleable {
         /** Attributes that can be used with a SherlockTheme.
@@ -420,7 +454,9 @@ containing a value of this type.
            <tr><td><code>{@link #SherlockTheme_popupMenuStyle com.actionbarsherlock:popupMenuStyle}</code></td><td></td></tr>
            <tr><td><code>{@link #SherlockTheme_selectableItemBackground com.actionbarsherlock:selectableItemBackground}</code></td><td></td></tr>
            <tr><td><code>{@link #SherlockTheme_windowActionBar com.actionbarsherlock:windowActionBar}</code></td><td></td></tr>
+           <tr><td><code>{@link #SherlockTheme_windowActionBarOverlay com.actionbarsherlock:windowActionBarOverlay}</code></td><td></td></tr>
            <tr><td><code>{@link #SherlockTheme_windowActionModeOverlay com.actionbarsherlock:windowActionModeOverlay}</code></td><td></td></tr>
+           <tr><td><code>{@link #SherlockTheme_windowNoTitle com.actionbarsherlock:windowNoTitle}</code></td><td></td></tr>
            </table>
            @see #SherlockTheme_abBackground
            @see #SherlockTheme_abBackgroundStacked
@@ -460,7 +496,9 @@ containing a value of this type.
            @see #SherlockTheme_popupMenuStyle
            @see #SherlockTheme_selectableItemBackground
            @see #SherlockTheme_windowActionBar
+           @see #SherlockTheme_windowActionBarOverlay
            @see #SherlockTheme_windowActionModeOverlay
+           @see #SherlockTheme_windowNoTitle
          */
         public static final int[] SherlockTheme = {
             0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
@@ -472,7 +510,8 @@ containing a value of this type.
             0x7f010018, 0x7f010019, 0x7f01001a, 0x7f01001b,
             0x7f01001c, 0x7f01001d, 0x7f01001e, 0x7f01001f,
             0x7f010020, 0x7f010021, 0x7f010022, 0x7f010023,
-            0x7f010024, 0x7f010025, 0x7f010026
+            0x7f010024, 0x7f010025, 0x7f010026, 0x7f010027,
+            0x7f010028
         };
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abBackground}
@@ -485,7 +524,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           @attr name android:abBackground
         */
-        public static final int SherlockTheme_abBackground = 30;
+        public static final int SherlockTheme_abBackground = 32;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abBackgroundStacked}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -497,7 +536,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           @attr name android:abBackgroundStacked
         */
-        public static final int SherlockTheme_abBackgroundStacked = 31;
+        public static final int SherlockTheme_abBackgroundStacked = 33;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abCustomNavigationLayout}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -507,7 +546,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abCustomNavigationLayout
         */
-        public static final int SherlockTheme_abCustomNavigationLayout = 32;
+        public static final int SherlockTheme_abCustomNavigationLayout = 34;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abDisplayOptions}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -527,7 +566,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 </table>
           @attr name android:abDisplayOptions
         */
-        public static final int SherlockTheme_abDisplayOptions = 22;
+        public static final int SherlockTheme_abDisplayOptions = 24;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abDivider}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -539,7 +578,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           @attr name android:abDivider
         */
-        public static final int SherlockTheme_abDivider = 29;
+        public static final int SherlockTheme_abDivider = 31;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abHeight}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -552,7 +591,7 @@ Available units are: px (pixels), dp (density-independent pixels), sp (scaled pi
 in (inches), mm (millimeters).
           @attr name android:abHeight
         */
-        public static final int SherlockTheme_abHeight = 33;
+        public static final int SherlockTheme_abHeight = 35;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abHomeLayout}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -562,7 +601,7 @@ in (inches), mm (millimeters).
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abHomeLayout
         */
-        public static final int SherlockTheme_abHomeLayout = 34;
+        public static final int SherlockTheme_abHomeLayout = 36;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abIcon}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -572,7 +611,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abIcon
         */
-        public static final int SherlockTheme_abIcon = 27;
+        public static final int SherlockTheme_abIcon = 29;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abIndeterminateProgressStyle}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -582,7 +621,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abIndeterminateProgressStyle
         */
-        public static final int SherlockTheme_abIndeterminateProgressStyle = 36;
+        public static final int SherlockTheme_abIndeterminateProgressStyle = 38;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abItemPadding}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -598,7 +637,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name android:abItemPadding
         */
-        public static final int SherlockTheme_abItemPadding = 38;
+        public static final int SherlockTheme_abItemPadding = 40;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abLogo}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -608,7 +647,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abLogo
         */
-        public static final int SherlockTheme_abLogo = 28;
+        public static final int SherlockTheme_abLogo = 30;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abNavigationMode}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -626,7 +665,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 </table>
           @attr name android:abNavigationMode
         */
-        public static final int SherlockTheme_abNavigationMode = 21;
+        public static final int SherlockTheme_abNavigationMode = 23;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abProgressBarPadding}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -642,7 +681,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name android:abProgressBarPadding
         */
-        public static final int SherlockTheme_abProgressBarPadding = 37;
+        public static final int SherlockTheme_abProgressBarPadding = 39;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abProgressBarStyle}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -652,7 +691,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abProgressBarStyle
         */
-        public static final int SherlockTheme_abProgressBarStyle = 35;
+        public static final int SherlockTheme_abProgressBarStyle = 37;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abSubtitle}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -666,7 +705,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name android:abSubtitle
         */
-        public static final int SherlockTheme_abSubtitle = 24;
+        public static final int SherlockTheme_abSubtitle = 26;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abSubtitleTextStyle}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -676,7 +715,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abSubtitleTextStyle
         */
-        public static final int SherlockTheme_abSubtitleTextStyle = 26;
+        public static final int SherlockTheme_abSubtitleTextStyle = 28;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abTitle}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -690,7 +729,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name android:abTitle
         */
-        public static final int SherlockTheme_abTitle = 23;
+        public static final int SherlockTheme_abTitle = 25;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#abTitleTextStyle}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -700,7 +739,7 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           @attr name android:abTitleTextStyle
         */
-        public static final int SherlockTheme_abTitleTextStyle = 25;
+        public static final int SherlockTheme_abTitleTextStyle = 27;
         /**
           <p>
           @attr description
@@ -928,7 +967,21 @@ theme attribute (in the form
 containing a value of this type.
           @attr name android:windowActionBar
         */
-        public static final int SherlockTheme_windowActionBar = 19;
+        public static final int SherlockTheme_windowActionBar = 20;
+        /**
+          <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#windowActionBarOverlay}
+          attribute's value can be found in the {@link #SherlockTheme} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:windowActionBarOverlay
+        */
+        public static final int SherlockTheme_windowActionBarOverlay = 21;
         /**
           <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#windowActionModeOverlay}
           attribute's value can be found in the {@link #SherlockTheme} array.
@@ -942,6 +995,20 @@ theme attribute (in the form
 containing a value of this type.
           @attr name android:windowActionModeOverlay
         */
-        public static final int SherlockTheme_windowActionModeOverlay = 20;
+        public static final int SherlockTheme_windowActionModeOverlay = 22;
+        /**
+          <p>This symbol is the offset where the {@link com.actionbarsherlock.R.attr#windowNoTitle}
+          attribute's value can be found in the {@link #SherlockTheme} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:windowNoTitle
+        */
+        public static final int SherlockTheme_windowNoTitle = 19;
     };
 }
