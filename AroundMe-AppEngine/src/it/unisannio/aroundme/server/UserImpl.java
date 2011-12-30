@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
@@ -17,38 +18,47 @@ import it.unisannio.aroundme.model.*;
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
+@Entity(name="User")
 @Indexed
 class UserImpl extends User {
 	private static final long serialVersionUID = 1270045595803902572L;
-
+	
 	@Id
 	private long id;	
-	
 	@Unindexed
 	private String name;
-	
-	
 	@Embedded
 	private Position position;	
-	
-	private ArrayList<Key<Interest>> interestsKeys; 
+	private ArrayList<Key<Interest>> interests;
+	private String authToken;
 
+	public UserImpl(long id, String name) {
+		this.id = id;
+		this.name = name;
+		position = null;
+		interests = new ArrayList<Key<Interest>>();
+	}
+
+	public UserImpl(long id, String name, Position position, ArrayList<Key<Interest>> interests) {
+		this.id = id;
+		this.name = name;
+		this.position = position;
+		this.interests = interests;
+	}
+	
+	public UserImpl(){
+		interests = new ArrayList<Key<Interest>>();
+	}
+		
 	@Override
 	public long getId() {
 		return id;
 	}
 
-	/* FIXME la parte di creazione degli interessi dovrˆ essere spostata nella factory.
-	 * 
-	 */
-	/*
-	@Override
 	public void addInterest(Interest interest) {
-		Objectify ofy = ObjectifyService.begin();
-		if(ofy.get(Interest.class, interest.getId()) == null)			
-			ofy.put(interest);
-		interestsKeys.add(new Key<Interest>(Interest.class, interest.getId()));
-	}*/
+		ModelFactory.getInstance().createInterest(interest.getId(), interest.getName(), interest.getCategory());
+		interests.add(new Key<Interest>(Interest.class, interest.getId()));
+	}
 
 	@Override
 	public String getName() {
@@ -59,22 +69,31 @@ class UserImpl extends User {
 	public Position getPosition() {
 		return position;
 	}
+	
+	public String getAuthToken() {
+		return authToken;
+	}
 
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
 
 	@Override
 	public Collection<Interest> getInterests() {
 		Objectify ofy = ObjectifyService.begin();
-		return ofy.get(interestsKeys).values();
+		return ofy.get(interests).values();
 	}
 	
 	protected Collection<Key<Interest>> getInterestKeys(){
-		return interestsKeys;
+		return interests;
 	}
 
 	@Override
 	public void setPosition(Position p) {
 		this.position = p;
 	}
+	
+	
 
 	/**
 	 * {@inheritDoc}

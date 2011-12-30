@@ -14,32 +14,34 @@ import com.googlecode.objectify.ObjectifyService;
 public class C2DMConfigLoader {
 	private String authKey;
 	private String c2dmUrl;
-	
-	/**
-	 * Crea un {@link C2DMConfigLoader} caricando dal Datastore l'oggetto di tipo {@link C2DMConfig}.
-	 * Se questo non è presente nel Datastore, ne viene creato uno nuovo (contentente i valori di default)
-	 * che viene salvato sul Datastore  
-	 */
-	public C2DMConfigLoader(){
-		Objectify ofy = ObjectifyService.begin();
-		C2DMConfig config =  ofy.get(C2DMConfig.class, 1);
-		if(config == null){
-			config = new C2DMConfig();
-			ofy.put(config);
-		}
-		authKey = config.getAuthKey();
-		c2dmUrl = config.getC2dmUrl();
+
+
+	//SingletonHolder pattern
+	private static class C2DMConfigLoaderHolder { 
+		public static final C2DMConfigLoader instance = new C2DMConfigLoader();
 	}
 	
+	/**
+	 * Singleton Pattern. Restituisce l'unica istanza di {@link C2DMConfigLoader}
+	 * @return L'unica istanza di {@link C2DMConfigLoader}
+	 */
+	public static C2DMConfigLoader getInstance() {
+        return C2DMConfigLoaderHolder.instance;
+	}
+
+	private C2DMConfigLoader(){}
+
 	/**
 	 * Restitusce la chiave necessaria per l'autenticazione sul server C2DM
 	 * 
 	 * @return La Stringa contenente chiave di autenticazione 
 	 */
 	public String getAuthKey() {
+		if (authKey == null)
+			authKey = retrieveConfig().getAuthKey();
 		return authKey;
 	}
-	
+
 	/**
 	 * Imposta la chiave necessaria per l'autenticazione sul server C2DM rendendone
 	 * persistene il valore sul Datastore.
@@ -48,31 +50,56 @@ public class C2DMConfigLoader {
 	 */
 	public void setAuthKey(String authKey) {
 		this.authKey = authKey;
-		Objectify ofy = ObjectifyService.begin();
-		C2DMConfig config =  ofy.get(C2DMConfig.class, 1);
+		C2DMConfig config = retrieveConfig();
 		config.setAuthKey(authKey);
+		Objectify ofy = ObjectifyService.begin();
 		ofy.put(config);
 	}
-	
+
 	/**
 	 * Restitusce l'URL del server C2DM
 	 * 
 	 * @return La Stringa contenente l'URL del server C2DM 
 	 */
 	public String getC2dmUrl() {
+		if(c2dmUrl == null)
+			c2dmUrl = retrieveConfig().getC2dmUrl();
 		return c2dmUrl;
 	}
-	
+
 	/**
 	 * Imposta l'URL del server C2DM rendendone persistene il valore sul Datastore.
 	 *  
 	 * @param authKey Il nuovo URL del server C2DM
 	 */
 	public void setC2dmUrl(String c2dmUrl) {
+		this.c2dmUrl = c2dmUrl;
+		C2DMConfig config = retrieveConfig();
+		config.setC2dmUrl(c2dmUrl);
 		Objectify ofy = ObjectifyService.begin();
-		C2DMConfig config =  ofy.get(C2DMConfig.class, 1);
-		config.setAuthKey(authKey);
 		ofy.put(config);
 	}
 	
+	/**
+	 * Invalida il token di registrazione forzandone la lettura dal datastore.
+	 * Utile quando il {@link C2DMConfigLoader} potrebbe non avere in memoria
+	 * l'ultimo token di autenticazione fornito da Google
+	 */
+	public void invalidateAuthToken(){
+		authKey = null;
+	}
+
+	/**
+	 * Recupera dal Datastore {@link C2DMConfig} per poter accedere alle impostazioni
+	 */
+	private C2DMConfig retrieveConfig(){
+		Objectify ofy = ObjectifyService.begin();
+		C2DMConfig config =  ofy.get(C2DMConfig.class, 1);
+		if(config == null){
+			config = new C2DMConfig();
+			ofy.put(config);
+		}
+		return config;
+	}
+
 }
