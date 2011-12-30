@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
 
 
 
@@ -20,7 +24,7 @@ import org.w3c.dom.Node;
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
-public class UserQueryServlet extends HttpServlet{
+public class UserServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -33,8 +37,18 @@ public class UserQueryServlet extends HttpServlet{
 			SerializerUtils.writeXML(xml, resp.getOutputStream());
 		} catch (Exception e) {
 			resp.sendError(500);
+		}				
+	}
+	
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try {
+			User user = (UserImpl) User.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
+			Objectify ofy = ObjectifyService.begin();
+			ofy.put(user);
+		} catch (SAXException e) {
+			resp.sendError(500);
 		}
-					
 	}
 }
 

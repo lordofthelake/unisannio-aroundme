@@ -28,8 +28,7 @@ public class UserQueryImpl extends UserQuery {
 		 * Query che ristituisce gli utenti con gli id forniti
 		 */
 		if(this.getIds() != null){
-			for(Long id: this.getIds())
-				query.filter("id", id.longValue());
+			query.filter("id", this.getIds());
 			/*XXX In questo modo si continua la lavorare su un oggetto Query<User>.
 			 * Se ciò non è necessario (se non conta l'ordine in cui questa query viene eseguita
 			 * rispetto alle altre) si può utilizzare il più cionveniente get:
@@ -65,10 +64,7 @@ public class UserQueryImpl extends UserQuery {
 		 */
 		if(this.getInterestIds() != null){
 			Collection<Interest> requiredInterests = ofy.get(Interest.class, this.getInterestIds()).values();
-			for(Interest interest: requiredInterests){
-				query.filter("interests", interest);
-			}
-		
+			query.filter("interests in", requiredInterests);		
 		}
 		
 		Collection<User> queriedUsers = query.list();
