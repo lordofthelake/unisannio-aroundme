@@ -34,7 +34,7 @@
   </filter>
   <filter-mapping>
 	<filter-name>ServletFilter</filter-name>
-	<url-pattern>user/*</url-pattern>
+	<url-pattern>/user/*</url-pattern>
   </filter-mapping>
 
 	<!-- Definizione delle Servlet -->
@@ -45,7 +45,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PositionServlet</servlet-name>
-		<url-pattern>user/*/position</url-pattern>
+		<url-pattern>/user/*/position</url-pattern>
 	</servlet-mapping>
 	
 	
@@ -56,7 +56,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>UserServlet</servlet-name>
-		<url-pattern>user/*</url-pattern>
+		<url-pattern>/user/*</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Definizione delle servlet usate come tasks -->
@@ -67,7 +67,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PositionQueryTask</servlet-name>
-		<url-pattern>task/positiontask</url-pattern>
+		<url-pattern>/task/positiontask</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
@@ -76,7 +76,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>C2DMSenderTask</servlet-name>
-		<url-pattern>task/positionsender</url-pattern>
+		<url-pattern>/task/positionsender</url-pattern>
 	</servlet-mapping>
 	
 
