@@ -3,9 +3,17 @@ package it.unisannio.aroundme.client;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.Callable;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import com.facebook.android.Facebook;
+
 import it.unisannio.aroundme.model.Interest;
+import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.SerializerUtils;
 import it.unisannio.aroundme.model.User;
@@ -50,6 +58,32 @@ public class Identity extends User {
 				}
 				
 				return instance;
+			}
+			
+		};
+	}
+	
+	public static Callable<User> create(final Facebook fb) {
+		return new Callable<User>() {
+
+			@Override
+			public User call() throws Exception {
+				ModelFactory f = ModelFactory.getInstance();
+				
+				
+				JSONObject likes = (JSONObject) new JSONTokener(fb.request("me/likes")).nextValue();
+				JSONArray data = likes.getJSONArray("data");
+				
+				Collection<Interest> interests = new HashSet<Interest>();
+				for(int i = 0, len = data.length(); i < len; ++i) {
+					JSONObject like = data.getJSONObject(i);
+					Interest interest = f.createInterest(like.getLong("id"), like.getString("name"), like.getString("category"));
+					interests.add(interest);
+				}
+				
+				JSONObject me = (JSONObject) new JSONTokener(fb.request("me")).nextValue();
+				
+				return f.createUser(me.getLong("id"), me.getString("name"), interests);
 			}
 			
 		};

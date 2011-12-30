@@ -41,6 +41,23 @@ public class ProfileActivity extends DataActivity{
 		grdInterests=(GridView)findViewById(R.id.grdInterests);
         progress = ProgressDialog.show(ProfileActivity.this, "", ProfileActivity.this.getString(R.string.loading), true, true);
         
+        service.asyncDo(UserQuery.single(userId),new DataListener<User>(){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         service.asyncDo(/*UserQuery.single(this.userId)*/
     		   new Callable<User>() {
 					@Override
@@ -59,7 +76,7 @@ public class ProfileActivity extends DataActivity{
 				},new DataListener<User>(){
 		@Override
 		public void onData(User user) {
-			//Questa activity vivrà in questo evento 
+			//Questa activity vivr? in questo evento 
 			loadedUser=user;
 			setFbPicture(loadedUser.getId(),service);
 			txtName.setText(user.getName());
