@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.google.android.maps.MapActivity;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -21,6 +23,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.support.v4.view.Menu;
+import android.support.v4.view.MenuItem;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
@@ -118,4 +121,18 @@ public class ListViewActivity extends DataActivity
 	    inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
+	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.toMap:
+	        startActivity(new Intent(this, MapActivity.class));
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 }
