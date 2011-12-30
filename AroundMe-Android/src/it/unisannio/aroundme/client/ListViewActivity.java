@@ -6,7 +6,6 @@ import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,9 +26,16 @@ import android.support.v4.view.MenuItem;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.View.OnAttachStateChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.SlidingDrawer;
+import android.widget.SlidingDrawer.OnDrawerCloseListener;
+import android.widget.SlidingDrawer.OnDrawerOpenListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -38,49 +44,97 @@ import android.widget.Toast;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
 public class ListViewActivity extends DataActivity 
-		implements OnItemClickListener, DataListener<Collection<User>> {
-
-	private UserAdapter adapter;
+		implements OnItemClickListener {
+	private final int MAX_DISTANCE=5000;
+	private UserAdapter usrAdapter;
+	private InterestFilterAdapter interestFilterAdapter;
+	private SlidingDrawer drawer;
 	private List<User> users;
-	private ListView list;
-	
+	private List<Interest> myInterests;
+	private ListView nearByList;
+	private ListView interestsFilter;
 	private ProgressDialog progress;
+	private SeekBar seekDistance;
+	private TextView txtDistanceFilter; 
     
     public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
 		Intent intent = new Intent(ListViewActivity.this, ProfileActivity.class);
-    	//FIXME fake intent
-    	//Intent intent = new Intent(ListViewActivity.this, MapViewActivity.class);
 		intent.putExtra("userId", ((User) v.getTag(R.id.tag_user)).getId());
 		startActivity(intent);				
 	}
     
     @Override
     protected void onServiceConnected(DataService service) {
-    	users = new ArrayList<User>();
     	setContentView(R.layout.listview);
-        list = (ListView) findViewById(R.id.nearByList);
-        list.setOnItemClickListener(this);
+    	users = new ArrayList<User>();
+    	myInterests=new ArrayList(Identity.get().getInterests());
+        nearByList = (ListView) findViewById(R.id.nearByList);
+        drawer=(SlidingDrawer) findViewById(R.id.filterDrawer);
+        seekDistance=(SeekBar) findViewById(R.id.seekDistance);
+        txtDistanceFilter=(TextView) findViewById(R.id.txtDistaceFilter);
+        
+        nearByList.setOnItemClickListener(this);
+        seekDistance.setMax(this.MAX_DISTANCE);
+        seekDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
+			@Override
+			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+				int distance= seekDistance.getProgress();
+				if (distance<1000){
+				txtDistanceFilter.setText(distance+" m");
+				}else{
+					txtDistanceFilter.setText(String.format("%.1f Km", (float)distance/1000));
+				}
+			}
+			@Override
+			public void onStartTrackingTouch(SeekBar arg0) {}
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				//TODO Salvare le impostazioni
+				Toast.makeText(ListViewActivity.this, "Saving Dinstance", Toast.LENGTH_SHORT).show();
+			}
+        });
+        seekDistance.setProgress(3000);  
+        drawer.setOnDrawerOpenListener(new OnDrawerOpenListener(){
+			@Override
+			public void onDrawerOpened() {
+				nearByList.setEnabled(false);
+			}
+        	
+        });
+        drawer.setOnDrawerCloseListener(new OnDrawerCloseListener(){
+			@Override
+			public void onDrawerClosed() {
+				nearByList.setEnabled(true);
+			}
+        	
+        });
+        interestsFilter=(ListView) findViewById(R.id.listInterestFilter);
         
         progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
-    
-    	list.setAdapter(adapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, service));
-        
+    	nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, service));
+    	//FIXME interestsFilter.setAdapter(interestFilterAdapter = new InterestFilterAdapter(ListViewActivity.this, myInterests, service));
+
         // TODO Mock loader. Replace with UserQuery
         // TODO Make cancelable
-
-        service.asyncDo(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), this);
-        
+    	service.asyncDo(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), new DataListener<Collection<User>>(){
+        	 @Override
+        		public void onData(Collection<User> object) {
+        	    	Log.i("LIST", String.valueOf(object.size()));
+        			progress.dismiss();
+        			users.clear();
+        			users.addAll(object);
+        			usrAdapter.notifyDataSetChanged();
+        		}
+        	 @Override
+        		public void onError(Exception e) {
+        			progress.dismiss();
+        			Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG).show();	
+        			e.printStackTrace();
+        		}
+        }); 	
     }
     
-    @Override
-	public void onData(Collection<User> object) {
-    	Log.i("LIST", String.valueOf(object.size()));
-		progress.dismiss();
-		users.clear();
-		users.addAll(object);
-		adapter.notifyDataSetChanged();
-	}
-    
+   
     // Prototipo
     private void createInterestDialog() {
 
@@ -108,13 +162,7 @@ public class ListViewActivity extends DataActivity
 		b.create().show();
     }
 
-	@Override
-	public void onError(Exception e) {
-		progress.dismiss();
-		Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG).show();	
-		e.printStackTrace();
 	
-	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();

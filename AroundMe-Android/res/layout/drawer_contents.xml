@@ -5,12 +5,7 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:orientation="vertical" >
-	<View
-        android:layout_height="1dip"
-        android:layout_marginTop="1dp"
-        android:background="#FF909090"
-        android:layout_width="match_parent" />
-    <TextView
+	<TextView
         android:id="@+id/txtLikeBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +13,7 @@
         android:gravity="center"
         android:background="@drawable/my_gradient"
         android:textColor="#FFFFFF"
-        android:text="Raggio" />
+        android:text="Distanze" />
     <View
         android:layout_height="2dip"
         android:layout_width="match_parent"
@@ -28,23 +23,40 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Distanza Massima" 
+     	android:layout_marginLeft="10dp"
+     	android:layout_marginTop="5dp"
+        android:text="Distanza di rilevamento" 
         android:textSize="20dp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         />
-
-    <SeekBar
-        android:id="@+id/seekDistance"
-        android:layout_width="273dp"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content" />
+	<LinearLayout
+	    android:id="@+id/linearLayout1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >
 
-	<View
-        android:layout_height="1dip"
-        android:layout_marginTop="1dp"
-        android:background="#FF909090"
-        android:layout_width="match_parent" />
+		<SeekBar
+		    android:id="@+id/seekDistance"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_vertical"
+		    android:paddingLeft="15dp"
+		    android:paddingRight="10dp"
+		    android:layout_weight="1" />
+
+		<TextView
+		    android:id="@+id/txtDistaceFilter"
+		    android:layout_width="100dp"
+		    android:layout_height="40dp"
+		   	android:textSize="30dp"
+		   	android:layout_gravity="center_vertical"
+		   	android:gravity="right"
+		   	android:layout_marginLeft="10dp"
+		    android:textColor="#FFFFFF"
+		    android:text="1" />
+
+	</LinearLayout>
+
     <TextView
         android:id="@+id/txtLikeBar"
         android:layout_width="match_parent"
@@ -60,7 +72,7 @@
         android:background="#FF909090" />
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/listInterestFilter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
