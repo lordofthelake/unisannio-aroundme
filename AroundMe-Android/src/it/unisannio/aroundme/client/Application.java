@@ -204,7 +204,11 @@ public class Application extends android.app.Application {
 		ModelFactory f = ModelFactory.getInstance();
 		
 		// FIXME Mock identity
-		Collection<Interest> empty = Collections.<Interest>emptySet();
+		Collection<Interest> empty =new HashSet<Interest>();
+        empty.add(f.createInterest(40796308305L,"Coca cola","notCat"));
+        empty.add(f.createInterest(5660597307L,"PinkFloyd","notCat"));
+        empty.add(f.createInterest(316314086430L,"Google+","notCat"));
+        empty.add(f.createInterest(105955506103417L,"Led Zeppelin","notCat"));
 		User jessica = f.createUser(100003074784184L, "Jessica Rossi", empty);
 		addToCache(f.createUser(1321813090L, "Michele Piccirillo", empty));
 		addToCache(f.createUser(100000268830695L, "Danilo Iannelli", empty));
