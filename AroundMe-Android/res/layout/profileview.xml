@@ -27,7 +27,7 @@
 	            android:layout_height="80dp"
 	            android:layout_alignParentLeft="true"
 	            android:layout_alignParentTop="true"
-	            android:src="@drawable/ic_no_photo" />
+	            android:src="@drawable/img_downloading" />
 			<LinearLayout 
 			    xmlns:android="http://schemas.android.com/apk/res/android"
 	            android:id="@+id/linearLayout1"
@@ -45,9 +45,10 @@
 
 				<ImageView
 				    android:id="@+id/imgfbProfile"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:src="@drawable/fb_icon" />
+				    android:layout_width="match_parent"
+				    android:layout_height="50dp"
+				    android:layout_gravity="left"
+				    android:src="@drawable/fb_icona" />
 			</LinearLayout>
 	</LinearLayout>
     </RelativeLayout>
@@ -60,7 +61,7 @@
         android:id="@+id/txtLikeBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="18dp"
         android:gravity="center"
         android:background="@drawable/my_gradient"
         android:textColor="#FFFFFF"
@@ -74,7 +75,9 @@
         android:id="@+id/grdInterests"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="3" >
+        android:numColumns="4"
+        android:verticalSpacing="3dp"
+        >
     </GridView>
 
 </LinearLayout>

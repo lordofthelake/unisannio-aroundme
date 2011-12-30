@@ -65,7 +65,9 @@ public class InterestAdapter extends ArrayAdapter<Interest> {
 			}
 
 			@Override
-			public void onError(Exception e) {}
+			public void onError(Exception e) {
+				imgInterest.setImageResource(R.drawable.img_error);
+			}
 		});
 		
 		return view;

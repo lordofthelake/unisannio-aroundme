@@ -34,8 +34,6 @@ public class ProfileActivity extends DataActivity{
 		setContentView(R.layout.profileview);
 		/*ottengo l'user ID dell' utente da visualizzare*/
 		userId= (Long) getIntent().getExtras().get("userId");
-		Toast toast = Toast.makeText(ProfileActivity.this,"Id: "+userId, Toast.LENGTH_SHORT);	
-		toast.show();
 		txtName=(TextView) findViewById(R.id.txtName);
 		image=(ImageView) findViewById(R.id.imgPhoto);	
 		compatibility= (TextView)findViewById(R.id.txtCompatibility);
@@ -55,13 +53,12 @@ public class ProfileActivity extends DataActivity{
 				        empty.add(f.createInterest(316314086430L,"Google+","notCat"));
 				        empty.add(f.createInterest(105955506103417L,"Led Zeppelin","notCat"));
 				        User user=f.createUser(userId, "User Selected", empty);
-				        Thread.sleep(2000);
+				        //Thread.sleep(2000);
 				        return user;
 					}
 				},new DataListener<User>(){
 		@Override
 		public void onData(User user) {
-			progress.dismiss();
 			//Questa activity vivrà in questo evento 
 			loadedUser=user;
 			setFbPicture(loadedUser.getId(),service);
@@ -70,15 +67,17 @@ public class ProfileActivity extends DataActivity{
 			//distance.setText(String.format("%.1f m", user.getDistance(user)));
 			//compatibility.setText(user.getCompatibilityRank(user)+" %");
 			ArrayList arrInterests = new ArrayList(user.getInterests());
-			grdInterests.setAdapter(new InterestAdapter(ProfileActivity.this,arrInterests,service));
+			grdInterests.setAdapter(new InterestAdapter(ProfileActivity.this,arrInterests,service));	
+			/*
+			 * TODO Al click di un interesse apre la pagina facebook di quell' interesse
+			 * TODO Al click dell' icona di facebook mostra il profilo facebook della persona
+			 * */
 			
-			Toast toast = Toast.makeText(ProfileActivity.this, user.getName()+" Caricato!", Toast.LENGTH_SHORT);	
-			toast.show();
+			progress.dismiss();
 		}
 		@Override
 		public void onError(Exception e) {
-			e.printStackTrace();
-			Toast.makeText(ProfileActivity.this, "On error!!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(ProfileActivity.this, "Impossibile accedere al server", Toast.LENGTH_SHORT).show();
 		}   
        });        
 	}
@@ -91,7 +90,9 @@ public class ProfileActivity extends DataActivity{
 					image.setImageBitmap(object);
 				}
 				@Override
-				public void onError(Exception e) {}	
+				public void onError(Exception e) {
+					image.setImageResource(R.drawable.img_error);
+				}	
 	       });
 	}
 	

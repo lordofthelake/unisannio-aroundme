@@ -14,8 +14,6 @@
         android:divider="#000000"
         android:dividerHeight="1dp" >
     </ListView>
-
-    
     <SlidingDrawer
         android:id="@+id/filterDrawer"
         android:layout_width="match_parent"
@@ -28,10 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Filter" />
-        
         <include layout="@layout/drawer_contents" />
     </SlidingDrawer>
-
     
 
 </FrameLayout>

@@ -9,6 +9,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +90,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 
 			@Override
 			public void onError(Exception e) {
-				e.printStackTrace();
+				imgPhoto.setImageResource(R.drawable.img_error);
 			}
 			
 		});

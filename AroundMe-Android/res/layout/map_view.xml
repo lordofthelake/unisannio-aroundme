@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
     android:orientation="vertical" >
+    
+     <com.google.android.maps.MapView
+         android:id="@+id/map"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:apiKey="0AxLfqRkyA9wRTxkh7Qq4ksxOdxuBOW0VB3RNJQ" 
+     />
+	
 </LinearLayout>

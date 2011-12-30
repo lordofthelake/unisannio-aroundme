@@ -9,9 +9,9 @@
 
         <ImageView
             android:id="@+id/imgInterest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher" 
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/img_downloading" 
             android:layout_gravity="center"
             />
 
@@ -19,6 +19,7 @@
             android:id="@+id/txtInterest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:text="Around Me" 
             android:gravity="center"
          />
