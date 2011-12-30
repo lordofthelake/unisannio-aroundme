@@ -34,7 +34,7 @@ public class PositionServlet extends HttpServlet{
 			Objectify ofy = ObjectifyService.begin();
 			User user = (UserImpl) ofy.get(User.class, Long.parseLong(userId));
 			Position position = Position.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
-			user.setPosition(position);
+			((UserImpl)user).setPosition(position);
 			ofy.put(user);
 			Queue queue = QueueFactory.getDefaultQueue();
 			TaskOptions url = TaskOptions.Builder.withUrl("/task/positionquery")
