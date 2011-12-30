@@ -5,4 +5,64 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:orientation="vertical" >
+	<View
+        android:layout_height="1dip"
+        android:layout_marginTop="1dp"
+        android:background="#FF909090"
+        android:layout_width="match_parent" />
+    <TextView
+        android:id="@+id/txtLikeBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:background="@drawable/my_gradient"
+        android:textColor="#FFFFFF"
+        android:text="Raggio" />
+    <View
+        android:layout_height="2dip"
+        android:layout_width="match_parent"
+        android:background="#FF909090" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distanza Massima" 
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        />
+
+    <SeekBar
+        android:id="@+id/seekDistance"
+        android:layout_width="273dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
+
+	<View
+        android:layout_height="1dip"
+        android:layout_marginTop="1dp"
+        android:background="#FF909090"
+        android:layout_width="match_parent" />
+    <TextView
+        android:id="@+id/txtLikeBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:background="@drawable/my_gradient"
+        android:textColor="#FFFFFF"
+        android:text="Filtro Interessi" />
+    <View
+        android:layout_height="2dip"
+        android:layout_width="match_parent"
+        android:background="#FF909090" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
 </LinearLayout>

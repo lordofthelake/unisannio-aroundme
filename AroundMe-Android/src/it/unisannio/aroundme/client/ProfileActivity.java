@@ -1,22 +1,13 @@
 package it.unisannio.aroundme.client;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.concurrent.Callable;
 
 import it.unisannio.aroundme.R;
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
 import android.widget.GridView;
 import android.widget.ImageView;

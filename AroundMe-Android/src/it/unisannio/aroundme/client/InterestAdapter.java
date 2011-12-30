@@ -49,7 +49,11 @@ public class InterestAdapter extends ArrayAdapter<Interest> {
 			
 		Interest interest = getItem(position);	
 		view.setTag(R.id.tag_interest,interest);
-		h.txtInterest.setText(interest.getName());
+		if (interest.getName().length()>MAX_CHARS){
+			h.txtInterest.setText(interest.getName().substring(0, MAX_CHARS-3)+"...");
+		}else{
+			h.txtInterest.setText(interest.getName());
+		}
 		
 		// FIXME Va resettata con un'immagine di default
 		final ImageView imgInterest = h.imgInterest;
@@ -72,4 +76,5 @@ public class InterestAdapter extends ArrayAdapter<Interest> {
 		
 		return view;
 	}
+	private final int MAX_CHARS=10;
 }
