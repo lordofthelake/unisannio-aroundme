@@ -55,16 +55,11 @@ class UserImpl extends User {
 		return id;
 	}
 
-<<<<<<< HEAD
-=======
-	/* FIXME la parte di creazione degli interessi dovr� essere spostata nella factory.
-	 * 
+
+	/* 
+	 * FIXME qualcuno deve scrivere l'interest sul datastore
 	 */
-	/*
-	@Override
->>>>>>> 737c641877831e40f746036546a29ba34a2332fc
 	public void addInterest(Interest interest) {
-		ModelFactory.getInstance().createInterest(interest.getId(), interest.getName(), interest.getCategory());
 		interests.add(new Key<Interest>(Interest.class, interest.getId()));
 	}
 
