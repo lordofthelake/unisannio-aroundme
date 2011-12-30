@@ -5,6 +5,7 @@ import java.util.Collection;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
+import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
@@ -32,8 +33,6 @@ public class ServletContextListenerImpl implements ServletContextListener{
 			@Override
 			public Interest createInterest(long id, String name, String category) {
 				Interest interest = new InterestImpl(id, name, category);
-				Objectify ofy = ObjectifyService.begin();
-				ofy.put(interest);
 				return interest;
 			}
 
@@ -45,6 +44,12 @@ public class ServletContextListenerImpl implements ServletContextListener{
 			@Override
 			public UserQuery createUserQuery() {
 				return new UserQueryImpl();
+			}
+
+			@Override
+			public Preferences createPreferences() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		});
 	}
