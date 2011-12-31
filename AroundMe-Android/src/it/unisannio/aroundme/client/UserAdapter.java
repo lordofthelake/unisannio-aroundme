@@ -75,26 +75,8 @@ public class UserAdapter extends ArrayAdapter<User> {
 		// FIXME rank = -1 => setText("N/A")
 		h.txtCompatibility.setText(String.format("%d%%", Math.round(me.getCompatibilityRank(user) * 100)));
 		
-		// FIXME Va resettata con un'immagine di default
-		final ImageView imgPhoto = h.imgPhoto;
+		Picture.get(user.getId()).asyncUpdate(async, h.imgPhoto, R.drawable.img_downloading, R.drawable.img_error);
 		
-		/* FIXME Potenziale problema di concorrenza
-		 * Le viste vengono riciclate, quindi il download dell'immagine potrebbe finire
-		 * quando la vista è già stata riciclata e dovrebbe visualizzare qualche altra cosa.
-		 */
-		async.exec(Picture.get(user.getId()), new FutureListener<Bitmap>() {
-
-			@Override
-			public void onSuccess(Bitmap object) {
-				imgPhoto.setImageBitmap(object);
-			}
-
-			@Override
-			public void onError(Exception e) {
-				imgPhoto.setImageResource(R.drawable.img_error);
-			}
-			
-		});
 		
 		return view;
 	}

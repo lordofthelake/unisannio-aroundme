@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 /**
@@ -64,23 +63,9 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 		Interest interest = getItem(position);	
 		view.setTag(R.id.tag_interest,interest);
 		h.txtMyInterest.setText(interest.getName());
-		final ImageView imgInterest = h.imgMyInterest;
 		
-		/* FIXME Potenziale problema di concorrenza
-		 * Le viste vengono riciclate, quindi il download dell'immagine potrebbe finire
-		 * quando la vista è già stata riciclata e dovrebbe visualizzare qualche altra cosa.
-		 */
-		async.exec(Picture.get(interest.getId()), new FutureListener<Bitmap>() {
-			@Override
-			public void onSuccess(Bitmap object) {
-				imgInterest.setImageBitmap(object);
-			}
-
-			@Override
-			public void onError(Exception e) {
-				imgInterest.setImageResource(R.drawable.img_error);
-			}
-		});
+		Picture.get(interest.getId()).asyncUpdate(async, h.imgMyInterest, R.drawable.img_downloading, R.drawable.img_error);
+		
 		
 		return view;
 	}

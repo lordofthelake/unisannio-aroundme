@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import android.os.Looper;
+
 
 /**
  * 
@@ -35,7 +37,7 @@ public class AsyncQueue {
 			if(keepAlive > 0)
 				allowCoreThreadTimeOut(true);
 			
-			// FIXME Set background priority
+			// TODO Set background priority
 		}
 
 		protected void beforeExecute(Thread t, Runnable r) {
@@ -71,9 +73,11 @@ public class AsyncQueue {
 	}
 
 	private PausableExecutor pool;
+	private Looper looper;
 	
 	public AsyncQueue(int poolSize, int keepAlive) {
 		this.pool = new PausableExecutor(poolSize, keepAlive);
+		this.looper = Looper.myLooper();
 	}
 	
 	public AsyncQueue(int poolSize) {
@@ -93,7 +97,7 @@ public class AsyncQueue {
 	}
 	
 	public <V> ListenableFuture<V> exec(Callable<V> action, FutureListener<V> listener) {
-		ListenableFuture<V> task = new ListenableFuture<V>(action, listener);
+		ListenableFuture<V> task = new ListenableFuture<V>(action, listener, looper);
 		this.exec(task);
 		return task;
 	}

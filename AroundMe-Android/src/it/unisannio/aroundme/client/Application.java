@@ -2,15 +2,11 @@ package it.unisannio.aroundme.client;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.ref.SoftReference;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 import org.w3c.dom.Node;
 
 import android.support.v4.util.LruCache;
-import android.util.Log;
 
 import it.unisannio.aroundme.model.*;
 
@@ -146,6 +142,7 @@ public class Application extends android.app.Application {
 							
 								protected Collection<User> read(InputStream input) throws Exception {
 									Node xml = SerializerUtils.getDocumentBuilder().parse(input); 
+									@SuppressWarnings("unchecked")
 									Collection<User> results = (Collection<User>) SerializerUtils.getCollectionSerializer(User.class).fromXML(xml);
 									
 									for(User u : results) {

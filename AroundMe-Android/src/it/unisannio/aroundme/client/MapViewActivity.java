@@ -12,7 +12,6 @@ public class MapViewActivity extends FragmentMapActivity  {
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

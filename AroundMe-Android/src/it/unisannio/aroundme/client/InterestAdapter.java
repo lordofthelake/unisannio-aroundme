@@ -62,24 +62,7 @@ public class InterestAdapter extends ArrayAdapter<Interest> {
 			h.txtInterest.setText(interest.getName());
 		}
 		
-		// FIXME Va resettata con un'immagine di default
-		final ImageView imgInterest = h.imgInterest;
-		
-		/* FIXME Potenziale problema di concorrenza
-		 * Le viste vengono riciclate, quindi il download dell'immagine potrebbe finire
-		 * quando la vista è già stata riciclata e dovrebbe visualizzare qualche altra cosa.
-		 */
-		async.exec(Picture.get(interest.getId()), new FutureListener<Bitmap>() {
-			@Override
-			public void onSuccess(Bitmap object) {
-				imgInterest.setImageBitmap(object);
-			}
-
-			@Override
-			public void onError(Exception e) {
-				imgInterest.setImageResource(R.drawable.img_error);
-			}
-		});
+		Picture.get(interest.getId()).asyncUpdate(async, h.imgInterest, R.drawable.img_downloading, R.drawable.img_error);
 		
 		return view;
 	}

@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import android.os.Handler;
+import android.os.Looper;
 
 /**
  * 
@@ -16,30 +17,26 @@ public class ListenableFuture<V> extends FutureTask<V> {
 	private FutureListener<V> listener = null;
 	private final Handler handler;
 	
-	public ListenableFuture(Callable<V> callable, FutureListener<V> listener, Handler h) {
+	public ListenableFuture(Callable<V> callable, FutureListener<V> listener, Looper looper) {
 		super(callable);
 		this.listener = listener;
-		this.handler = h;
-	}
-	
-	public ListenableFuture(Callable<V> callable, FutureListener<V> listener) {
-		this(callable, listener, new Handler());
+		this.handler = new Handler(looper);
 	}
 	
 	public ListenableFuture(Callable<V> callable) {
-		this(callable, null);
+		this(callable, null, null);
 	}
 	
-	public void setListener(FutureListener<V> listener) {
+	public synchronized void setListener(FutureListener<V> listener) {
 		this.listener = listener;
+		if(isDone()) notifyListener();
 	}
 	
 	public FutureListener<V> getListener() {
 		return listener;
 	}
 	
-	@Override
-	protected void done() {
+	private void notifyListener() {
 		if(listener != null && !isCancelled()) {
 			try {
 				final V result = get();
@@ -62,5 +59,10 @@ public class ListenableFuture<V> extends FutureTask<V> {
 				});
 			}
 		}
+	}
+	
+	@Override
+	protected synchronized void done() {
+		notifyListener();
 	}
 }

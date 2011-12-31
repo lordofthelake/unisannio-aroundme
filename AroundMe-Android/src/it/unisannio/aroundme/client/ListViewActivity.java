@@ -224,7 +224,7 @@ public class ListViewActivity extends FragmentActivity
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		//TODO Andrebbe salvato lo stato attuale dei filtri nel Bundle.
+		// FIXME Andrebbe salvato lo stato attuale dei filtri nel Bundle.
 		
 		/* Dalla doc. di Android:
 		 * 
