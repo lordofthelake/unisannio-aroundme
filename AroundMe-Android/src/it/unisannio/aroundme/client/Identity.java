@@ -19,13 +19,17 @@ import it.unisannio.aroundme.model.SerializerUtils;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
+/**
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class Identity extends User {
 	private static final long serialVersionUID = 1L;
 	
 	private static Identity instance = null;
 	
 	public static Callable<Identity> register(final User u, final String auth) {
-		HttpTask<Identity> task = new HttpTask<Identity>("PUT", Constants.MODEL_HOST + Constants.MODEL_PATH_USER, null) {
+		HttpTask<Identity> task = new HttpTask<Identity>("PUT", Setup.BACKEND_HOST + Setup.BACKEND_USER_PATH, null) {
 			
 			@Override
 			protected Identity read(InputStream in) throws Exception {
@@ -38,7 +42,7 @@ public class Identity extends User {
 			}
 		};
 
-		task.setHeader(Constants.AUTH_HEADER, auth);
+		task.setHeader(Setup.BACKEND_AUTH_HEADER, auth);
 		return task;
 	}
 	

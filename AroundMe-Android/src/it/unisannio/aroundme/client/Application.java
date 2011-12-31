@@ -20,7 +20,7 @@ import it.unisannio.aroundme.model.*;
  *
  */
 public class Application extends android.app.Application {
-	private static final LruCache<Long, User> cache = new LruCache<Long, User>(Constants.CACHE_USER_SIZE);
+	private static final LruCache<Long, User> cache = new LruCache<Long, User>(Setup.USER_CACHE_SIZE);
 	
 	public void addToCache(User u) {
 		cache.put(u.getId(), u);
@@ -142,7 +142,7 @@ public class Application extends android.app.Application {
 							}
 						}
 
-						return (new HttpTask<Collection<User>>("POST", Constants.MODEL_HOST + Constants.MODEL_PATH_USER) { 
+						return (new HttpTask<Collection<User>>("POST", Setup.BACKEND_USER_URL) { 
 							
 								protected Collection<User> read(InputStream input) throws Exception {
 									Node xml = SerializerUtils.getDocumentBuilder().parse(input); 

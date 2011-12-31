@@ -1,6 +1,8 @@
 package it.unisannio.aroundme.client;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.client.async.AsyncQueue;
+import it.unisannio.aroundme.client.async.FutureListener;
 import it.unisannio.aroundme.model.User;
 
 import com.facebook.android.DialogError;
@@ -11,6 +13,7 @@ import com.facebook.android.FacebookError;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -20,14 +23,19 @@ import android.widget.*;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */ 
-public class LoginActivity extends DataActivity implements DataListener<Identity>{
+public class LoginActivity extends FragmentActivity implements FutureListener<Identity>{
 	
-	private Facebook facebook = new Facebook(Constants.FACEBOOK_APP_ID);
+	private Facebook facebook = new Facebook(Setup.FACEBOOK_APP_ID);
 	String FILENAME = "AndroidSSO_data";
     private SharedPreferences mPrefs;
+    private AsyncQueue async;
 	
 	@Override
-	protected void onServiceConnected(final DataService service) {
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		this.async = new AsyncQueue();
+		
 		setContentView(R.layout.login);
 		Button btnFacebookConnect = (Button) findViewById(R.id.btnFacebookConnect);
 		
@@ -46,6 +54,7 @@ public class LoginActivity extends DataActivity implements DataListener<Identity
         if(facebook.isSessionValid()) {
         	//service.asyncDo(Identity.login(id, access_token), this);
         }
+        
 	
 		btnFacebookConnect.setOnClickListener(new OnClickListener() {
 
@@ -57,10 +66,10 @@ public class LoginActivity extends DataActivity implements DataListener<Identity
 					public void onComplete(Bundle values) {
 						Toast.makeText(getApplicationContext(), "On complete", Toast.LENGTH_LONG).show();
 						
-	                    service.asyncDo(Identity.create(facebook), new DataListener<User>() {
+	                    async.exec(Identity.create(facebook), new FutureListener<User>() {
 
 							@Override
-							public void onData(User object) {
+							public void onSuccess(User object) {
 								SharedPreferences.Editor editor = mPrefs.edit();
 			                    editor.putString("access_token", facebook.getAccessToken());
 			                    editor.putLong("access_expires", facebook.getAccessExpires());
@@ -122,7 +131,7 @@ public class LoginActivity extends DataActivity implements DataListener<Identity
 
 
 	@Override
-	public void onData(Identity object) {
+	public void onSuccess(Identity object) {
 		startActivity(new Intent(LoginActivity.this, ListViewActivity.class));
     	finish();
 	}
@@ -132,6 +141,24 @@ public class LoginActivity extends DataActivity implements DataListener<Identity
 	public void onError(Exception e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		async.pause();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		async.resume();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		async.shutdown();
 	}
     
 }

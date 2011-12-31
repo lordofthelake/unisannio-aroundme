@@ -1,6 +1,8 @@
 package it.unisannio.aroundme.client;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.client.async.AsyncQueue;
+import it.unisannio.aroundme.client.async.FutureListener;
 import it.unisannio.aroundme.model.Interest;
 
 import java.util.List;
@@ -15,13 +17,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author Marco Magnetti <marcomagnetti@gmail.com>
+ *
+ */
 public class InterestAdapter extends ArrayAdapter<Interest> {
 	private static final int ITEM_RESOURCE = R.layout.like_grid_elem;
-	private DataService service;
+	private AsyncQueue async;
 
-	public InterestAdapter(Context context, List<Interest> interests, DataService service) {
+	public InterestAdapter(Context context, List<Interest> interests, AsyncQueue async) {
 		super(context, ITEM_RESOURCE, interests);
-		this.service = service;
+		this.async = async;
 	}
 	
 	/* 
@@ -62,9 +69,9 @@ public class InterestAdapter extends ArrayAdapter<Interest> {
 		 * Le viste vengono riciclate, quindi il download dell'immagine potrebbe finire
 		 * quando la vista è già stata riciclata e dovrebbe visualizzare qualche altra cosa.
 		 */
-		service.asyncDo(Picture.get(interest.getId()), new DataListener<Bitmap>() {
+		async.exec(Picture.get(interest.getId()), new FutureListener<Bitmap>() {
 			@Override
-			public void onData(Bitmap object) {
+			public void onSuccess(Bitmap object) {
 				imgInterest.setImageBitmap(object);
 			}
 

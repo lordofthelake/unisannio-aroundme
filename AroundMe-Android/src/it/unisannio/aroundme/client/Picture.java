@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.client;
 
+
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
@@ -13,8 +14,6 @@ import android.util.Log;
 /**
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
- * 
  */
 public class Picture implements Callable<Bitmap> {
 	private static Map<Long, Picture> instances = new HashMap<Long, Picture>();
@@ -34,7 +33,7 @@ public class Picture implements Callable<Bitmap> {
 	}
 	
 	private Picture(long id) {
-		this(String.format(Constants.PICTURE_SRC, id));
+		this(String.format(Setup.PICTURE_URL, id));
 	}
 	
 	public String getURL() {

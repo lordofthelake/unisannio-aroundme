@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.client;
 
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
@@ -10,6 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+/**
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ *
+ * @param <T>
+ */
 public abstract class HttpTask<T> implements Callable<T> {
 	private final String url;
 	private final String method;
@@ -36,20 +43,20 @@ public abstract class HttpTask<T> implements Callable<T> {
 		try {
 			urlConnection = (HttpURLConnection) new URL(this.url).openConnection();
 
-			urlConnection.setConnectTimeout(30000); // 30 sec. connection timeout
+			urlConnection.setConnectTimeout(Setup.NETWORK_TIMEOUT);
 			
 			urlConnection.setUseCaches(true);
 			urlConnection.setRequestMethod(method);
 			
 			if(identity != null)
-				urlConnection.setRequestProperty(Constants.AUTH_HEADER, identity.getAccessToken());
+				urlConnection.setRequestProperty(Setup.BACKEND_AUTH_HEADER, identity.getAccessToken());
 			
 			for(Map.Entry<String, String> e : headers.entrySet())
 				urlConnection.setRequestProperty(e.getKey(), e.getValue());
 					
 			if(!method.equalsIgnoreCase("get")) {
 				urlConnection.setDoOutput(true);
-			    urlConnection.setChunkedStreamingMode(1024); // FIXME 1024 bytes? Is it optimal?
+			    urlConnection.setChunkedStreamingMode(1024); // XXX 1024 bytes? Is it optimal?
 
 			    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream(), 1024);
 			    try {

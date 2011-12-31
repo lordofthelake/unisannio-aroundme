@@ -2,6 +2,8 @@ package it.unisannio.aroundme.client;
 
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.client.async.AsyncQueue;
+import it.unisannio.aroundme.client.async.FutureListener;
 import it.unisannio.aroundme.model.User;
 
 import java.util.List;
@@ -9,7 +11,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +27,11 @@ public class UserAdapter extends ArrayAdapter<User> {
 	private static final int ITEM_RESOURCE = R.layout.list_entry;
 	
 	private User me;
-	private DataService service; // FIXME Context leak?
+	private AsyncQueue async; 
 
-	public UserAdapter(Context context, User me, List<User> users, DataService service) {
+	public UserAdapter(Context context, User me, List<User> users, AsyncQueue async) {
 		super(context, ITEM_RESOURCE, users);
-		this.service = service;
+		this.async = async;
 		this.me = me;
 	}
 	
@@ -81,10 +82,10 @@ public class UserAdapter extends ArrayAdapter<User> {
 		 * Le viste vengono riciclate, quindi il download dell'immagine potrebbe finire
 		 * quando la vista è già stata riciclata e dovrebbe visualizzare qualche altra cosa.
 		 */
-		service.asyncDo(Picture.get(user.getId()), new DataListener<Bitmap>() {
+		async.exec(Picture.get(user.getId()), new FutureListener<Bitmap>() {
 
 			@Override
-			public void onData(Bitmap object) {
+			public void onSuccess(Bitmap object) {
 				imgPhoto.setImageBitmap(object);
 			}
 

@@ -2,31 +2,22 @@ package it.unisannio.aroundme.client;
 
 
 import it.unisannio.aroundme.R;
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.User;
-import it.unisannio.aroundme.model.UserQuery;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import com.google.android.maps.MapActivity;
+import it.unisannio.aroundme.client.async.*;
+import it.unisannio.aroundme.model.*;
+import java.util.*;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.content.DialogInterface.*;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnAttachStateChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -43,19 +34,32 @@ import android.widget.Toast;
  * @author Marco Magnetti <marcomagnetti@gmail.com>
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
-public class ListViewActivity extends DataActivity 
-		implements OnItemClickListener {
-	private final int MAX_DISTANCE=5000;
+
+/* TODO Si dovrebbe accettare una lista di id via Intent, così che possa essere usato
+ * dal Notification service
+ */
+public class ListViewActivity extends FragmentActivity 
+		implements OnItemClickListener, OnCancelListener {
+	private static final int MAX_DISTANCE=5000;
+	
+	private AsyncQueue async;
+	private AsyncQueue pictureAsync;
+	
 	private UserAdapter usrAdapter;
 	private InterestFilterAdapter interestFilterAdapter;
-	private SlidingDrawer drawer;
+	
 	private List<User> users;
 	private List<Interest> myInterests;
+	
 	private ListView nearByList;
+	
+	private SlidingDrawer drawer;
 	private ListView interestsFilter;
 	private ProgressDialog progress;
 	private SeekBar seekDistance;
-	private TextView txtDistanceFilter; 
+	private TextView txtDistanceFilter;
+
+	private ListenableFuture<Collection<User>> task; 
     
     public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
 		Intent intent = new Intent(ListViewActivity.this, ProfileActivity.class);
@@ -63,18 +67,29 @@ public class ListViewActivity extends DataActivity
 		startActivity(intent);				
 	}
     
+    /* TODO La query andrebbe ripristinata dal savedInstanceState, se non è null
+     * 
+     * @see http://developer.android.com/guide/topics/fundamentals/activities.html#SavingActivityState
+     */
     @Override
-    protected void onServiceConnected(DataService service) {
+    protected void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	
     	setContentView(R.layout.listview);
+    	
+    	async = new AsyncQueue();
+    	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
+    	
     	users = new ArrayList<User>();
     	myInterests=new ArrayList(Identity.get().getInterests());
+    	
         nearByList = (ListView) findViewById(R.id.nearByList);
-        drawer=(SlidingDrawer) findViewById(R.id.filterDrawer);
-        seekDistance=(SeekBar) findViewById(R.id.seekDistance);
+        drawer= (SlidingDrawer) findViewById(R.id.filterDrawer);
+        seekDistance= (SeekBar) findViewById(R.id.seekDistance);
         txtDistanceFilter=(TextView) findViewById(R.id.txtDistaceFilter);
         
         nearByList.setOnItemClickListener(this);
-        seekDistance.setMax(this.MAX_DISTANCE);
+        seekDistance.setMax(MAX_DISTANCE);
         seekDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
 			@Override
 			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
@@ -90,7 +105,7 @@ public class ListViewActivity extends DataActivity
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				//TODO Salvare le impostazioni
-				Toast.makeText(ListViewActivity.this, "Saving Dinstance", Toast.LENGTH_SHORT).show();
+				Toast.makeText(ListViewActivity.this, "Saving Distance", Toast.LENGTH_SHORT).show();
 			}
         });
         seekDistance.setProgress(3000);  
@@ -111,15 +126,16 @@ public class ListViewActivity extends DataActivity
         interestsFilter=(ListView) findViewById(R.id.listInterestFilter);
         
         progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
-    	nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, service));
+    	progress.setOnCancelListener(this);
+    	
+        nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, pictureAsync));
     	//FIXME interestsFilter.setAdapter(interestFilterAdapter = new InterestFilterAdapter(ListViewActivity.this, myInterests, service));
 
-        // TODO Mock loader. Replace with UserQuery
-        // TODO Make cancelable
-    	service.asyncDo(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), new DataListener<Collection<User>>(){
+    	this.task = async.exec(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), new FutureListener<Collection<User>>(){
         	 @Override
-        		public void onData(Collection<User> object) {
+        		public void onSuccess(Collection<User> object) {
         	    	Log.i("LIST", String.valueOf(object.size()));
+        	    	task = null;
         			progress.dismiss();
         			users.clear();
         			users.addAll(object);
@@ -181,6 +197,53 @@ public class ListViewActivity extends DataActivity
 	    default:
 	        return super.onOptionsItemSelected(item);
 	    }
+	}
+
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		if(task != null)
+			task.cancel(true);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		async.pause();
+		pictureAsync.pause();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		async.resume();
+		pictureAsync.resume();
+		
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		//TODO Andrebbe salvato lo stato attuale dei filtri nel Bundle.
+		
+		/* Dalla doc. di Android:
+		 * 
+		 * "A good way to test your application's ability to restore its state is to simply rotate 
+		 * the device so that the screen orientation changes. When the screen orientation changes, 
+		 * the system destroys and recreates the activity in order to apply alternative resources 
+		 * that might be available for the new orientation. For this reason alone, it's very important 
+		 * that your activity completely restores its state when it is recreated, because users regularly 
+		 * rotate the screen while using applications."
+		 * 
+		 * @see http://developer.android.com/guide/topics/fundamentals/activities.html#SavingActivityState
+		 */
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		async.shutdown();
+		pictureAsync.shutdown();
 	}
 	
 }

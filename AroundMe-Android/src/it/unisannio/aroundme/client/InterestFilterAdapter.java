@@ -1,6 +1,8 @@
 package it.unisannio.aroundme.client;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.client.async.AsyncQueue;
+import it.unisannio.aroundme.client.async.FutureListener;
 import it.unisannio.aroundme.model.Interest;
 
 import java.util.List;
@@ -17,17 +19,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+/**
+ * 
+ * @author Marco Magnetti <marcomagnetti@gmail.com>
+ *
+ */
 public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 	private static final int ITEM_RESOURCE = R.layout.like_filter_elem;
-	private DataService service;
+	private AsyncQueue async;
 
-	public InterestFilterAdapter(Context context, List<Interest> interests, DataService service) {
+	public InterestFilterAdapter(Context context, List<Interest> interests, AsyncQueue async) {
 		super(context, ITEM_RESOURCE, interests);
-		this.service = service;
+		this.async = async;
 	}
 	
 	/* 
-	 * View Holder pattern: si minimizzano le chiamate a findViewById() (costose) memorizzando i riferimenti in un "holder".
+	 * View Holder pattern: si minimizzano le chiamate a findViewById() (costose) memorizzando 
+	 * i riferimenti in un "holder".
 	 */
 	private static class ViewHolder {
 		TextView txtMyInterest;
@@ -61,9 +70,9 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 		 * Le viste vengono riciclate, quindi il download dell'immagine potrebbe finire
 		 * quando la vista è già stata riciclata e dovrebbe visualizzare qualche altra cosa.
 		 */
-		service.asyncDo(Picture.get(interest.getId()), new DataListener<Bitmap>() {
+		async.exec(Picture.get(interest.getId()), new FutureListener<Bitmap>() {
 			@Override
-			public void onData(Bitmap object) {
+			public void onSuccess(Bitmap object) {
 				imgInterest.setImageBitmap(object);
 			}
 
