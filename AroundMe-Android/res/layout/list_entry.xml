@@ -9,6 +9,8 @@
         android:id="@+id/imgPhoto"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
         android:src="@drawable/img_downloading" />
 
     <LinearLayout
@@ -34,14 +36,16 @@
             <TextView
                 android:id="@+id/txtDistance"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/distance_shape"
-                android:padding="3dp"
-                android:text="100m"
+                android:padding="5dp"
+                android:text="test"
+                android:gravity="center_vertical"
                 android:textStyle="bold"
                 android:textColor="#ffffff"
-                android:textSize="15dp" />
+                android:textSize="15dp" 
+                android:background="@drawable/distance_shape"
+                />
             <TextView
                 android:id="@+id/txtCompatibility"
                 android:layout_width="wrap_content"

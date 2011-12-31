@@ -72,7 +72,7 @@
 	
 	<servlet>
 		<servlet-name>C2DMSenderTask</servlet-name>
-		<servlet-class>it.unisannio.aroundme.server.C2DMSenderTask</servlet-class>
+		<servlet-class>it.unisannio.aroundme.server.c2dm.C2DMSenderTask</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>C2DMSenderTask</servlet-name>

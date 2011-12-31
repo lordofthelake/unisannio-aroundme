@@ -30,7 +30,7 @@ public class PositionQueryTask extends HttpServlet{
 		
 			long userId = Long.parseLong(req.getParameter("userId"));
 			Objectify ofy = ObjectifyService.begin();
-			User user = (UserImpl) ofy.get(User.class, userId);
+			User user = ofy.get(UserImpl.class, userId);
 			Position position = user.getPosition();
 			Neighbourhood neighbourhood = new Neighbourhood();		
 			neighbourhood.setPosition(position);
