@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.client;
 
+import android.location.LocationManager;
 import it.unisannio.aroundme.client.async.AsyncQueue;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
@@ -92,6 +93,30 @@ public interface Setup {
 	 */
 	final int USER_CACHE_SIZE = 20;
 	
-
+	/**
+	 * Intervallo di tempo dopo cui una rilevazione di posizione viene automaticamente considerata
+	 * migliore della precedente (in millisecondi).
+	 * 
+	 * @see PositionTrackingService#isBetterLocation(android.location.Location, android.location.Location)
+	 */
+	final long TRACKING_TIME_WINDOW = 1000 * 60 * 2; // 2 min.
 	
+
+	/**
+	 * Intervallo minimo di tempo tra le rilevazioni della posizione (in millisecondi).
+	 * 
+	 * Gli sviluppatori Android sconsigliano intervalli inferiori a 60 sec. per questioni di 
+	 * risparmio energetico.
+	 * 
+	 * @see PositionTrackingService
+	 * @see LocationManager#requestLocationUpdates(String, long, float, android.location.LocationListener)
+	 */
+	final long TRACKING_MIN_TIME = 60 * 1000;
+	
+	/**
+	 * Distanza minima per una nuova rilevazione della posizione.
+	 * 
+	 * @see LocationManager#requestLocationUpdates(String, long, float, android.location.LocationListener)
+	 */
+	final float TRACKING_MIN_DISTANCE = 5;
 }

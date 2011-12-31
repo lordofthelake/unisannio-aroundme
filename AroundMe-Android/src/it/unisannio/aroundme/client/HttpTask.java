@@ -23,14 +23,22 @@ public abstract class HttpTask<T> implements Callable<T> {
 	private final Map<String, String> headers = new HashMap<String, String>();
 	private final Identity identity;
 	
-	public HttpTask(String method, String url, Identity identity) {
+	public HttpTask(Identity identity, String method, String url, Object... args) {
+		this(identity, method, String.format(url, args));
+	}
+	
+	public HttpTask(Identity identity, String method, String url) {
 		this.url = url;
 		this.method = method;
 		this.identity = identity;
 	}
 	
+	public HttpTask(String method, String url, Object... args) {
+		this(Identity.get(), method, url, args);
+	}
+	
 	public HttpTask(String method, String url) {
-		this(method, url, Identity.get());
+		this(Identity.get(), method, url);
 	}
 	
 	public void setHeader(String key, String value) {

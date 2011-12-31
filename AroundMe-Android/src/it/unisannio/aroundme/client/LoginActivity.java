@@ -78,6 +78,7 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 			                    
 			                    ((Application) getApplication()).addToCache(object);
 			                    Identity.set(object, facebook.getAccessToken());
+			                    startService(new Intent(LoginActivity.this, PositionTrackingService.class));
 			                    startActivity(new Intent(LoginActivity.this, ListViewActivity.class));
 			                	finish();
 							}

@@ -25,19 +25,15 @@ public class Picture implements Callable<Bitmap> {
 		return instances.get(id);
 	}
 	
-	private String url;
+	private long id;
 	private SoftReference<Bitmap> cache;
-	
-	public Picture(String url) {
-		this.url = url;
-	}
-	
+		
 	private Picture(long id) {
-		this(String.format(Setup.PICTURE_URL, id));
+		this.id = id;
 	}
 	
-	public String getURL() {
-		return url;
+	public long getId() {
+		return id;
 	}
 	
 	public Bitmap call() throws Exception {
@@ -45,8 +41,8 @@ public class Picture implements Callable<Bitmap> {
 		if(cache != null && (cachedBmp = cache.get()) != null) {
 			return cachedBmp;
 		}
-		Log.d("Picture", url);
-		return (new HttpTask<Bitmap>("GET", url, null) {
+
+		return (new HttpTask<Bitmap>((Identity) null, "GET", Setup.PICTURE_URL, id) {
 
 			@Override
 			protected Bitmap read(InputStream in) throws Exception {

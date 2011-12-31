@@ -29,7 +29,7 @@ public class Identity extends User {
 	private static Identity instance = null;
 	
 	public static Callable<Identity> register(final User u, final String auth) {
-		HttpTask<Identity> task = new HttpTask<Identity>("PUT", Setup.BACKEND_HOST + Setup.BACKEND_USER_PATH, null) {
+		HttpTask<Identity> task = new HttpTask<Identity>(null, "PUT", Setup.BACKEND_HOST + Setup.BACKEND_USER_PATH) {
 			
 			@Override
 			protected Identity read(InputStream in) throws Exception {
