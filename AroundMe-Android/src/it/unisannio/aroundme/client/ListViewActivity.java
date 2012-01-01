@@ -81,16 +81,17 @@ public class ListViewActivity extends FragmentActivity
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
     	
     	users = new ArrayList<User>();
-    	myInterests=new ArrayList(Identity.get().getInterests());
+    	myInterests = new ArrayList<Interest>(Identity.get().getInterests());
     	
         nearByList = (ListView) findViewById(R.id.nearByList);
-        drawer= (SlidingDrawer) findViewById(R.id.filterDrawer);
-        seekDistance= (SeekBar) findViewById(R.id.seekDistance);
-        txtDistanceFilter=(TextView) findViewById(R.id.txtDistaceFilter);
+        drawer = (SlidingDrawer) findViewById(R.id.filterDrawer);
+        seekDistance = (SeekBar) findViewById(R.id.seekDistance);
+        txtDistanceFilter = (TextView) findViewById(R.id.txtDistaceFilter);
         
         nearByList.setOnItemClickListener(this);
         seekDistance.setMax(MAX_DISTANCE);
-        seekDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
+        seekDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        	
 			@Override
 			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 				int distance= seekDistance.getProgress()*100;
@@ -102,9 +103,15 @@ public class ListViewActivity extends FragmentActivity
 				}else{
 					txtDistanceFilter.setText(String.format("%.1f Km", (float)distance/1000));
 				}
+				int distance= seekDistance.getProgress();
+				txtDistanceFilter.setText(distance<1000 
+						? distance + " m" 
+						: String.format("%.1f Km", (float) distance/1000));
 			}
+			
 			@Override
 			public void onStartTrackingTouch(SeekBar arg0) {}
+			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				//TODO Salvare le impostazioni
@@ -134,22 +141,23 @@ public class ListViewActivity extends FragmentActivity
         nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, pictureAsync));
     	//FIXME interestsFilter.setAdapter(interestFilterAdapter = new InterestFilterAdapter(ListViewActivity.this, myInterests, service));
 
-    	this.task = async.exec(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), new FutureListener<Collection<User>>(){
-        	 @Override
-        		public void onSuccess(Collection<User> object) {
-        	    	Log.i("LIST", String.valueOf(object.size()));
-        	    	task = null;
-        			progress.dismiss();
-        			users.clear();
-        			users.addAll(object);
-        			usrAdapter.notifyDataSetChanged();
-        		}
-        	 @Override
-        		public void onError(Exception e) {
-        			progress.dismiss();
-        			Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG).show();	
-        			e.printStackTrace();
-        		}
+        this.task = async.exec(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), new FutureListener<Collection<User>>(){
+        	@Override
+        	public void onSuccess(Collection<User> object) {
+        		Log.i("LIST", String.valueOf(object.size()));
+        		task = null;
+        		progress.dismiss();
+        		users.clear();
+        		users.addAll(object);
+        		usrAdapter.notifyDataSetChanged();
+        	}
+        	
+        	@Override
+        	public void onError(Throwable e) {
+        		progress.dismiss();
+        		Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG).show();	
+        		e.printStackTrace();
+        	}
         }); 	
     }
     

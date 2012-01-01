@@ -53,10 +53,10 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 		userId = (Long) getIntent().getExtras().get("userId");
 		
 		txtName = (TextView) findViewById(R.id.txtName);
-		imgPhoto=(ImageView) findViewById(R.id.imgPhoto);	
-		txtCompatibility= (TextView)findViewById(R.id.txtCompatibility);
-		txtDistance=(TextView)findViewById(R.id.txtDistance);
-		grdInterests=(GridView)findViewById(R.id.grdInterests);
+		imgPhoto = (ImageView) findViewById(R.id.imgPhoto);	
+		txtCompatibility = (TextView) findViewById(R.id.txtCompatibility);
+		txtDistance = (TextView) findViewById(R.id.txtDistance);
+		grdInterests = (GridView) findViewById(R.id.grdInterests);
 		
 		async = new AsyncQueue();
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
@@ -78,8 +78,9 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 		txtName.setText(user.getName());
 		
 		if(me != null && me.getId() != userId) {
-			txtDistance.setText(String.format("%.1f m", me.getDistance(user)));
-			txtCompatibility.setText(me.getCompatibilityRank(user)+" %");
+			// FIXME Al momento mancano i campi
+			// txtDistance.setText(String.format("%.1f m", me.getDistance(user)));
+			// txtCompatibility.setText(me.getCompatibilityRank(user)+" %");
 		}
 		
 		ArrayList<Interest> interests = new ArrayList<Interest>(user.getInterests());
@@ -95,7 +96,7 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 				imgPhoto.setImageBitmap(object);
 			}
 			@Override
-			public void onError(Exception e) {
+			public void onError(Throwable e) {
 				imgPhoto.setImageResource(R.drawable.img_error);
 			}	
        });
@@ -104,7 +105,7 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 	}
 	
 	@Override
-	public void onError(Exception e) {
+	public void onError(Throwable e) {
 		progress.dismiss();
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		

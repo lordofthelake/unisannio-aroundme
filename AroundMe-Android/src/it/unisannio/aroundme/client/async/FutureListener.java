@@ -5,7 +5,7 @@ package it.unisannio.aroundme.client.async;
  * 
  * Nel momento in cui i dati siano stati correttamente caricati (per esempio dalla rete o da un DB), 
  * viene richiamato il metodo {@link #onFuture(T)}. In caso di errori, viene notificato 
- * {@link #onError(Exception)}.
+ * {@link #onError(Throwable)}.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
@@ -25,5 +25,5 @@ public interface FutureListener<V> {
 	 * 
 	 * @param e Eccezione contenente informazioni circa l'errore verificatosi.
 	 */
-	void onError(Exception e);
+	void onError(Throwable e);
 }

@@ -60,12 +60,27 @@ public interface Setup {
 	final int PICTURE_AVERAGE_SIZE = 7654; // 7.7KiB
 	
 	/**
-	 * Tempo di timeout dopo il quale una connessione HTTP viene terminata (in sec.)
+	 * Tempo di timeout dopo il quale una connessione HTTP viene terminata (in millisecondi).
 	 * 
 	 * @see HttpTask
 	 */
-	final int NETWORK_TIMEOUT = 30; // 30 sec.
+	final int NETWORK_TIMEOUT = 30 * 1000; // 30 sec.
 	
+	/**
+	 * Dimensione per la cache HTTP su disco (in byte).
+	 * 
+	 * La cache su disco &egrave; disponibile solo per Android 3.2+ (API Level 13).
+	 * 
+	 * @see android.net.http.HttpResponseCache
+	 */
+	final int NETWORK_CACHE_SIZE = 10 * 1024 * 1024; // 10 MiB
+	
+	/**
+	 * Dimensione dei chunk per le richieste HTTP.
+	 * 
+	 * @see HttpTask
+	 */
+	final int NETWORK_CHUNCK_SIZE = 1024; // 1 KiB
 	/**
 	 * Indirizzo del server backend.
 	 * 
