@@ -2,14 +2,12 @@ package it.unisannio.aroundme.client;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.client.async.AsyncQueue;
-import it.unisannio.aroundme.client.async.FutureListener;
 import it.unisannio.aroundme.model.Interest;
 
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

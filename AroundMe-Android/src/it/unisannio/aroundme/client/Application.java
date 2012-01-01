@@ -23,6 +23,13 @@ public class Application extends android.app.Application {
 	}
 	
 	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		cache.evictAll();
+		Picture.flushCache();
+	}
+	
+	@Override
 	public void onCreate() {
 		
 		ModelFactory.setInstance(new ModelFactory() {

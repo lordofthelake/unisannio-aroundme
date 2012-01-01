@@ -3,5 +3,6 @@
 	<item type="id" name="tag_user" />
 	<item type="id" name="tag_viewholder" />
 	<item type="id" name="tag_interest"/>
-    
+    <item type="id" name="tag_task" />
+    <item type="id" name="tag_pictureid" />
 </resources>

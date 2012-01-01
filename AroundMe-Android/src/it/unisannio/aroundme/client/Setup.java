@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.client;
 
+import android.graphics.Bitmap;
 import android.location.LocationManager;
 import it.unisannio.aroundme.client.async.AsyncQueue;
 import it.unisannio.aroundme.model.User;
@@ -13,11 +14,15 @@ import it.unisannio.aroundme.model.UserQuery;
 public interface Setup {
 	/**
 	 * Id dell'applicazione Facebook.
+	 * 
+	 * @see LoginActivity
 	 */
 	final String FACEBOOK_APP_ID = "298477283507880";
 	
 	/**
 	 * URL per le immagini.
+	 * 
+	 * @see Picture
 	 */
 	final String PICTURE_URL = "http://graph.facebook.com/%d/picture";
 	
@@ -36,14 +41,36 @@ public interface Setup {
 	final int PICTURE_KEEPALIVE = 10;
 	
 	/**
-	 * N. di secondi dopo il quale una connessione HTTP viene terminata
+	 * Dimensione della cache delle immagini (in byte).
+	 * 
+	 * @see Picture
+	 */
+	final int PICTURE_CACHE_SIZE = 4 * 1024 * 1024; // 4MiB
+	
+	/**
+	 * Dimensione delle immagini formato 50x50 px fornite da Facebook, in formato bitmap
+	 * (in byte).
+	 * 
+	 * Viene utilizzata come misura approssimata per il numero di entry che possono entrare nella
+	 * cache, per versioni di Android inferiori alla 3.1 (API Level 12).
+	 * 
+	 * @see Picture#getCachedBitmap()
+	 * @see Bitmap#getByteCount()
+	 */
+	final int PICTURE_AVERAGE_SIZE = 7654; // 7.7KiB
+	
+	/**
+	 * Tempo di timeout dopo il quale una connessione HTTP viene terminata (in sec.)
 	 * 
 	 * @see HttpTask
 	 */
-	final int NETWORK_TIMEOUT = 30;
+	final int NETWORK_TIMEOUT = 30; // 30 sec.
 	
 	/**
-	 * Indirizzo del server backend.	
+	 * Indirizzo del server backend.
+	 * 
+	 * @see #BACKEND_USER_URL	
+	 * @see #BACKEND_POSITION_URL
 	 */
 	final String BACKEND_HOST = "https://aroundme-backend.appspot.com";
 	
@@ -111,10 +138,10 @@ public interface Setup {
 	 * @see PositionTrackingService
 	 * @see LocationManager#requestLocationUpdates(String, long, float, android.location.LocationListener)
 	 */
-	final long TRACKING_MIN_TIME = 60 * 1000;
+	final long TRACKING_MIN_TIME = 60 * 1000; // 60 sec
 	
 	/**
-	 * Distanza minima per una nuova rilevazione della posizione.
+	 * Distanza minima per una nuova rilevazione della posizione (in metri).
 	 * 
 	 * @see LocationManager#requestLocationUpdates(String, long, float, android.location.LocationListener)
 	 */

@@ -9,13 +9,14 @@ import it.unisannio.aroundme.client.async.ListenableFuture;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.LruCache;
 import android.widget.ImageView;
 
 /**
@@ -61,17 +62,38 @@ public class Picture implements Callable<Bitmap> {
 	    }
 	}
 	
-	private static Map<Long, Picture> instances = new HashMap<Long, Picture>();
+	// Non vogliamo che esistano due istanze con lo stesso id, ma permettiamo al GC di 
+	// reclamarle se non sono più referenziate altrove
+	private static Map<Long, WeakReference<Picture>> instances = new HashMap<Long, WeakReference<Picture>>();
+	
+	private static LruCache<Long, Bitmap> cache = new LruCache<Long, Bitmap>(Setup.PICTURE_CACHE_SIZE) {
+		protected int sizeOf(Long key, Bitmap value) {
+			try {
+				// Disponibile solo per API Level >= 12
+				return (Integer) Bitmap.class.getMethod("getByteCount").invoke(value);
+			} catch (Exception e) {
+				return Setup.PICTURE_AVERAGE_SIZE;
+			}
+		};
+	};
 	
 	public static Picture get(long id) {
-		if(!instances.containsKey(id)) 
-			instances.put(id, new Picture(id));
+		WeakReference<Picture> ref = instances.get(id);
+		Picture instance = (ref == null) ? null : ref.get();
 		
-		return instances.get(id);
+		if(instance == null) {
+			instance = new Picture(id);
+			instances.put(id, new WeakReference<Picture>(instance));
+		}
+
+		return instance;
+	}
+	
+	public static void flushCache() {
+		cache.evictAll();
 	}
 	
 	private long id;
-	private SoftReference<Bitmap> cache;
 		
 	private Picture(long id) {
 		this.id = id;
@@ -81,11 +103,14 @@ public class Picture implements Callable<Bitmap> {
 		return id;
 	}
 	
+	public Bitmap getCachedBitmap() {
+		return cache.get(id);
+	}
+	
 	public Bitmap call() throws Exception {
-		Bitmap cachedBmp = null;
-		if(cache != null && (cachedBmp = cache.get()) != null) {
+		Bitmap cachedBmp = getCachedBitmap();
+		if(cachedBmp != null) 
 			return cachedBmp;
-		}
 
 		return (new HttpTask<Bitmap>((Identity) null, "GET", Setup.PICTURE_URL, id) {
 
@@ -95,16 +120,12 @@ public class Picture implements Callable<Bitmap> {
 				if(bmp == null) 
 					throw new RuntimeException("Cannot decode image");
 				
-				cache = new SoftReference<Bitmap>(bmp);
+				cache.put(id, bmp);
 				
 				return bmp;
 			}
 			
 		}).call();
-	}
-	
-	public void reset() {
-		this.cache = null;
 	}
 	
 	public void asyncUpdate(AsyncQueue async, final ImageView view, int defaultRes, final int errorRes) {
