@@ -40,7 +40,7 @@ import android.widget.Toast;
  */
 public class ListViewActivity extends FragmentActivity 
 		implements OnItemClickListener, OnCancelListener {
-	private static final int MAX_DISTANCE=5000;
+	private static final int MAX_DISTANCE=50;
 	
 	private AsyncQueue async;
 	private AsyncQueue pictureAsync;
@@ -93,9 +93,12 @@ public class ListViewActivity extends FragmentActivity
         seekDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
 			@Override
 			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-				int distance= seekDistance.getProgress();
-				if (distance<1000){
-				txtDistanceFilter.setText(distance+" m");
+				int distance= seekDistance.getProgress()*100;
+				if (distance==0){
+					txtDistanceFilter.setText("Off  ");
+				}
+				else if (distance<1000){
+					txtDistanceFilter.setText(distance+" m");
 				}else{
 					txtDistanceFilter.setText(String.format("%.1f Km", (float)distance/1000));
 				}
@@ -218,7 +221,6 @@ public class ListViewActivity extends FragmentActivity
 		super.onResume();
 		async.resume();
 		pictureAsync.resume();
-		
 	}
 	
 	@Override
