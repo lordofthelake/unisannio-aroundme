@@ -84,7 +84,7 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 							}
 
 							@Override
-							public void onError(Exception e) {
+							public void onError(Throwable e) {
 								Toast.makeText(LoginActivity.this, "Errore", Toast.LENGTH_LONG).show();
 								e.printStackTrace();
 								
@@ -95,8 +95,8 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 	                     * Fai una richiesta al server. Se l'utente c'è, ridireziona alla ListView.
 	                     * Altrimenti alla pagina di registrazione.
 	                     */
-						startActivity(new Intent(LoginActivity.this, ListViewActivity.class));
-						finish();
+						//startActivity(new Intent(LoginActivity.this, ListViewActivity.class));
+						//finish();
 					}
 
 					@Override
@@ -139,7 +139,7 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 
 
 	@Override
-	public void onError(Exception e) {
+	public void onError(Throwable e) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,11 +1,13 @@
 package it.unisannio.aroundme.client;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
 import org.w3c.dom.Node;
 
+import android.content.Context;
 import android.support.v4.util.LruCache;
 
 import it.unisannio.aroundme.model.*;
@@ -32,6 +34,21 @@ public class Application extends android.app.Application {
 	@Override
 	public void onCreate() {
 		
+		/* Cache HTTP con storage sulla memoria interna.
+		 * 
+		 * Disponibile solo per API Level >= 13.
+		 * 
+		 * @see http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+		 * @see android.net.http.HttpResponseCache
+		 */
+		try {
+			Class.forName("android.net.http.HttpResponseCache")
+			.getMethod("install", File.class, long.class)
+			.invoke(null, new File(getCacheDir(), "http"), Setup.NETWORK_CACHE_SIZE);
+		} catch (Exception e) {}
+
+
+
 		ModelFactory.setInstance(new ModelFactory() {
 			
 			@Override

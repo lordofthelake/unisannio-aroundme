@@ -11,13 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import android.content.Context;
+
 /**
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  *
  * @param <T>
  */
-public abstract class HttpTask<T> implements Callable<T> {
+public abstract class HttpTask<T> implements Callable<T> {	
 	private final String url;
 	private final String method;
 	private final Map<String, String> headers = new HashMap<String, String>();
@@ -64,9 +66,9 @@ public abstract class HttpTask<T> implements Callable<T> {
 					
 			if(!method.equalsIgnoreCase("get")) {
 				urlConnection.setDoOutput(true);
-			    urlConnection.setChunkedStreamingMode(1024); // XXX 1024 bytes? Is it optimal?
-
-			    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream(), 1024);
+			    urlConnection.setChunkedStreamingMode(Setup.NETWORK_CHUNCK_SIZE);
+			    
+			    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream(), Setup.NETWORK_CHUNCK_SIZE);
 			    try {
 			    	write(out);
 			    } finally {
@@ -80,7 +82,7 @@ public abstract class HttpTask<T> implements Callable<T> {
 			if(status >= 400)
 				throw new HttpStatusException(status);
 
-		    InputStream in = new BufferedInputStream(urlConnection.getInputStream(), 1024);
+		    InputStream in = new BufferedInputStream(urlConnection.getInputStream(), Setup.NETWORK_CHUNCK_SIZE);
 		    
 		    try {
 		    	return read(in);
