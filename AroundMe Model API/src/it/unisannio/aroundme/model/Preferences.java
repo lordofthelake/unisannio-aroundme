@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -18,17 +17,12 @@ public abstract class Preferences implements Model {
 	public static final Serializer<Preferences> SERIALIZER = new Serializer<Preferences>() {
 
 		@Override
-		public Preferences fromXML(Node xml) {
-			if(!(xml instanceof Element))
-				throw new IllegalArgumentException();
-			
-			Element preferences = (Element) xml;
-			if(!preferences.getTagName().equals("preferences")) 
-				throw new IllegalArgumentException();
+		public Preferences fromXML(Element node) {
+			validateTagName(node, "preferences");
 			
 			Preferences obj = ModelFactory.getInstance().createPreferences();
 			
-			NodeList entries = preferences.getChildNodes();
+			NodeList entries = node.getChildNodes();
 			for(int i = 0; i < entries.getLength(); i++) {
 				if(!(entries.item(i) instanceof Element)) continue;
 				
@@ -36,6 +30,8 @@ public abstract class Preferences implements Model {
 				String key = entry.getTagName();
 				String content = entry.getTextContent();
 				String type = entry.getAttribute("type");
+				
+				if(type.isEmpty()) type = "string";
 				
 				if(type.equals("string")) obj.put(key, content);
 				else if(type.equals("float")) obj.put(key, Float.valueOf(content));
@@ -50,13 +46,13 @@ public abstract class Preferences implements Model {
 		}
 
 		@Override
-		public Node toXML(Preferences obj) {
+		public Element toXML(Preferences obj) {
 			Map<String, ?> map = obj.getAll();
-			Document d = SerializerUtils.newDocument();
+			Document document = getDocumentBuilder().newDocument();
 			
-			Element preferences = d.createElement("preferences");
+			Element preferences = document.createElement("preferences");
 			for(Map.Entry<String, ?> e : map.entrySet()) {
-				Element entry = d.createElement(e.getKey());
+				Element entry = document.createElement(e.getKey());
 				entry.setTextContent(e.getValue().toString());
 				Class<?> clazz = e.getValue().getClass();
 				String type = null;

@@ -32,9 +32,7 @@ public class PositionQueryTask extends HttpServlet{
 			Objectify ofy = ObjectifyService.begin();
 			User user = ofy.get(UserImpl.class, userId);
 			Position position = user.getPosition();
-			Neighbourhood neighbourhood = new Neighbourhood();		
-			neighbourhood.setPosition(position);
-			neighbourhood.setRadius(100);
+			Neighbourhood neighbourhood = new Neighbourhood(position, 100);	
 			Compatibility compatibility = new Compatibility(user.getId(), 0.6f);
 
 			UserQuery query = new UserQueryImpl();

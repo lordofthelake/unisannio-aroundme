@@ -1,6 +1,6 @@
 package it.unisannio.aroundme.server;
 
-import it.unisannio.aroundme.model.SerializerUtils;
+import it.unisannio.aroundme.model.Serializer;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.googlecode.objectify.Objectify;
@@ -30,11 +29,10 @@ public class UserServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp)	throws ServletException, IOException {
 		try {
-			UserQuery query = UserQuery.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
+			UserQuery query = UserQuery.SERIALIZER.read(req.getInputStream());
 			Collection<? extends User> users = query.call();
 			resp.setContentType("text/xml");
-			Node xml = SerializerUtils.getCollectionSerializer(User.class).toXML(users);
-			SerializerUtils.writeXML(xml, resp.getOutputStream());
+			Serializer.ofCollection(User.class).write(users, resp.getOutputStream());
 		} catch (Exception e) {
 			resp.sendError(500);
 		}				
@@ -43,7 +41,7 @@ public class UserServlet extends HttpServlet{
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			UserImpl user = (UserImpl) User.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
+			UserImpl user = (UserImpl) User.SERIALIZER.read(req.getInputStream());
 			Objectify ofy = ObjectifyService.begin();
 			ofy.put(user);
 		} catch (SAXException e) {

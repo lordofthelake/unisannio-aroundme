@@ -1,7 +1,6 @@
 package it.unisannio.aroundme.server;
 
 import it.unisannio.aroundme.model.Position;
-import it.unisannio.aroundme.model.SerializerUtils;
 
 import java.io.IOException;
 
@@ -32,7 +31,7 @@ public class PositionServlet extends HttpServlet{
 			String userId = req.getRequestURI().split("user/(.*?)/position")[0]; //FIXME Usare un altro modo per ottenere l'userId
 			Objectify ofy = ObjectifyService.begin();
 			UserImpl user = ofy.get(UserImpl.class, Long.parseLong(userId));
-			Position position = Position.SERIALIZER.fromXML(SerializerUtils.getDocumentBuilder().parse(req.getInputStream()));
+			Position position = Position.SERIALIZER.read(req.getInputStream());
 			user.setPosition(position);
 			ofy.put(user);
 			Queue queue = QueueFactory.getDefaultQueue();
@@ -55,7 +54,7 @@ public class PositionServlet extends HttpServlet{
 		if(user != null){
 			try {
 				resp.setContentType("text/xml");
-				SerializerUtils.writeXML(Position.SERIALIZER.toXML(user.getPosition()), resp.getOutputStream());
+				Position.SERIALIZER.write(user.getPosition(), resp.getOutputStream());
 			} catch (TransformerException e) {
 				e.printStackTrace();
 			}

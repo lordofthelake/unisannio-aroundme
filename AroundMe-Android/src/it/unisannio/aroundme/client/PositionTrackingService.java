@@ -2,7 +2,6 @@ package it.unisannio.aroundme.client;
 
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
-import it.unisannio.aroundme.model.SerializerUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -91,7 +90,7 @@ public class PositionTrackingService extends Service {
 
 						@Override
 						protected void write(OutputStream out) throws Exception {
-							SerializerUtils.writeXML(SerializerUtils.toXML(position), out);
+							Position.SERIALIZER.write(position, out);
 						}
 					}).call();
 				} catch (Exception e) {
