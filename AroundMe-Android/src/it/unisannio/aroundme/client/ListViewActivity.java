@@ -11,6 +11,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.*;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
@@ -57,7 +59,9 @@ public class ListViewActivity extends FragmentActivity
 	private ProgressDialog progress;
 	private SeekBar seekDistance;
 	private TextView txtDistanceFilter;
-
+	
+	private Neighbourhood neigh=new Neighbourhood();
+	private UserQuery userQuery=ModelFactory.getInstance().createUserQuery();
 	private ListenableFuture<Collection<User>> task; 
     
     public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
@@ -109,14 +113,21 @@ public class ListViewActivity extends FragmentActivity
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				//TODO Salvare le impostazioni
-				Toast.makeText(ListViewActivity.this, "Saving Distance", Toast.LENGTH_SHORT).show();
+				//TODO Salvare le impostazioni ed aggiornare UserQuery
+				Location loc=new Location(LocationManager.GPS_PROVIDER);
+				ListViewActivity.this.neigh.setPosition(
+						ModelFactory.getInstance().createPosition(loc.getLatitude(), loc.getLongitude()
+				));//Ottengo l'ultima posizione nota
+				ListViewActivity.this.neigh.setRadius(seekBar.getProgress()*100);//Imposto la distanza in metri
+				userQuery.setNeighbourhood(ListViewActivity.this.neigh);//Imposto le preferenze di visualizzazione
+				Toast.makeText(ListViewActivity.this, "Saving Distance "+userQuery.getNeighbourhood().getRadius(), Toast.LENGTH_SHORT).show();
 			}
         });
         seekDistance.setProgress(3000);  
         drawer.setOnDrawerOpenListener(new OnDrawerOpenListener(){
 			@Override
 			public void onDrawerOpened() {
+				//TODO Sospendere il servizio di notifica
 				nearByList.setEnabled(false);
 			}
         	
@@ -124,6 +135,7 @@ public class ListViewActivity extends FragmentActivity
         drawer.setOnDrawerCloseListener(new OnDrawerCloseListener(){
 			@Override
 			public void onDrawerClosed() {
+				//TODO Ripristinare il servizio di notifica
 				nearByList.setEnabled(true);
 			}
         	
@@ -206,7 +218,6 @@ public class ListViewActivity extends FragmentActivity
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
 		async.pause();
 		pictureAsync.pause();
 	}

@@ -29,6 +29,8 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 	String FILENAME = "AndroidSSO_data";
     private SharedPreferences mPrefs;
     private AsyncQueue async;
+	private TextView txtLoading;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,8 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 		this.async = new AsyncQueue();
 		
 		setContentView(R.layout.login);
-		Button btnFacebookConnect = (Button) findViewById(R.id.btnFacebookConnect);
-		
+		//Button btnFacebookConnect = (Button) findViewById(R.id.btnFacebookConnect);
+		txtLoading=(TextView) findViewById(R.id.txtLoginWait);
 		mPrefs = getPreferences(MODE_PRIVATE);
         final String access_token = mPrefs.getString("access_token", null);
         long expires = mPrefs.getLong("access_expires", 0);
@@ -54,18 +56,16 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
         if(facebook.isSessionValid()) {
         	//service.asyncDo(Identity.login(id, access_token), this);
         }
-        
-	
-		btnFacebookConnect.setOnClickListener(new OnClickListener() {
+		/*btnFacebookConnect.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) {*/
 				facebook.authorize(LoginActivity.this, new String[] { "offline_access", "user_likes" }, new DialogListener() {
 
 					@Override
 					public void onComplete(Bundle values) {
-						Toast.makeText(getApplicationContext(), "On complete", Toast.LENGTH_LONG).show();
-						
+						//Toast.makeText(getApplicationContext(), "Accesso Effettuato", Toast.LENGTH_SHORT).show();
+						LoginActivity.this.txtLoading.setText("Caricamento informazioni");
 	                    async.exec(Identity.create(facebook), new FutureListener<User>() {
 
 							@Override
@@ -78,6 +78,7 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 			                    
 			                    ((Application) getApplication()).addToCache(object);
 			                    Identity.set(object, facebook.getAccessToken());
+								LoginActivity.this.txtLoading.setText("Benvenuto! "+object.getName());
 			                    startService(new Intent(LoginActivity.this, PositionTrackingService.class));
 			                    startActivity(new Intent(LoginActivity.this, ListViewActivity.class));
 			                	finish();
@@ -101,26 +102,26 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 
 					@Override
 					public void onFacebookError(FacebookError e) {
-						Toast.makeText(getApplicationContext(), "Si ï¿½ verificato un errore durante l'autorizzazione: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), "Si è verificato un errore durante l'autorizzazione: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 					}
 
 					@Override
 					public void onError(DialogError e) {
-						Toast.makeText(getApplicationContext(), "On Error", Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), "Errore di connessione", Toast.LENGTH_LONG).show();
 						
 					}
 
 					@Override
 					public void onCancel() {
-						Toast.makeText(getApplicationContext(), "On cancel", Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), "Autenticazione Annullata", Toast.LENGTH_LONG).show();
 						
 					}
 					
 				});
 			}
 			
-		});
-	}
+		/*});
+	}*/
 	
 	
     @Override
