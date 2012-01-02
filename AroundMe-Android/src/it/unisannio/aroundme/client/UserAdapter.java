@@ -80,7 +80,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 			h.txtCompatibility.setText("N/A");
 		}
 		
-		//FIXME Picture.get(user.getId()).asyncUpdate(async, h.imgPhoto, R.drawable.img_downloading, R.drawable.img_error);
+		Picture.get(user.getId()).asyncUpdate(async, h.imgPhoto, R.drawable.img_downloading, R.drawable.img_error);
 		
 		
 		return view;
