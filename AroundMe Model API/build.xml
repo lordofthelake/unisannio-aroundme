@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ModelAPI" default="makejar" basedir=".">
+  <target name ="makejar" description="Create a jar for the Model APIs">
+    <jar jarfile="aroundme-modelapi.jar" includes="*.class" basedir="bin"/>
+  </target>
+</project>

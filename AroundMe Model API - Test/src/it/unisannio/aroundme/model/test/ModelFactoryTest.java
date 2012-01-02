@@ -8,7 +8,9 @@ import java.util.HashSet;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
+import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.model.User;
+import it.unisannio.aroundme.model.UserQuery;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +22,13 @@ import org.junit.Test;
  */
 public abstract class ModelFactoryTest {
 	private ModelFactory factory;
-	@Before
-	public void setUp() throws Exception {
-		factory = ModelFactory.getInstance();
+	
+	protected ModelFactoryTest(ModelFactory f) {
+		this.factory = f;
 	}
 
 	@Test
-	public void testGetInstance() {
+	public void testInstance() {
 		assertNotNull(factory);
 	}
 
@@ -52,7 +54,16 @@ public abstract class ModelFactoryTest {
 
 	@Test
 	public void testCreateInterest() {
-		fail();
+		long id = Math.round(Math.random()*10000);
+		String name = String.valueOf(Math.random()*1000000);
+		String category = String.valueOf(Math.random()*1000000);
+		
+		Interest i = factory.createInterest(id, name, category);
+		
+		assertNotNull(i);
+		assertEquals(i.getId(), id);
+		assertEquals(i.getName(), name);
+		assertEquals(i.getCategory(), category);
 	}
 
 	@Test
@@ -68,15 +79,18 @@ public abstract class ModelFactoryTest {
 		assertEquals(p.getLongitude(), longitude, 0);
 	}
 
-
-	@Test
-	public void testCreateInterestQuery() {
-		fail();
-	}
-
 	@Test
 	public void testCreateUserQuery() {
-		fail();
+		UserQuery query = factory.createUserQuery();
+		
+		assertNotNull(query);
+	}
+	
+	@Test
+	public void testCreatePreferences() {
+		Preferences preferences = factory.createPreferences();
+		
+		assertNotNull(preferences);
 	}
 
 }

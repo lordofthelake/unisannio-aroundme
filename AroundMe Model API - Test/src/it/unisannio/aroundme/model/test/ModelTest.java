@@ -14,12 +14,13 @@ import org.junit.Test;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public abstract class ModelTest {
-	protected Class<? extends Model> clazz;
+public abstract class ModelTest<T extends Model> {
+	protected Class<T> clazz;
 	
-	protected ModelTest(Class<? extends Model> clazz) {
+	protected ModelTest(Class<T> clazz) {
 		this.clazz = clazz;
 	}
+	
 	
 	@Test
 	public void testSerializerFieldPresence() {
@@ -41,5 +42,4 @@ public abstract class ModelTest {
 		}
 		
 	}
-
 }
