@@ -40,8 +40,7 @@ import android.widget.Toast;
  */
 public class ListViewActivity extends FragmentActivity 
 		implements OnItemClickListener, OnCancelListener {
-	private static final int MAX_DISTANCE=5000;
-	
+	private static final int MAX_DISTANCE=50;
 	private AsyncQueue async;
 	private AsyncQueue pictureAsync;
 	
@@ -94,10 +93,15 @@ public class ListViewActivity extends FragmentActivity
         	
 			@Override
 			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-				int distance= seekDistance.getProgress();
-				txtDistanceFilter.setText(distance<1000 
-						? distance + " m" 
-						: String.format("%.1f Km", (float) distance/1000));
+				int distance= seekDistance.getProgress()*100;
+				if (distance==0){
+					txtDistanceFilter.setText("Off  ");
+				}
+				else if (distance<1000){
+					txtDistanceFilter.setText(distance+" m");
+				}else{
+					txtDistanceFilter.setText(String.format("%.1f Km", (float)distance/1000));
+				}
 			}
 			
 			@Override
@@ -130,7 +134,7 @@ public class ListViewActivity extends FragmentActivity
     	progress.setOnCancelListener(this);
     	
         nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, pictureAsync));
-    	//FIXME interestsFilter.setAdapter(interestFilterAdapter = new InterestFilterAdapter(ListViewActivity.this, myInterests, service));
+    	interestsFilter.setAdapter(interestFilterAdapter = new InterestFilterAdapter(ListViewActivity.this,myInterests, pictureAsync));
 
         this.task = async.exec(UserQuery.byId(1321813090L, 100000268830695L, 100001053949157L, 100000293335056L), new FutureListener<Collection<User>>(){
         	@Override
@@ -165,18 +169,10 @@ public class ListViewActivity extends FragmentActivity
 		b.setPositiveButton("Filtra", new OnClickListener() {
 
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				
-			}});
+			public void onClick(DialogInterface dialog, int which) {}});
 		b.setMultiChoiceItems(items, checked, new OnMultiChoiceClickListener() {
-
 			@Override
-			public void onClick(DialogInterface dialog, int which,
-					boolean isChecked) {
-				// TODO Auto-generated method stub
-				
-			}});
+			public void onClick(DialogInterface dialog, int which,boolean isChecked) {}});
 		b.create().show();
     }
 
@@ -220,7 +216,6 @@ public class ListViewActivity extends FragmentActivity
 		super.onResume();
 		async.resume();
 		pictureAsync.resume();
-		
 	}
 	
 	@Override

@@ -67,11 +67,18 @@ public class UserAdapter extends ArrayAdapter<User> {
 		
 		h.txtName.setText(user.getName());
 		// TODO Externalize strings
-		// FIXME -1 => setText("N/A")
-		h.txtDistance.setText(String.format("%.1f m", me.getDistance(user)));
-		
-		// FIXME rank = -1 => setText("N/A")
-		h.txtCompatibility.setText(String.format("%d%%", Math.round(me.getCompatibilityRank(user) * 100)));
+		int dist=(int) me.getDistance(user);
+		if (dist!=-1){
+			h.txtDistance.setText(String.format("%d m", dist));
+		}else{
+			h.txtDistance.setText("N/A");
+		}		
+		int rank=Math.round(me.getCompatibilityRank(user) * 100);
+		if (rank!=-1){
+			h.txtCompatibility.setText(String.format("%d%%", rank));
+		}else{
+			h.txtCompatibility.setText("N/A");
+		}
 		
 		Picture.get(user.getId()).asyncUpdate(async, h.imgPhoto, R.drawable.img_downloading, R.drawable.img_error);
 		
