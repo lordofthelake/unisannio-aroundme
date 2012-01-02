@@ -6,11 +6,24 @@
     android:orientation="vertical" 
     android:background="@drawable/my_gradient">
 
-    <Button
+   <!--  <Button
         android:id="@+id/btnFacebookConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/connect_with_facebook" />
+    -->
+
+    <ProgressBar
+        android:id="@+id/progressLogin"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtLoginWait"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accesso in corso..." />
 
 </LinearLayout>
