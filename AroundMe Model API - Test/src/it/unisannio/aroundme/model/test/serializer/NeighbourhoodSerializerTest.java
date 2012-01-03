@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.model.test;
+package it.unisannio.aroundme.model.test.serializer;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import static org.easymock.EasyMock.*;
 
 import it.unisannio.aroundme.model.*;
+import it.unisannio.aroundme.model.test.MockHelper;
 
 public class NeighbourhoodSerializerTest extends TestCase {
 	private Serializer<Neighbourhood> serializer;
@@ -29,10 +30,7 @@ public class NeighbourhoodSerializerTest extends TestCase {
 	public void setUp() {
 		serializer = Neighbourhood.SERIALIZER;
 		
-		mockPosition = createMock(Position.class);
-		expect(mockPosition.getLatitude()).andReturn(1.23456);
-		expect(mockPosition.getLongitude()).andReturn(-6.54321);
-		replay(mockPosition);
+		mockPosition = MockHelper.createMockPosition(1.23456, -6.54321);
 		
 		mockFactory = createMock(ModelFactory.class);
 		expect(mockFactory.createPosition(1.23456, -6.54321)).andReturn(mockPosition);

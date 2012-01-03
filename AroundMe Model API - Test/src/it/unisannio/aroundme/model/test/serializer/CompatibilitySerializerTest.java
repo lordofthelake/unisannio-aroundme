@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.model.test;
+package it.unisannio.aroundme.model.test.serializer;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 

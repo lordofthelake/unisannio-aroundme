@@ -1,6 +1,8 @@
-package it.unisannio.aroundme.model.test;
+package it.unisannio.aroundme.model.test.serializer;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.xml.transform.TransformerException;
 
@@ -12,39 +14,34 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.model.*;
+import it.unisannio.aroundme.model.test.MockHelper;
 
 import static org.easymock.EasyMock.*;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;;
 
 public class InterestSerializerTest extends TestCase {
 	private Serializer<Interest> serializer;
+	private Interest mockInterest;
+	private ModelFactory mockFactory;
 	
 	@Before
 	public void setUp() {
 		serializer = Interest.SERIALIZER;
-	}
-	
-	private Interest createMockInterest(long id, String name, String category) {
-		Interest mockInterest = createMock(Interest.class);
-		expect(mockInterest.getCategory()).andReturn(category);
-		expect(mockInterest.getName()).andReturn(name);
-		expect(mockInterest.getId()).andReturn(id);
-		
-		replay(mockInterest);
-		return mockInterest;
+		mockInterest = MockHelper.createMockInterest(1337L, "Mock interest", "Mock category");
+
+		mockFactory = createMock(ModelFactory.class);
+		expect(mockFactory.createInterest(1337L, "Mock interest", "Mock category"))
+			.andReturn(mockInterest);
+		replay(mockFactory);
+		ModelFactory.setInstance(mockFactory);
 	}
 	
 	@Test
 	public void testDeserialization() throws SAXException, IOException {
 		try {
-			ModelFactory mockFactory = createMock(ModelFactory.class);
-			expect(mockFactory.createInterest(1337L, "Mock interest", "Mock category"))
-				.andReturn(createMockInterest(1337L, "Mock interest", "Mock category"));
-			replay(mockFactory);
-			ModelFactory.setInstance(mockFactory);
 			
 			serializer.fromString("<interest id=\"1337\" category=\"Mock category\" name=\"Mock interest\" />");
-	
+			
 			verify(mockFactory);
 		} catch (IllegalArgumentException rEx) {
 			fail(rEx.getMessage());
@@ -53,8 +50,6 @@ public class InterestSerializerTest extends TestCase {
 	
 	@Test
 	public void testSerialization() throws TransformerException, IOException, SAXException {
-		Interest mockInterest = createMockInterest(1337, "Mock interest", "Mock category");
-		
 		assertXMLEqual(serializer.toString(mockInterest), "<interest id=\"1337\" category=\"Mock category\" name=\"Mock interest\" />");	
 	}
 
