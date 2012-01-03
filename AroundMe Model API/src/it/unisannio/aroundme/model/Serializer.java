@@ -238,13 +238,16 @@ public abstract class Serializer<T> {
 	 * @return L'oggetto ricostruito
 	 * 
 	 * @throws SAXException
-	 * @throws IOException
 	 * 
 	 * @see #fromXML(Element)
 	 * @see #toString(Object)
 	 */
-	public T fromString(String str) throws SAXException, IOException {
-		return read(new InputSource(new StringReader(str)));
+	public T fromString(String str) throws SAXException {
+		try {
+			return read(new InputSource(new StringReader(str)));
+		} catch (IOException ioEx) { // Non dovrebbero mai accadere
+			throw new RuntimeException(ioEx);
+		}
 	}
 
 	/**
