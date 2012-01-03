@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.client;
+package it.unisannio.aroundme.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentMapActivity;
 

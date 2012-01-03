@@ -1,9 +1,13 @@
-package it.unisannio.aroundme.client;
+package it.unisannio.aroundme.activities;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.client.Application;
+import it.unisannio.aroundme.client.Identity;
+import it.unisannio.aroundme.client.Setup;
 import it.unisannio.aroundme.client.async.AsyncQueue;
 import it.unisannio.aroundme.client.async.FutureListener;
 import it.unisannio.aroundme.model.User;
+import it.unisannio.aroundme.services.PositionTrackingService;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -30,7 +34,14 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
     private SharedPreferences mPrefs;
     private AsyncQueue async;
 	private TextView txtLoading;
-
+	/**
+	 * Lo scopo di questa activity è quello di ottenere un accesso a facebook ed ottenere tutte le informazioni che occorrono
+	 *  
+	 *  La prima cosa da fare è ottenere le seguenti cose:
+	 *  
+	 *  - Oggetto Identity contenente tutte le informazioni dell' utente che sta utilizzando
+	 *  
+	 * */
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

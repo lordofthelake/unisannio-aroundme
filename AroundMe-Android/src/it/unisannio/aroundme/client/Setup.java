@@ -2,9 +2,11 @@ package it.unisannio.aroundme.client;
 
 import android.graphics.Bitmap;
 import android.location.LocationManager;
+import it.unisannio.aroundme.activities.LoginActivity;
 import it.unisannio.aroundme.client.async.AsyncQueue;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
+import it.unisannio.aroundme.services.PositionTrackingService;
 
 /**
  * Costanti di configurazione utilizzate all'interno dell'applicazione.

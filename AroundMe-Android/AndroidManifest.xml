@@ -31,7 +31,7 @@
         android:label="@string/app_name" android:theme="@style/AroundMe" android:name=".client.Application">
 		
        <!--  Main activity -->
-        <activity android:name="it.unisannio.aroundme.client.LoginActivity" android:label="@string/app_name"
+        <activity android:name=".activities.LoginActivity" android:label="@string/app_name"
             android:launchMode="singleTop" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,15 +44,15 @@
             android:screenOrientation="portrait">
         </activity>
         
-        <activity android:name="it.unisannio.aroundme.client.ListViewActivity" android:label="@string/app_name"
+        <activity android:name=".activities.ListViewActivity" android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         
-        <activity android:name="it.unisannio.aroundme.client.MapViewActivity" android:label="@string/app_name"
+        <activity android:name=".activities.MapViewActivity" android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         
-        <activity android:name=".client.ProfileActivity" android:label="@string/app_name"
+        <activity android:name=".activities.ProfileActivity" android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
 

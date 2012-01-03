@@ -1,5 +1,8 @@
-package it.unisannio.aroundme.client;
+package it.unisannio.aroundme.services;
 
+import it.unisannio.aroundme.client.HttpTask;
+import it.unisannio.aroundme.client.Identity;
+import it.unisannio.aroundme.client.Setup;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.SerializerUtils;
@@ -34,11 +37,11 @@ import android.util.Log;
  * <p>Ad ogni rilevazione ritenuta affidabile, il servizio provvede ad aggiornare la posizione dell'utente
  * sul server di backend.</p>
  * 
- * @author Giuseppe Fusco <gfeldiablo@gmail.com>
+ * @author Giuseppe Fusco?? <gfeldiablo@gmail.com>
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
 
-// TODO Il servizio dovr√† essere fermato quando l'utente fa il logout
+// TODO Il servizio dovr‡† essere fermato quando l'utente fa il logout
 public class PositionTrackingService extends Service {
 
 	/**
@@ -66,7 +69,7 @@ public class PositionTrackingService extends Service {
 		public void onProviderDisabled(String arg0) {}
 
 		/**
-		 * Riceve la notifica quando &egrave disponibile una nuova posizione.
+		 * Riceve la notifica quando &egrave; disponibile una nuova posizione.
 		 * 
 		 * Se &egrave; migliore della precedente, aggiorna il server.
 		 * 

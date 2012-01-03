@@ -1,7 +1,11 @@
-package it.unisannio.aroundme.client;
+package it.unisannio.aroundme.activities;
 
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.adapters.InterestFilterAdapter;
+import it.unisannio.aroundme.adapters.UserAdapter;
+import it.unisannio.aroundme.client.Identity;
+import it.unisannio.aroundme.client.Setup;
 import it.unisannio.aroundme.client.async.*;
 import it.unisannio.aroundme.model.*;
 import java.util.*;
@@ -77,7 +81,6 @@ public class ListViewActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	
     	setContentView(R.layout.listview);
     	
     	async = new AsyncQueue();
