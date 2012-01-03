@@ -80,6 +80,11 @@ public class Application extends android.app.Application {
 						return collection;
 					}
 
+					@Override
+					public void setPosition(Position position) {
+						this.position = position;
+					}
+
 				};
 			}
 
@@ -165,9 +170,7 @@ public class Application extends android.app.Application {
 						return (new HttpTask<Collection<User>>("POST", Setup.BACKEND_USER_URL) { 
 							
 								protected Collection<User> read(InputStream input) throws Exception {
-									Node xml = SerializerUtils.getDocumentBuilder().parse(input); 
-									@SuppressWarnings("unchecked")
-									Collection<User> results = (Collection<User>) SerializerUtils.getCollectionSerializer(User.class).fromXML(xml);
+									Collection<User> results = (Collection<User>) Serializer.ofCollection(User.class).read(input);
 									
 									for(User u : results) {
 										addToCache(u);
@@ -177,7 +180,7 @@ public class Application extends android.app.Application {
 								}
 
 								protected void write(OutputStream out) throws Exception {
-									SerializerUtils.writeXML(SERIALIZER.toXML(self), out);
+									SERIALIZER.write(self, out);
 								}
 
 							}).call();

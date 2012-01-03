@@ -12,12 +12,7 @@ import org.json.JSONTokener;
 
 import com.facebook.android.Facebook;
 
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.Position;
-import it.unisannio.aroundme.model.SerializerUtils;
-import it.unisannio.aroundme.model.User;
-import it.unisannio.aroundme.model.UserQuery;
+import it.unisannio.aroundme.model.*;
 
 /**
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
@@ -38,7 +33,7 @@ public class Identity extends User {
 			
 			@Override
 			protected void write(OutputStream out) throws Exception {
-				SerializerUtils.writeXML(SerializerUtils.toXML(u), out);
+				User.SERIALIZER.write(u, out);
 			}
 		};
 
@@ -60,7 +55,7 @@ public class Identity extends User {
 						throw e;
 					}
 				}
-				
+		
 				return instance;
 			}
 			
@@ -129,7 +124,7 @@ public class Identity extends User {
 	}
 
 	public void setPosition(Position p) {
-		// FIXME update network position
+		self.setPosition(p);
 	}
 
 	@Override

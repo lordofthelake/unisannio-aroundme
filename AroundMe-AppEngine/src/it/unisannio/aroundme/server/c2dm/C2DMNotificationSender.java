@@ -1,5 +1,7 @@
 package it.unisannio.aroundme.server.c2dm;
 
+import it.unisannio.aroundme.server.task.C2DMSenderTask;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,7 +41,7 @@ public class C2DMNotificationSender {
 	
 	public static void sendWithRetry(String registrationId, long userId){
 		Queue queue = QueueFactory.getQueue("c2dm");
-		TaskOptions url = TaskOptions.Builder.withUrl("/task/positionsender")
+		TaskOptions url = TaskOptions.Builder.withUrl(C2DMSenderTask.URI)
 											.param("registrationId", registrationId)
 											.param("userId", userId+"")
 											.method(Method.POST);

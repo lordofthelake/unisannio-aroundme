@@ -2,14 +2,14 @@ package it.unisannio.aroundme.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
-public interface Interest extends Model {
+public abstract class Interest implements Model {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * <interest id="123" name="Name" category="Category" />
@@ -17,22 +17,21 @@ public interface Interest extends Model {
 	public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
 
 		@Override
-		public Interest fromXML(Node xml) {
-			if(!(xml instanceof Element)) 
-				throw new IllegalArgumentException();
+		public Interest fromXML(Element node) {
+			validateTagName(node, "interest");
 			
-			Element interest = (Element) xml;
-			long id = Long.parseLong(interest.getAttribute("id"));
-			String name = interest.getAttribute("name");
-			String category = interest.getAttribute("category");
+			long id = Long.parseLong(node.getAttribute("id"));
+			String name = node.getAttribute("name");
+			String category = node.getAttribute("category");
 			
 			return ModelFactory.getInstance().createInterest(id, name, category);
 		}
 
 		@Override
-		public Node toXML(Interest obj) {
-			Document d = SerializerUtils.newDocument();
-			Element interest = d.createElement("interest");
+		public Element toXML(Interest obj) {
+			Document document = getDocumentBuilder().newDocument();
+			Element interest = document.createElement("interest");
+			
 			interest.setAttribute("id", String.valueOf(obj.getId()));
 			interest.setAttribute("name", obj.getName());
 			interest.setAttribute("category", obj.getCategory());
@@ -42,7 +41,16 @@ public interface Interest extends Model {
 		
 	};
 	
-	String getName();
-	String getCategory();
-	long getId();
+	public abstract String getName();
+	public abstract String getCategory();
+	public abstract long getId();
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Interest))
+			return false;
+		
+		Interest i = (Interest) obj;
+		return getId() == i.getId() && getName().equals(i.getName()) && getCategory().equals(i.getCategory());
+	}
 }

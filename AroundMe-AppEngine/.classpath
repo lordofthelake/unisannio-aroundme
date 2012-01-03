@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="shared"/>
-	<classpathentry kind="lib" path="/home/m/.eclipse/org.eclipse.platform_3.7.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37/gwt-2.4.0/gwt-user.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/m/.eclipse/org.eclipse.platform_3.7.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37/gwt-2.4.0/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/m/.eclipse/org.eclipse.platform_3.7.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37/gwt-2.4.0/gwt-dev.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/m/.eclipse/org.eclipse.platform_3.7.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37/gwt-2.4.0/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/m/.eclipse/org.eclipse.platform_3.7.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
-	<classpathentry kind="lib" path="/home/m/.eclipse/org.eclipse.platform_3.7.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA.jar" sourcepath="/home/m/.eclipse/org.eclipse.platform_3.7.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201112160242-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/json-1.5.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/validation-api-1.0.0.GA.jar"/>
@@ -24,13 +11,13 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe Model API"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.1.jar" sourcepath="/home/danilo/git/aroundme/AroundMe-AppEngine/objectify-3.1/src">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/home/danilo/git/aroundme/AroundMe-AppEngine/objectify3.1/javadoc/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/c2dm-server-src.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/aroundme-modelapi.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

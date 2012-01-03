@@ -4,7 +4,6 @@ import javax.xml.parsers.DocumentBuilder;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * 
@@ -20,13 +19,11 @@ public abstract class Position implements Model {
 	public static final Serializer<Position> SERIALIZER = new Serializer<Position>() {
 
 		@Override
-		public Position fromXML(Node xml) {
-			if(!(xml instanceof Element)) 
-				throw new IllegalArgumentException();
+		public Position fromXML(Element node) {
+			validateTagName(node, "position");
 			
-			Element position = (Element) xml;
-			double lat = Double.parseDouble(position.getAttribute("lat"));
-			double lon = Double.parseDouble(position.getAttribute("lon"));
+			double lat = Double.parseDouble(getRequiredAttribute(node, "lat"));
+			double lon = Double.parseDouble(getRequiredAttribute(node, "lon"));
 			
 			Position obj = ModelFactory.getInstance().createPosition(lat, lon);
 			
@@ -34,11 +31,10 @@ public abstract class Position implements Model {
 		}
 
 		@Override
-		public Node toXML(Position obj) {
-			DocumentBuilder b = SerializerUtils.getDocumentBuilder();
-			Document d = b.newDocument();
+		public Element toXML(Position obj) {
+			Document document = getDocumentBuilder().newDocument();
 			
-			Element e = d.createElement("position");
+			Element e = document.createElement("position");
 			e.setAttribute("lat", String.valueOf(obj.getLatitude()));
 			e.setAttribute("lon", String.valueOf(obj.getLongitude()));
 			
@@ -68,4 +64,13 @@ public abstract class Position implements Model {
 	public abstract double getLatitude();
 
 	public abstract double getLongitude();
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Position))
+			return false;
+		
+		Position other = (Position) obj;
+		return other.getLatitude() == getLatitude() && other.getLongitude() == getLongitude();
+	}
 }

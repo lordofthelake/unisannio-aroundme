@@ -14,7 +14,7 @@ import it.unisannio.aroundme.model.Interest;
  */
 @Entity(name="Interest")
 @Indexed
-public class InterestImpl implements Interest{
+public class InterestImpl extends Interest{
 	private static final long serialVersionUID = 1L;
 	
 	@Id private long id;

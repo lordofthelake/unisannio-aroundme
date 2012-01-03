@@ -2,7 +2,6 @@ package it.unisannio.aroundme.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 
 /**
@@ -14,33 +13,31 @@ public class Compatibility implements Model {
 	/**
 	 * <compatibility rank="0.0" userid="123" />
 	 */
-	static final Serializer<Compatibility> SERIALIZER = new Serializer<Compatibility>() {
+	public static final Serializer<Compatibility> SERIALIZER = new Serializer<Compatibility>() {
 
-		@Override
 		/**
-		 * 
-		 * @param xml
-		 * @param obj
-		 * @return
+		 * {@inheritDoc}
 		 */
-		public Compatibility fromXML(Node xml) {
-			if(!(xml instanceof Element))
-				throw new IllegalArgumentException();
+		@Override
+		public Compatibility fromXML(Element node) {
+			validateTagName(node, "compatibility");
 			
-			Element compatibility = (Element) xml;
-			float rank = Float.parseFloat(compatibility.getAttribute("rank"));
-			long userId = Long.parseLong(compatibility.getAttribute("userid"));
+			float rank = Float.parseFloat(getRequiredAttribute(node, "rank"));
+			long userId = Long.parseLong(getRequiredAttribute(node, "userid"));
 			
 			Compatibility obj = new Compatibility(userId, rank);
 			
 			return obj;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		public Node toXML(Compatibility obj) {
-			Document d = SerializerUtils.newDocument();
+		public Element toXML(Compatibility obj) {
+			Document document = getDocumentBuilder().newDocument();
 			
-			Element e = d.createElement("compatibility");
+			Element e = document.createElement("compatibility");
 			e.setAttribute("rank", String.valueOf(obj.getRank()));
 			e.setAttribute("userid", String.valueOf(obj.getUserId()));
 			
@@ -65,5 +62,14 @@ public class Compatibility implements Model {
 	
 	public float getRank() {
 		return rank;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Compatibility))
+			return false;
+		
+		Compatibility c = (Compatibility) obj;
+		return getUserId() == c.getUserId() && getRank() == c.getRank();
 	}
 }

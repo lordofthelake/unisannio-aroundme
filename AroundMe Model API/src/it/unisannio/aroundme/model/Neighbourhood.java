@@ -2,7 +2,6 @@ package it.unisannio.aroundme.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * 
@@ -19,32 +18,26 @@ public class Neighbourhood implements Model {
 	public static final Serializer<Neighbourhood> SERIALIZER = new Serializer<Neighbourhood>() {
 
 		@Override
-		public Neighbourhood fromXML(Node xml) {
-			if(!(xml instanceof Element))
-				throw new IllegalArgumentException();
+		public Neighbourhood fromXML(Element node) {
+			validateTagName(node, "neighbourhood");
 			
-			Element neighbourhood = (Element) xml;
-			if(!neighbourhood.getTagName().equals("neighbourhood")) 
-				throw new IllegalArgumentException();
+			double radius = Double.parseDouble(getRequiredAttribute(node, "radius"));
+			Element position = getSingleElementByTagName(node, "position");
 			
-			double radius = Double.parseDouble(neighbourhood.getAttribute("radius"));
-			Element position = (Element) neighbourhood.getElementsByTagName("position").item(0);
-			Position p = Position.SERIALIZER.fromXML(position);
+			if(position == null) {
+				throw new IllegalArgumentException("A <position> element is required.");
+			}
 			
-			Neighbourhood obj = new Neighbourhood();
-			obj.setRadius(radius);
-			obj.setPosition(p);
-			
-			return obj;
+			return new Neighbourhood(Position.SERIALIZER.fromXML(position), radius);
 		}
 
 		@Override
-		public Node toXML(Neighbourhood obj) {
-			Document d = SerializerUtils.newDocument();
+		public Element toXML(Neighbourhood obj) {
+			Document document = getDocumentBuilder().newDocument();
 			
-			Element e = d.createElement("neighbourhood");
+			Element e = document.createElement("neighbourhood");
 			e.setAttribute("radius", String.valueOf(obj.getRadius()));
-			e.appendChild(SerializerUtils.toXML(obj.getPosition()));
+			e.appendChild(document.importNode(Position.SERIALIZER.toXML(obj.getPosition()), true));
 			
 			return e;
 		}
@@ -53,22 +46,28 @@ public class Neighbourhood implements Model {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Position position;
-	private double radius;
+	private final Position position;
+	private final double radius;
+	
+	public Neighbourhood(Position position, double radius) {
+		this.position = position;
+		this.radius = radius;
+	}
 	
 	public Position getPosition() {
 		return position;
-	}
-	
-	public void setPosition(Position p) {
-		this.position = p;
 	}
 	
 	public double getRadius() {
 		return radius;
 	}
 	
-	public void setRadius(double radius) {
-		this.radius = radius;
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Neighbourhood))
+			return false;
+		
+		Neighbourhood other = (Neighbourhood) obj;
+		return other.getPosition().equals(getPosition()) && other.getRadius() == getRadius();
 	}
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ModelAPI" default="deploy" basedir=".">
+  <target name ="makejar" description="Create a jar for the Model APIs">
+  	<delete file="aroundme-modelapi.jar" />
+    <jar jarfile="aroundme-modelapi.jar" basedir="bin"/>
+  </target>
+	<target name="deploy" description="Copy jar in AroundMe-AppEngine" depends="makejar">
+		<delete file="../AroundMe-AppEngine/war/WEB-INF/lib/aroundme-modelapi.jar" />
+		<copy file="aroundme-modelapi.jar" todir="../AroundMe-AppEngine/war/WEB-INF/lib/" />
+	</target>
+</project>

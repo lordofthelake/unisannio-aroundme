@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -19,7 +18,7 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * <query type="user">
+	 * <query>
 	 * 	<compatibility rank="0.0" userid="123" />
 	 * 	<neighbourhood radius="0.0">
 	 * 		<position lat="0.0" lon="0.0" />
@@ -33,38 +32,31 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	public static final Serializer<UserQuery> SERIALIZER = new Serializer<UserQuery>() {
 
 		@Override
-		public UserQuery fromXML(Node xml) {
-			if(!(xml instanceof Element))
-				throw new IllegalArgumentException();
+		public UserQuery fromXML(Element node) {
+			validateTagName(node, "query");
 			
 			UserQuery obj = ModelFactory.getInstance().createUserQuery();
-			Element query = (Element) xml;
+
+			Element compatibility = getSingleElementByTagName(node, "compatibility");
+			if(compatibility != null) 
+				obj.setCompatibility(Compatibility.SERIALIZER.fromXML(compatibility));
 			
-			NodeList compatibilityList = query.getElementsByTagName("compatibility");
-			if(compatibilityList.getLength() > 0) {
-				Compatibility c = Compatibility.SERIALIZER.fromXML(compatibilityList.item(0));
-				obj.setCompatibility(c);
-			}
+			Element neighbourhood = getSingleElementByTagName(node, "neighbourhood");
+			if(neighbourhood != null) 
+				obj.setNeighbourhood(Neighbourhood.SERIALIZER.fromXML(neighbourhood));
 			
-			NodeList neighbourhoodList = query.getElementsByTagName("neighbourhood");
-			if(neighbourhoodList.getLength() > 0) {
-				Neighbourhood n = Neighbourhood.SERIALIZER.fromXML(neighbourhoodList.item(0));
-				obj.setNeighbourhood(n);
-			}
-			
-			NodeList interestsList = query.getElementsByTagName("interest-ids");
-			if(interestsList.getLength() > 0) {
-				Element interests = (Element) interestsList.item(0);
-				NodeList ids = interests.getElementsByTagName("id");
+			Element interestIds = getSingleElementByTagName(node, "interest-ids");
+			if(interestIds != null) {
+				NodeList ids = interestIds.getElementsByTagName("id");
 				for(int i = 0, len = ids.getLength(); i < len; ++i) {
 					Element id = (Element) ids.item(i);
 					obj.addInterestId(Long.parseLong(id.getTextContent()));
 				}
 			}
 			
-			NodeList idList = query.getElementsByTagName("ids");
-			if(idList.getLength() > 0) {
-				NodeList ids = ((Element) idList.item(0)).getElementsByTagName("id");
+			Element userIds = getSingleElementByTagName(node, "ids");
+			if(userIds != null) {
+				NodeList ids = userIds.getElementsByTagName("id");
 				for(int i = 0, len = ids.getLength(); i < len; ++i) {
 					Element id = (Element) ids.item(i);
 					obj.addId(Long.parseLong(id.getTextContent()));
@@ -75,25 +67,25 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 		}
 
 		@Override
-		public Node toXML(UserQuery obj) {
-			Document d = SerializerUtils.newDocument();
-			Element container = d.createElement("query");
-			container.setAttribute("type", "user");
+		public Element toXML(UserQuery obj) {
+			Document document = getDocumentBuilder().newDocument();
+			
+			Element container = document.createElement("query");
 			
 			Neighbourhood n = obj.getNeighbourhood();
 			if(n != null)
-				container.appendChild(SerializerUtils.toXML(n));
+				container.appendChild(document.importNode(Neighbourhood.SERIALIZER.toXML(n), true));
 			
 			Compatibility c = obj.getCompatibility();
 			if(c != null)
-				container.appendChild(SerializerUtils.toXML(c));
+				container.appendChild(document.importNode(Compatibility.SERIALIZER.toXML(c), true));
 			
 			Collection<Long> iids = obj.getInterestIds();
 			if(iids.size() > 0) {
-				Element interests = d.createElement("interest-ids");
+				Element interests = document.createElement("interest-ids");
 				
 				for(long l : obj.getInterestIds()) {
-					Element e = d.createElement("id");
+					Element e = document.createElement("id");
 					e.setTextContent(String.valueOf(l));
 					interests.appendChild(e);
 				}
@@ -103,10 +95,10 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 			
 			Collection<Long> ids = obj.getIds();
 			if(ids.size() > 0) {
-				Element ids1 = d.createElement("ids");
+				Element ids1 = document.createElement("ids");
 				
 				for(long l : ids) {
-					Element e = d.createElement("id");
+					Element e = document.createElement("id");
 					e.setTextContent(String.valueOf(l));
 					ids1.appendChild(e);
 				}
@@ -195,4 +187,43 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	public Compatibility getCompatibility() {
 		return compatibility;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null && !(obj instanceof UserQuery))
+			return false;
+		
+		UserQuery other = (UserQuery) obj;
+		
+		Compatibility myCompatibility = getCompatibility();
+		Compatibility otherCompatibility = other.getCompatibility();
+		
+		boolean compatibilityEquals = 
+				(myCompatibility == null && otherCompatibility == null)
+				|| (myCompatibility != null && myCompatibility.equals(otherCompatibility));
+		
+		Neighbourhood myNeighbourhood = getNeighbourhood();
+		Neighbourhood otherNeighbourhood = other.getNeighbourhood();
+
+		boolean neighbourhoodEquals = 
+				(myNeighbourhood == null && otherNeighbourhood == null)
+				|| (myNeighbourhood != null && myNeighbourhood.equals(otherNeighbourhood));
+		
+		Collection<Long> myInterestIds = getInterestIds();
+		Collection<Long> otherInterestIds = other.getInterestIds();
+		
+		boolean interestIdsEquals = 
+				(myInterestIds == null && otherInterestIds == null)
+				|| (myInterestIds != null && myInterestIds.equals(otherInterestIds));
+		
+		Collection<Long> myIds = getIds();
+		Collection<Long> otherIds = other.getIds();
+
+		boolean idsEquals = 
+				(myIds == null && otherIds == null)
+				|| (myIds != null && myIds.equals(otherIds));
+		
+		return compatibilityEquals && neighbourhoodEquals && interestIdsEquals && idsEquals;
+	}
+	
 }

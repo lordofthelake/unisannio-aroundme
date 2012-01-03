@@ -28,8 +28,8 @@ public class UserQueryImpl extends UserQuery {
 		/*
 		 * Query che ristituisce gli utenti con gli id forniti
 		 */
-		if(this.getIds() != null){
-			query.filter("id", this.getIds());
+		if(this.getIds() != null && !this.getIds().isEmpty()){
+			query.filter("id in", this.getIds());
 		}
 		
 		/*
@@ -58,7 +58,7 @@ public class UserQueryImpl extends UserQuery {
 		/*
 		 * Query che restituisce gli utenti che hanno tutti gli interessi dati
 		 */
-		if(this.getInterestIds() != null){
+		if(this.getInterestIds() != null && !this.getInterestIds().isEmpty()){
 			Collection<InterestImpl> requiredInterests = ofy.get(InterestImpl.class, this.getInterestIds()).values();
 			query.filter("interests in", requiredInterests);		
 		}
