@@ -6,6 +6,9 @@ import java.util.Collection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Transient;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -20,7 +23,7 @@ import it.unisannio.aroundme.model.*;
  */
 @Entity(name="User")
 @Indexed
-class UserImpl extends User {
+public class UserImpl extends User {
 	private static final long serialVersionUID = 1270045595803902572L;
 	
 	@Id
@@ -28,8 +31,9 @@ class UserImpl extends User {
 	@Unindexed
 	private String name;
 	@Embedded
-	private Position position;	
+	private PositionImpl position;	
 	private ArrayList<Key<Interest>> interests;
+	@Transient private ArrayList<Interest> interestsChache;
 	private String authToken;
 
 	public UserImpl(long id, String name) {
@@ -37,17 +41,12 @@ class UserImpl extends User {
 		this.name = name;
 		position = null;
 		interests = new ArrayList<Key<Interest>>();
-	}
-
-	public UserImpl(long id, String name, Position position, ArrayList<Key<Interest>> interests) {
-		this.id = id;
-		this.name = name;
-		this.position = position;
-		this.interests = interests;
+		interestsChache = new ArrayList<Interest>();
 	}
 	
 	public UserImpl(){
 		interests = new ArrayList<Key<Interest>>();
+		interestsChache = new ArrayList<Interest>();
 	}
 		
 	@Override
@@ -56,11 +55,9 @@ class UserImpl extends User {
 	}
 
 
-	/* 
-	 * FIXME qualcuno deve scrivere l'interest sul datastore
-	 */
 	public void addInterest(Interest interest) {
 		interests.add(new Key<Interest>(Interest.class, interest.getId()));
+		interestsChache.add(interest);
 	}
 
 	@Override
@@ -83,8 +80,11 @@ class UserImpl extends User {
 
 	@Override
 	public Collection<Interest> getInterests() {
+		if(interestsChache.size()==interests.size())
+			return interestsChache;
 		Objectify ofy = ObjectifyService.begin();
-		return ofy.get(interests).values();
+		interestsChache = new ArrayList<Interest>(ofy.get(interests).values());
+		return interestsChache;
 	}
 	
 	protected Collection<Key<Interest>> getInterestKeys(){
@@ -92,10 +92,20 @@ class UserImpl extends User {
 	}
 
 	public void setPosition(Position p) {
-		this.position = p;
+		if (p instanceof PositionImpl) {
+			position = (PositionImpl) p;
+		}
+		this.position = (PositionImpl) ModelFactory.getInstance().createPosition(p.getLatitude(), p.getLongitude());
 	}
 	
-	
+	@SuppressWarnings("unused")
+	@PrePersist
+	private void prePerist(){
+		if(!interestsChache.isEmpty()){
+			Objectify ofy = ObjectifyService.begin();
+			ofy.put(interestsChache);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
