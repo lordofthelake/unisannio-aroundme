@@ -4,15 +4,18 @@ package it.unisannio.aroundme.client;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.client.async.*;
 import it.unisannio.aroundme.model.*;
+
 import java.util.*;
+
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.*;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
@@ -60,23 +63,38 @@ public class ListViewActivity extends FragmentActivity
 	private SeekBar seekDistance;
 	private TextView txtDistanceFilter;
 	
-	private Neighbourhood neigh=new Neighbourhood();
-	private UserQuery userQuery=ModelFactory.getInstance().createUserQuery();
-	private ListenableFuture<Collection<User>> task; 
-    
-    public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
-		Intent intent = new Intent(ListViewActivity.this, ProfileActivity.class);
-		intent.putExtra("userId", ((User) v.getTag(R.id.tag_user)).getId());
-		startActivity(intent);				
-	}
-    
-    /* TODO La query andrebbe ripristinata dal savedInstanceState, se non è null
-     * 
-     * @see http://developer.android.com/guide/topics/fundamentals/activities.html#SavingActivityState
-     */
+	private UserQuery userQuery;
+	
+	private ListenableFuture<Collection<User>> task = null; 
+ 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	
+    	
+    	if(savedInstanceState == null) {
+    		// L'Activity è stata avviata per la prima volta tramite un Intent
+    		long[] ids = getIntent().getLongArrayExtra("userIds");
+    		if(ids != null) {
+        		userQuery = UserQuery.byId(ids);
+        	}
+    	} else { 
+    		// Controlliamo se c'è uno stato salvato
+    		String serializedQuery = savedInstanceState.getString("userQuery");
+    		if(serializedQuery != null) {
+    			try {
+					userQuery = UserQuery.SERIALIZER.fromString(serializedQuery);
+				} catch (SAXException e1) {
+					Log.d("ListViewActivity", "Error deserializing UserQuery", e1);
+				}
+    		} 
+    	}
+
+    	if(userQuery == null) {
+    		// Non è stato possibile ricostruire la query. Usiamo le impostazioni di default
+    		userQuery = ModelFactory.getInstance().createUserQuery();
+    		// TODO Carica le impostazioni di default qui
+    	}
     	
     	setContentView(R.layout.listview);
     	
@@ -113,14 +131,10 @@ public class ListViewActivity extends FragmentActivity
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				//TODO Salvare le impostazioni ed aggiornare UserQuery
-				Location loc=new Location(LocationManager.GPS_PROVIDER);
-				ListViewActivity.this.neigh.setPosition(
-						ModelFactory.getInstance().createPosition(loc.getLatitude(), loc.getLongitude()
-				));//Ottengo l'ultima posizione nota
-				ListViewActivity.this.neigh.setRadius(seekBar.getProgress()*100);//Imposto la distanza in metri
-				userQuery.setNeighbourhood(ListViewActivity.this.neigh);//Imposto le preferenze di visualizzazione
-				Toast.makeText(ListViewActivity.this, "Saving Distance "+userQuery.getNeighbourhood().getRadius(), Toast.LENGTH_SHORT).show();
+				Position position = Identity.get().getPosition();
+				Neighbourhood neighbourhood = new Neighbourhood(position, seekBar.getProgress() * 100);
+				
+				userQuery.setNeighbourhood(neighbourhood); //Imposto le preferenze di visualizzazione
 			}
         });
         seekDistance.setProgress(3000);  
@@ -168,6 +182,12 @@ public class ListViewActivity extends FragmentActivity
         }); 	
     }
     
+    public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
+		Intent intent = new Intent(ListViewActivity.this, ProfileActivity.class);
+		intent.putExtra("userId", ((User) v.getTag(R.id.tag_user)).getId());
+		startActivity(intent);				
+	}
+
    
     // Prototipo
     private void createInterestDialog() {
@@ -232,18 +252,18 @@ public class ListViewActivity extends FragmentActivity
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		// FIXME Andrebbe salvato lo stato attuale dei filtri nel Bundle.
 		
-		/* Dalla doc. di Android:
-		 * 
-		 * "A good way to test your application's ability to restore its state is to simply rotate 
-		 * the device so that the screen orientation changes. When the screen orientation changes, 
-		 * the system destroys and recreates the activity in order to apply alternative resources 
-		 * that might be available for the new orientation. For this reason alone, it's very important 
-		 * that your activity completely restores its state when it is recreated, because users regularly 
-		 * rotate the screen while using applications."
-		 * 
-		 * @see http://developer.android.com/guide/topics/fundamentals/activities.html#SavingActivityState
+		if(userQuery != null) { 
+			try {
+				// Sfruttiamo il serializzatore XML per salvare lo stato della query
+				outState.putString("userQuery", UserQuery.SERIALIZER.toString(userQuery));
+			} catch (TransformerException tEx) {
+				Log.d("ListViewActivity", "Error serializing UserQuery", tEx);
+			}
+		}
+		
+		/* TODO Andrebbero cacheati anche i risultati.
+		 * Se l'utente gira il dispositivo non vogliamo che venga fatta un'altra query in rete
 		 */
 	}
 	

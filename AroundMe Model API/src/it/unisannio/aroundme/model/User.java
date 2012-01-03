@@ -129,4 +129,16 @@ public abstract class User implements Model {
 		
 		return (mine == null || hers == null) ? -1 : mine.getDistance(hers);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof User))
+			return false;
+		
+		User other = (User) obj;
+		return getId() == other.getId() 
+				&& getPosition().equals(other.getPosition())
+				&& getName().equals(other.getName())
+				&& getInterests().equals(other.getInterests());
+	}
 }

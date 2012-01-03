@@ -61,4 +61,13 @@ public class Neighbourhood implements Model {
 	public double getRadius() {
 		return radius;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Neighbourhood))
+			return false;
+		
+		Neighbourhood other = (Neighbourhood) obj;
+		return other.getPosition().equals(getPosition()) && other.getRadius() == getRadius();
+	}
 }

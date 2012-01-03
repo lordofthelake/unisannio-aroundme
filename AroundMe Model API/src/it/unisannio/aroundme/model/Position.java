@@ -64,4 +64,13 @@ public abstract class Position implements Model {
 	public abstract double getLatitude();
 
 	public abstract double getLongitude();
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Position))
+			return false;
+		
+		Position other = (Position) obj;
+		return other.getLatitude() == getLatitude() && other.getLongitude() == getLongitude();
+	}
 }

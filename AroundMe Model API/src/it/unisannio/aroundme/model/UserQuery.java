@@ -192,5 +192,42 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 		return compatibility;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null && !(obj instanceof UserQuery))
+			return false;
+		
+		UserQuery other = (UserQuery) obj;
+		
+		Compatibility myCompatibility = getCompatibility();
+		Compatibility otherCompatibility = other.getCompatibility();
+		
+		boolean compatibilityEquals = 
+				(myCompatibility == null && otherCompatibility == null)
+				|| (myCompatibility != null && myCompatibility.equals(otherCompatibility));
+		
+		Neighbourhood myNeighbourhood = getNeighbourhood();
+		Neighbourhood otherNeighbourhood = other.getNeighbourhood();
+
+		boolean neighbourhoodEquals = 
+				(myNeighbourhood == null && otherNeighbourhood == null)
+				|| (myNeighbourhood != null && myNeighbourhood.equals(otherNeighbourhood));
+		
+		Collection<Long> myInterestIds = getInterestIds();
+		Collection<Long> otherInterestIds = other.getInterestIds();
+		
+		boolean interestIdsEquals = 
+				(myInterestIds == null && otherInterestIds == null)
+				|| (myInterestIds != null && myInterestIds.equals(otherInterestIds));
+		
+		Collection<Long> myIds = getIds();
+		Collection<Long> otherIds = other.getIds();
+
+		boolean idsEquals = 
+				(myIds == null && otherIds == null)
+				|| (myIds != null && myIds.equals(otherIds));
+		
+		return compatibilityEquals && neighbourhoodEquals && interestIdsEquals && idsEquals;
+	}
 	
 }

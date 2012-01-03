@@ -129,4 +129,13 @@ public abstract class Preferences implements Model {
 	public void put(String key, String val) {
 		put(key, val);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Preferences))
+			return false;
+		
+		Preferences other = (Preferences) obj;
+		return other.getAll().equals(getAll());
+	}
 }
