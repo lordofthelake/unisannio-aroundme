@@ -24,13 +24,13 @@
   
   <!-- Defiizione del ContextListener -->
   <listener>
-  	<listener-class>it.unisannio.aroundme.server.ServletContextListenerImpl</listener-class>
+  	<listener-class>it.unisannio.aroundme.server.servlet.ServletContextListenerImpl</listener-class>
   </listener>
   
   <!-- Definizione del Filter --> 
   <filter>
   	<filter-name>ServletFilter</filter-name>
-  	<filter-class>it.unisannio.aroundme.server.ServletFilter</filter-class>
+  	<filter-class>it.unisannio.aroundme.server.servlet.ServletFilter</filter-class>
   </filter>
   <filter-mapping>
 	<filter-name>ServletFilter</filter-name>
@@ -40,7 +40,7 @@
 	<!-- Definizione delle Servlet -->
 	<servlet>
 		<servlet-name>PositionServlet</servlet-name>
-		<servlet-class>it.unisannio.aroundme.server.PositionServlet
+		<servlet-class>it.unisannio.aroundme.server.servlet.PositionServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
@@ -51,19 +51,19 @@
 	
 	<servlet>
 		<servlet-name>UserServlet</servlet-name>
-		<servlet-class>it.unisannio.aroundme.server.UserServlet
+		<servlet-class>it.unisannio.aroundme.server.servlet.UserServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>UserServlet</servlet-name>
-		<url-pattern>/user/*</url-pattern>
+		<url-pattern>/user</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Definizione delle servlet usate come tasks -->
 	
 	<servlet>
 		<servlet-name>PositionQueryTask</servlet-name>
-		<servlet-class>it.unisannio.aroundme.server.PositionQueryTask</servlet-class>
+		<servlet-class>it.unisannio.aroundme.server.task.PositionQueryTask</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PositionQueryTask</servlet-name>
@@ -72,70 +72,11 @@
 	
 	<servlet>
 		<servlet-name>C2DMSenderTask</servlet-name>
-		<servlet-class>it.unisannio.aroundme.server.c2dm.C2DMSenderTask</servlet-class>
+		<servlet-class>it.unisannio.aroundme.server.task.C2DMSenderTask</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>C2DMSenderTask</servlet-name>
 		<url-pattern>/task/positionsender</url-pattern>
 	</servlet-mapping>
 	
-
-
-<!-- Da qui in poi, c'è "robaccia" di Google -->
-
-  <!-- RequestFactory Servlet -->
-
-  <servlet>
-    <servlet-name>requestFactoryServlet</servlet-name>
-    <servlet-class>com.google.web.bindery.requestfactory.server.RequestFactoryServlet</servlet-class>
-    <init-param>
-      <param-name>symbolMapsDirectory</param-name>
-      <!-- You'll need to compile with -extras and move the symbolMaps directory
-           to this location if you want stack trace deobfuscation to work -->
-      <param-value>WEB-INF/classes/symbolMaps/</param-value>
-    </init-param>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>requestFactoryServlet</servlet-name>
-    <url-pattern>/gwtRequest</url-pattern>
-  </servlet-mapping>
-
-  <!-- Other servlets -->
-
-  <servlet>
-    <servlet-name>dataMessagingServlet</servlet-name>
-    <servlet-class>
-      com.google.android.c2dm.server.C2DMRetryServlet
-    </servlet-class>
-  </servlet>
-    
-  <servlet-mapping>
-    <servlet-name>dataMessagingServlet</servlet-name>
-      <url-pattern>/tasks/c2dm</url-pattern>
-  </servlet-mapping>
-
-  <!-- Security -->
-
-  <!--  Require user login for the .html welcome page -->
-  <security-constraint>
-    <web-resource-collection>
-      <url-pattern>/AroundMe.html</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>*</role-name>
-    </auth-constraint>
-  </security-constraint>
-
-  <!--  Require admin role for the tasks servlet 
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>tasks</web-resource-name>
-      <url-pattern>/tasks/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>admin</role-name>
-    </auth-constraint>
-  </security-constraint>
--->
 </web-app>

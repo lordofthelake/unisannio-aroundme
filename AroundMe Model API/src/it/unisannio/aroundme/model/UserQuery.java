@@ -159,7 +159,6 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	
 	public UserQuery addId(Collection<Long> id) {
 		ids.addAll(id);
-		
 		return this;
 	}
 	
@@ -170,13 +169,11 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	public UserQuery addInterestId(long... id) {
 		for(long i : id)
 			interestIds.add(i);
-		
 		return this;
 	}
 	
 	public UserQuery addInterestId(Collection<Long> id) {
 		interestIds.addAll(id);
-		
 		return this;
 	}
 	
@@ -185,8 +182,7 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	}
 	
 	public UserQuery setCompatibility(Compatibility c) {
-		compatibility = c;
-		
+		compatibility = c;	
 		return this;
 	}
 	
