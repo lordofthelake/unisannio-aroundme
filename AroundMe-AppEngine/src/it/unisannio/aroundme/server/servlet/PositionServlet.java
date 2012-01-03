@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.TransformerException;
 
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.Queue;
@@ -25,7 +24,7 @@ import com.googlecode.objectify.ObjectifyService;
  */
 public class PositionServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	
+
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,14 +37,15 @@ public class PositionServlet extends HttpServlet{
 			ofy.put(user);
 			Queue queue = QueueFactory.getDefaultQueue();
 			TaskOptions url = TaskOptions.Builder.withUrl(PositionQueryTask.URI)
-												.param("userId", userId)
-												.method(Method.POST);
+					.param("userId", userId)
+					.method(Method.POST);
 			queue.add(url);
-			
+
 		}catch (Exception e){
+			e.printStackTrace();
 			resp.sendError(500);
 		}
-			
+
 	}
 
 	@Override
@@ -57,7 +57,12 @@ public class PositionServlet extends HttpServlet{
 			try {
 				resp.setContentType("text/xml");
 				Position.SERIALIZER.write(user.getPosition(), resp.getOutputStream());
-			} catch (TransformerException e) {
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+				resp.sendError(404);
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
 				resp.sendError(500);
 			}
 		}

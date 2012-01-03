@@ -35,6 +35,7 @@ public class UserServlet extends HttpServlet{
 			resp.setContentType("text/xml");
 			Serializer.ofCollection(User.class).write(users, resp.getOutputStream());
 		} catch (Exception e) {
+			e.printStackTrace();
 			resp.sendError(500);
 		}				
 	}
@@ -44,8 +45,10 @@ public class UserServlet extends HttpServlet{
 		try {
 			UserImpl user = (UserImpl) User.SERIALIZER.read(req.getInputStream());
 			Objectify ofy = ObjectifyService.begin();
+			user.setAuthToken(req.getHeader("X-AccessToken"));
 			ofy.put(user);
 		} catch (SAXException e) {
+			e.printStackTrace();
 			resp.sendError(500);
 		}
 	}
