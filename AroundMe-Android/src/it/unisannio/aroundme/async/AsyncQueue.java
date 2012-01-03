@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.client.async;
+package it.unisannio.aroundme.async;
 
 
 import java.util.concurrent.Callable;

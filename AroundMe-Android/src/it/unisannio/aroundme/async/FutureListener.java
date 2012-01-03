@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.client.async;
+package it.unisannio.aroundme.async;
 
 /**
  * Oggetto che viene notificato nel momento in cui &egrave; terminata una richiesta in background.

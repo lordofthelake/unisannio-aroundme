@@ -1,4 +1,4 @@
-package it.unisannio.aroundme.client;
+package it.unisannio.aroundme;
 
 import java.io.File;
 import java.io.InputStream;
@@ -10,6 +10,9 @@ import org.w3c.dom.Node;
 import android.content.Context;
 import android.support.v4.util.LruCache;
 
+import it.unisannio.aroundme.client.HttpTask;
+import it.unisannio.aroundme.client.Identity;
+import it.unisannio.aroundme.client.Picture;
 import it.unisannio.aroundme.model.*;
 
 /**
@@ -197,7 +200,7 @@ public class Application extends android.app.Application {
 					private final Map<String, Object> map = new HashMap<String, Object>();
 
 					@Override
-					public Map<String, ?> getAll() {
+					public Map<String, Object> getAll() {
 						return Collections.unmodifiableMap(map);
 					}
 

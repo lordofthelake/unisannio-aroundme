@@ -1,9 +1,12 @@
-package it.unisannio.aroundme.client;
+package it.unisannio.aroundme;
 
 import android.graphics.Bitmap;
 import android.location.LocationManager;
 import it.unisannio.aroundme.activities.LoginActivity;
-import it.unisannio.aroundme.client.async.AsyncQueue;
+import it.unisannio.aroundme.async.AsyncQueue;
+import it.unisannio.aroundme.client.HttpTask;
+import it.unisannio.aroundme.client.Identity;
+import it.unisannio.aroundme.client.Picture;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.services.PositionTrackingService;

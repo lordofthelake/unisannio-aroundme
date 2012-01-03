@@ -3,13 +3,13 @@ package it.unisannio.aroundme.activities;
 import java.util.ArrayList;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.adapters.InterestAdapter;
+import it.unisannio.aroundme.async.AsyncQueue;
+import it.unisannio.aroundme.async.FutureListener;
+import it.unisannio.aroundme.async.ListenableFuture;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Picture;
-import it.unisannio.aroundme.client.Setup;
-import it.unisannio.aroundme.client.async.AsyncQueue;
-import it.unisannio.aroundme.client.async.FutureListener;
-import it.unisannio.aroundme.client.async.ListenableFuture;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;

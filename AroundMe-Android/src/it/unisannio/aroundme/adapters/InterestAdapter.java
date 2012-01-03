@@ -1,8 +1,8 @@
 package it.unisannio.aroundme.adapters;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.Picture;
-import it.unisannio.aroundme.client.async.AsyncQueue;
 import it.unisannio.aroundme.model.Interest;
 
 import java.util.List;

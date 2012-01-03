@@ -2,11 +2,11 @@ package it.unisannio.aroundme.activities;
 
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.adapters.InterestFilterAdapter;
 import it.unisannio.aroundme.adapters.UserAdapter;
+import it.unisannio.aroundme.async.*;
 import it.unisannio.aroundme.client.Identity;
-import it.unisannio.aroundme.client.Setup;
-import it.unisannio.aroundme.client.async.*;
 import it.unisannio.aroundme.model.*;
 
 import java.util.*;
@@ -190,26 +190,6 @@ public class ListViewActivity extends FragmentActivity
 		intent.putExtra("userId", ((User) v.getTag(R.id.tag_user)).getId());
 		startActivity(intent);				
 	}
-
-   
-    // Prototipo
-    private void createInterestDialog() {
-
-		AlertDialog.Builder b = new AlertDialog.Builder(this);
-		String[] items = new String[100];
-		boolean[] checked = new boolean[100];
-		Arrays.fill(items, "Interesse");
-		Arrays.fill(checked, true);
-		b.setTitle("Seleziona interessi");
-		b.setPositiveButton("Filtra", new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}});
-		b.setMultiChoiceItems(items, checked, new OnMultiChoiceClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which,boolean isChecked) {}});
-		b.create().show();
-    }
 
 	
 	@Override
