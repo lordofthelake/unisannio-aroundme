@@ -1,5 +1,7 @@
 package it.unisannio.aroundme.model;
 
+import javax.xml.transform.TransformerException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -52,5 +54,10 @@ public abstract class Interest implements Model {
 		
 		Interest i = (Interest) obj;
 		return getId() == i.getId() && getName().equals(i.getName()) && getCategory().equals(i.getCategory());
+	}
+	
+	@Override
+	public String toString() {
+		return "\"" + getName() + "\" (#" + getId() + ")";
 	}
 }

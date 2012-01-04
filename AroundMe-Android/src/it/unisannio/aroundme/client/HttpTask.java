@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
@@ -60,6 +61,7 @@ public abstract class HttpTask<T> implements Callable<T> {
 			urlConnection.setUseCaches(true);
 			urlConnection.setRequestMethod(method);
 			
+			Log.d("HttpTask", method + " " + url);
 			if(identity != null)
 				urlConnection.setRequestProperty(Setup.BACKEND_AUTH_HEADER, identity.getAccessToken());
 			

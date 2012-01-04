@@ -93,6 +93,7 @@ public interface Setup {
 	 * @see #BACKEND_POSITION_URL
 	 */
 	final String BACKEND_HOST = "https://aroundme-backend.appspot.com";
+	//final String BACKEND_HOST = "http://localhost:8888";
 	
 	/**
 	 * Path della risorsa "User"

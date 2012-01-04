@@ -66,13 +66,14 @@ public abstract class User implements Model {
 			
 			Position position = obj.getPosition();
 			if(position != null)
-				user.appendChild(document.importNode(Position.SERIALIZER.toXML(position), true));
+				user.appendChild(document.adoptNode(Position.SERIALIZER.toXML(position)));
 			
 			Collection<Interest> userInterests = obj.getInterests();
 			if(userInterests.size() > 0) {
 				Element interests = document.createElement("interests");
 				for(Interest i : userInterests) {
-					interests.appendChild(document.importNode(Interest.SERIALIZER.toXML(i), true));
+					if(i != null)
+						interests.appendChild(document.adoptNode(Interest.SERIALIZER.toXML(i)));
 				}
 				user.appendChild(interests);
 			}
@@ -140,5 +141,10 @@ public abstract class User implements Model {
 				&& getPosition().equals(other.getPosition())
 				&& getName().equals(other.getName())
 				&& getInterests().equals(other.getInterests());
+	}
+	
+	@Override
+	public String toString() {
+		return getName() + "(#" + getId() + ") " + getInterests();
 	}
 }

@@ -15,6 +15,6 @@
 	<classpathentry kind="lib" path="lib/c2dm-sources.jar"/>
 	<classpathentry kind="lib" path="lib/requestfactory-client-src.jar"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe Model API"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AroundMe Model API"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

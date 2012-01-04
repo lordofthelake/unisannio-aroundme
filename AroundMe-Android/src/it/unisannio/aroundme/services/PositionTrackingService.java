@@ -102,6 +102,18 @@ public class PositionTrackingService extends Service {
 			}
 		}
 	};
+	
+	public static Position getLastKnownPosition(Context ctx) {
+		LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+		Location gpsLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location networkLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		
+		Location best = isBetterLocation(networkLocation, gpsLocation) ? networkLocation : gpsLocation;
+		if(best == null)
+			return null;
+		
+		return ModelFactory.getInstance().createPosition(best.getLatitude(), best.getLongitude());
+	}
 
 	/** 
 	 * Determina se la nuova posizione rilevata &egrave; migliore dell'ultima. 

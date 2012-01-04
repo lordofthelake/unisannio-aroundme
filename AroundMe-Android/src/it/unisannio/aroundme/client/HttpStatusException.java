@@ -10,7 +10,13 @@ public class HttpStatusException extends Exception {
 	
 	private int code;
 	
+	public HttpStatusException(int code, String message) {
+		super("[" + code + "]" + message);
+		this.code = code;
+	}
+	
 	public HttpStatusException(int code) {
+		super("[" + code + "]");
 		this.code = code;
 	}
 	

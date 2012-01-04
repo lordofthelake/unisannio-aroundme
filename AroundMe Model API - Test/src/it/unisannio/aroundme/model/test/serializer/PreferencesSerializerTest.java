@@ -13,8 +13,6 @@ import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import junit.framework.TestCase;
@@ -28,7 +26,6 @@ public class PreferencesSerializerTest extends TestCase {
 	
 	private String testXml;
 	
-	@Before
 	public void setUp() {
 		serializer = Preferences.SERIALIZER;
 
@@ -49,7 +46,6 @@ public class PreferencesSerializerTest extends TestCase {
 				+ "</preferences>";
 	}
 	
-	@Test
 	public void testDeserialization() throws SAXException, IOException {
 		try {
 			mockPreferences.put("stringKey", "Lorem ipsum dolor");
@@ -70,7 +66,6 @@ public class PreferencesSerializerTest extends TestCase {
 		}
 	}
 	
-	@Test
 	public void testSerialization() throws TransformerException, IOException, SAXException {
 		Map<String, Object> mockEntries = new HashMap<String, Object>();
 		mockEntries.put("stringKey", "Lorem ipsum dolor");

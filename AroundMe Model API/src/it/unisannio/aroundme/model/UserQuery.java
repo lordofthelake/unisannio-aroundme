@@ -2,6 +2,7 @@ package it.unisannio.aroundme.model;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -74,11 +75,11 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 			
 			Neighbourhood n = obj.getNeighbourhood();
 			if(n != null)
-				container.appendChild(document.importNode(Neighbourhood.SERIALIZER.toXML(n), true));
+				container.appendChild(document.adoptNode(Neighbourhood.SERIALIZER.toXML(n)));
 			
 			Compatibility c = obj.getCompatibility();
 			if(c != null)
-				container.appendChild(document.importNode(Compatibility.SERIALIZER.toXML(c), true));
+				container.appendChild(document.adoptNode(Compatibility.SERIALIZER.toXML(c)));
 			
 			Collection<Long> iids = obj.getInterestIds();
 			if(iids.size() > 0) {
@@ -127,7 +128,10 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 				Collection<? extends User> c = byId(id).call();
 				User[] u = c.toArray(new User[0]);
 				
-				return u.length == 0 ? null : u[0];
+				if(u.length == 0)
+					throw new NoSuchElementException("User with id #" + id + "doesn't exist");
+				
+				return u[0];
 			}
 			
 		};

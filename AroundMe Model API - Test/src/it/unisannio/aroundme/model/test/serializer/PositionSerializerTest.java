@@ -11,8 +11,6 @@ import java.io.IOException;
 
 import javax.xml.transform.TransformerException;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import junit.framework.TestCase;
@@ -23,7 +21,6 @@ public class PositionSerializerTest extends TestCase {
 	private ModelFactory mockFactory;
 	private Position mockPosition;
 	
-	@Before
 	public void setUp() {
 		serializer = Position.SERIALIZER;
 		mockPosition = MockHelper.createMockPosition(0.9, -0.9);
@@ -33,7 +30,6 @@ public class PositionSerializerTest extends TestCase {
 		ModelFactory.setInstance(mockFactory);
 	}
 	
-	@Test
 	public void testDeserialization() throws SAXException, IOException {
 		try {
 			Position obj = serializer.fromString("<position lat=\"0.9\" lon=\"-0.9\" />");
@@ -44,7 +40,6 @@ public class PositionSerializerTest extends TestCase {
 		}
 	}
 	
-	@Test
 	public void testSerialization() throws TransformerException, IOException, SAXException {
 		
 		assertXMLEqual(serializer.toString(mockPosition), "<position lat=\"0.9\" lon=\"-0.9\" />");

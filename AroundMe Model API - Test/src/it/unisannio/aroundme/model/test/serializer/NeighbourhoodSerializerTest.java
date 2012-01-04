@@ -8,8 +8,6 @@ import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -26,7 +24,6 @@ public class NeighbourhoodSerializerTest extends TestCase {
 	
 	private String xmlFormat = "<neighbourhood radius=\"987.654321\"><position lat=\"1.23456\" lon=\"-6.54321\" /></neighbourhood>";
 	
-	@Before
 	public void setUp() {
 		serializer = Neighbourhood.SERIALIZER;
 		
@@ -40,7 +37,6 @@ public class NeighbourhoodSerializerTest extends TestCase {
 		testNeighbourhood = new Neighbourhood(mockPosition, 987.654321);
 	}
 	
-	@Test
 	public void testDeserialization() throws SAXException, IOException {
 		try {
 			Neighbourhood obj = serializer.fromString(xmlFormat);
@@ -52,7 +48,6 @@ public class NeighbourhoodSerializerTest extends TestCase {
 		}
 	}
 	
-	@Test
 	public void testSerialization() throws TransformerException, IOException, SAXException {
 		assertXMLEqual(serializer.toString(testNeighbourhood), xmlFormat);
 	}

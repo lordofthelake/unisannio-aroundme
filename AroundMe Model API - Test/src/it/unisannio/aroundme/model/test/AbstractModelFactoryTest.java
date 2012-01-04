@@ -1,6 +1,5 @@
 package it.unisannio.aroundme.model.test;
 
-import static org.junit.Assert.*;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,8 +13,6 @@ import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * 
@@ -29,12 +26,10 @@ public abstract class AbstractModelFactoryTest extends TestCase {
 		this.factory = f;
 	}
 
-	@Test
 	public void testInstance() {
 		assertNotNull(factory);
 	}
 
-	@Test
 	public void testCreateUser() {
 		long id = Math.round(Math.random()*10000);
 		String name = String.valueOf(Math.random()*1000000);
@@ -54,7 +49,6 @@ public abstract class AbstractModelFactoryTest extends TestCase {
 		assertEquals(user.getInterests(), interests);
 	}
 
-	@Test
 	public void testCreateInterest() {
 		long id = Math.round(Math.random()*10000);
 		String name = String.valueOf(Math.random()*1000000);
@@ -68,7 +62,6 @@ public abstract class AbstractModelFactoryTest extends TestCase {
 		assertEquals(i.getCategory(), category);
 	}
 
-	@Test
 	public void testCreatePosition() {
 		double latitude = Math.random() * 10;
 		double longitude = Math.random() * 10;
@@ -81,14 +74,12 @@ public abstract class AbstractModelFactoryTest extends TestCase {
 		assertEquals(p.getLongitude(), longitude, 0);
 	}
 
-	@Test
 	public void testCreateUserQuery() {
 		UserQuery query = factory.createUserQuery();
 		
 		assertNotNull(query);
 	}
 	
-	@Test
 	public void testCreatePreferences() {
 		Preferences preferences = factory.createPreferences();
 		

@@ -37,8 +37,7 @@ public class Neighbourhood implements Model {
 			
 			Element e = document.createElement("neighbourhood");
 			e.setAttribute("radius", String.valueOf(obj.getRadius()));
-			//FIXME org.w3c.dom.DOMException (probabili problemi con importNode)
-			e.appendChild(document.importNode(Position.SERIALIZER.toXML(obj.getPosition()), true));
+			e.appendChild(document.adoptNode(Position.SERIALIZER.toXML(obj.getPosition())));
 			
 			return e;
 		}
@@ -51,6 +50,9 @@ public class Neighbourhood implements Model {
 	private final double radius;
 	
 	public Neighbourhood(Position position, double radius) {
+		if(position == null)
+			throw new IllegalArgumentException("Position cannot be null");
+		
 		this.position = position;
 		this.radius = radius;
 	}

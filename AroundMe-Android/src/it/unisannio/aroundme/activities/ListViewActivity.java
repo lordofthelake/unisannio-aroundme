@@ -75,6 +75,10 @@ public class ListViewActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	
+    	if(Identity.get() == null) {
+    		// TODO Si dovrebbe avviare l'attività di login per procedere all'autenticazione
+    	}
+    	
     	if(savedInstanceState == null) {
     		// L'Activity è stata avviata per la prima volta tramite un Intent
     		long[] ids = getIntent().getLongArrayExtra("userIds");

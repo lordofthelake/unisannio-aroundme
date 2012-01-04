@@ -1,6 +1,5 @@
 package it.unisannio.aroundme.model.test;
 
-import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 
@@ -9,7 +8,6 @@ import junit.framework.TestCase;
 import it.unisannio.aroundme.model.Model;
 import it.unisannio.aroundme.model.Serializer;
 
-import org.junit.Test;
 
 /**
  * 
@@ -24,7 +22,6 @@ public abstract class AbstractModelTest<T extends Model>  extends TestCase {
 	}
 	
 	
-	@Test
 	public void testSerializerFieldPresence() {
 		assertNotNull(clazz);
 		

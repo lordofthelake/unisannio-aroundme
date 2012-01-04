@@ -12,8 +12,6 @@ import javax.xml.transform.TransformerException;
 import junit.framework.TestCase;
 
 import org.easymock.Capture;
-import org.junit.Before;
-import org.junit.Test;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -34,7 +32,6 @@ public class UserQueySerializerTest extends TestCase {
 	
 	private String testXml;
 	
-	@Before
 	public void setUp() {
 		serializer = UserQuery.SERIALIZER;
 		
@@ -73,7 +70,6 @@ public class UserQueySerializerTest extends TestCase {
 		
 	}
 	
-	@Test
 	public void testDeserialization() throws SAXException, IOException {
 		try {
 			UserQuery obj = serializer.fromString(testXml);
@@ -101,7 +97,6 @@ public class UserQueySerializerTest extends TestCase {
 		}
 	}
 	
-	@Test
 	public void testSerialization() throws TransformerException, IOException, SAXException {
 		mockUserQuery.addId(testIds);
 		mockUserQuery.addInterestId(testInterestIds);

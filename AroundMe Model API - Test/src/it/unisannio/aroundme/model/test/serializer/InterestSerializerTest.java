@@ -8,8 +8,6 @@ import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -24,7 +22,6 @@ public class InterestSerializerTest extends TestCase {
 	private Interest mockInterest;
 	private ModelFactory mockFactory;
 	
-	@Before
 	public void setUp() {
 		serializer = Interest.SERIALIZER;
 		mockInterest = MockHelper.createMockInterest(1337L, "Mock interest", "Mock category");
@@ -36,7 +33,6 @@ public class InterestSerializerTest extends TestCase {
 		ModelFactory.setInstance(mockFactory);
 	}
 	
-	@Test
 	public void testDeserialization() throws SAXException, IOException {
 		try {
 			
@@ -48,7 +44,6 @@ public class InterestSerializerTest extends TestCase {
 		}
 	}
 	
-	@Test
 	public void testSerialization() throws TransformerException, IOException, SAXException {
 		assertXMLEqual(serializer.toString(mockInterest), "<interest id=\"1337\" category=\"Mock category\" name=\"Mock interest\" />");	
 	}
