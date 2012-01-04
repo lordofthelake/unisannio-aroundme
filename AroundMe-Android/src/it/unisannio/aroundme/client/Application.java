@@ -9,6 +9,7 @@ import org.w3c.dom.Node;
 
 import android.content.Context;
 import android.support.v4.util.LruCache;
+import android.widget.Toast;
 
 import it.unisannio.aroundme.model.*;
 

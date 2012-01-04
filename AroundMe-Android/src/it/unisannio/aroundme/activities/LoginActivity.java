@@ -50,7 +50,6 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 		this.async = new AsyncQueue();
 		
 		setContentView(R.layout.login);
-		//Button btnFacebookConnect = (Button) findViewById(R.id.btnFacebookConnect);
 		txtLoading=(TextView) findViewById(R.id.txtLoginWait);
 		mPrefs = getPreferences(MODE_PRIVATE);
         final String access_token = mPrefs.getString("access_token", null);
@@ -67,10 +66,7 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
         if(facebook.isSessionValid()) {
         	//service.asyncDo(Identity.login(id, access_token), this);
         }
-		/*btnFacebookConnect.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {*/
 				facebook.authorize(LoginActivity.this, new String[] { "offline_access", "user_likes" }, new DialogListener() {
 
 					@Override
@@ -78,10 +74,10 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 						//Toast.makeText(getApplicationContext(), "Accesso Effettuato", Toast.LENGTH_SHORT).show();
 						LoginActivity.this.txtLoading.setText("Caricamento informazioni");
 	                    async.exec(Identity.create(facebook), new FutureListener<User>() {
-
 							@Override
 							public void onSuccess(User object) {
 								SharedPreferences.Editor editor = mPrefs.edit();
+								System.out.println(facebook.getAccessToken());//TODO remove it
 			                    editor.putString("access_token", facebook.getAccessToken());
 			                    editor.putLong("access_expires", facebook.getAccessExpires());
 			                    editor.putLong("userId", object.getId());
@@ -99,7 +95,6 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 							public void onError(Throwable e) {
 								Toast.makeText(LoginActivity.this, "Errore", Toast.LENGTH_LONG).show();
 								e.printStackTrace();
-								
 							}
 	                    	
 	                    });
@@ -130,10 +125,6 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 					
 				});
 			}
-			
-		/*});
-	}*/
-	
 	
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
