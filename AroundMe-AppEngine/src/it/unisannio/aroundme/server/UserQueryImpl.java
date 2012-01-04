@@ -2,7 +2,10 @@ package it.unisannio.aroundme.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import com.beoui.geocell.GeocellManager;
+import com.beoui.geocell.model.BoundingBox;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
@@ -37,6 +40,7 @@ public class UserQueryImpl extends UserQuery {
 		 * data posizione entro un certo raggio.
 		 */
 		if(getNeighbourhood() != null){
+			
 			/* Creazione di un quadrato di un certo "raggio"
 			 * a partire da una posizione; utilizzato per definire
 			 * l'area all'interno della quale altri utenti sono 
@@ -44,15 +48,23 @@ public class UserQueryImpl extends UserQuery {
 			 * Si basa sul fatto che 1° di latitudine corrisponde a circa 110000 metri
 			 * e un 1° di longitudine corrisponde a circa cos(latitudine in radianti)*110000 metri
 			 */
+			
 			Position myPosition = this.getNeighbourhood().getPosition();
 			double radius = this.getNeighbourhood().getRadius();
 			double aLongitudeDegree2Meters = (Math.abs(Math.cos(Math.toRadians(myPosition.getLatitude()))*110000));
-
+			/*
+			 * Il Datastore del Google AppEngine non supporta l'utilizzo di più filtri di disuguaglianza  (<, <=, >=, >, !=)
+			 * per una stessa query...
 			query.filter("position.longitude >=", myPosition.getLongitude() - radius/ aLongitudeDegree2Meters)
 					.filter("position.longitude <=", myPosition.getLongitude() + radius/ aLongitudeDegree2Meters)
 					.filter("position.latitude >=", myPosition.getLatitude() - radius/110000)
 					.filter("position.latitude <=", myPosition.getLatitude() + radius/110000);
-					
+			*/
+			BoundingBox boundingBox = new BoundingBox(myPosition.getLatitude() + radius/110000, myPosition.getLongitude() + radius/ aLongitudeDegree2Meters,
+													  myPosition.getLatitude() - radius/110000, myPosition.getLongitude() - radius/ aLongitudeDegree2Meters);
+			
+			List<String> cells = GeocellManager.bestBboxSearchCells(boundingBox, null);
+			query.filter("position.cells in", cells);
 		}
 		
 		/*
