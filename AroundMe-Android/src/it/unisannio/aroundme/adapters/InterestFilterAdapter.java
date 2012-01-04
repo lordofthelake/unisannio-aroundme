@@ -1,10 +1,13 @@
 package it.unisannio.aroundme.adapters;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.Picture;
-import it.unisannio.aroundme.client.async.AsyncQueue;
 import it.unisannio.aroundme.model.Interest;
+import it.unisannio.aroundme.model.ModelFactory;
+import it.unisannio.aroundme.model.UserQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +33,13 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 	private static final int ITEM_RESOURCE = R.layout.interest_filter_entry;
 	private AsyncQueue async;
 	private Context context;
+	private UserQuery userQuery;
 
-	public InterestFilterAdapter(Context context, List<Interest> interests, AsyncQueue async) {
+	public InterestFilterAdapter(Context context, List<Interest> interests, AsyncQueue async,UserQuery userQuery) {
 		super(context, ITEM_RESOURCE, interests);
 		this.context=context;
 		this.async = async;
+		this.userQuery=userQuery;
 	}
 	
 	/* 
@@ -45,7 +52,7 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 		ImageView imgMyInterest;
 	}
 	
-	public View getView(int position, View view, ViewGroup parent) {
+	public View getView(final int position, View view, ViewGroup parent) {
 		ViewHolder h = null;
 		
 		if(view == null){
@@ -59,12 +66,50 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 		} else {
 			h = (ViewHolder) view.getTag(R.id.tag_viewholder);
 		}
-		
 		Interest interest = getItem(position);	
 		view.setTag(R.id.tag_interest,interest);
-		Toast.makeText(context, interest.getName(), 3);
+		h.ckEnabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				long interestId = getItem(position).getId();
+				if (isChecked){
+					if (!isQueried(interestId)){
+						userQuery.addId(interestId);
+					}
+				}else{
+					//Non deve essere in UserQuery
+					userQuery=InterestFilterAdapter.this.removeInterestId(interestId);
+					
+				}
+				UserQuery tmpQuery=ModelFactory.getInstance().createUserQuery();
+			}
+		});
 		h.txtMyInterest.setText(interest.getName());
+		h.ckEnabled.setChecked(isQueried(interest.getId()));
 		Picture.get(interest.getId()).asyncUpdate(async, h.imgMyInterest, R.drawable.img_downloading, R.drawable.img_error);
 		return view;
+	}
+	
+	private UserQuery removeInterestId(long interestId){
+		UserQuery retUserQuery =ModelFactory.getInstance().createUserQuery();
+		ArrayList <Long> queriedInterests= new ArrayList<Long>(userQuery.getInterestIds());
+		for (int i=0;i<queriedInterests.size();i++){
+			if (!queriedInterests.get(i).equals(new Long(interestId))){
+				//inserisce in userQuery solo gli id diversi
+				retUserQuery.addInterestId(queriedInterests.get(i));
+			}
+		}
+		retUserQuery.setNeighbourhood(userQuery.getNeighbourhood());
+		retUserQuery.setCompatibility(userQuery.getCompatibility());
+		return retUserQuery;
+	}
+	
+	private boolean isQueried(long interestId){
+		ArrayList<Long> queriedInterests = new ArrayList<Long>(userQuery.getInterestIds());
+		for (int i=0;i<queriedInterests.size();i++){
+			if (queriedInterests.get(i).equals(new Long(interestId)))
+				return true;
+		}
+		return false;
 	}
 }

@@ -12,6 +12,7 @@ import org.json.JSONTokener;
 
 import com.facebook.android.Facebook;
 
+import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.model.*;
 
 /**

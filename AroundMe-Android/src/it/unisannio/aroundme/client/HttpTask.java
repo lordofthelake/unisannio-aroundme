@@ -1,6 +1,8 @@
 package it.unisannio.aroundme.client;
 
 
+import it.unisannio.aroundme.Setup;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;

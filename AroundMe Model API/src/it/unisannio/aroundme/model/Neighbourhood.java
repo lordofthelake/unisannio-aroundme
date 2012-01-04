@@ -37,6 +37,7 @@ public class Neighbourhood implements Model {
 			
 			Element e = document.createElement("neighbourhood");
 			e.setAttribute("radius", String.valueOf(obj.getRadius()));
+			//FIXME org.w3c.dom.DOMException (probabili problemi con importNode)
 			e.appendChild(document.importNode(Position.SERIALIZER.toXML(obj.getPosition()), true));
 			
 			return e;

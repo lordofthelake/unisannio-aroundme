@@ -33,12 +33,12 @@ public abstract class Preferences implements Model {
 				
 				if(type.isEmpty()) type = "string";
 				
-				if(type.equals("string")) obj.put(key, content);
-				else if(type.equals("float")) obj.put(key, Float.valueOf(content));
-				else if(type.equals("double")) obj.put(key, Double.valueOf(content));
-				else if(type.equals("int")) obj.put(key, Integer.valueOf(content));
-				else if(type.equals("long")) obj.put(key, Long.valueOf(content));
-				else if(type.equals("boolean")) obj.put(key, Boolean.valueOf(content));
+				if(type.equals("string")) obj.put(key, (String) content);
+				else if(type.equals("float")) obj.put(key, (float) Float.valueOf(content));
+				else if(type.equals("double")) obj.put(key, (double) Double.valueOf(content));
+				else if(type.equals("int")) obj.put(key, (int) Integer.valueOf(content));
+				else if(type.equals("long")) obj.put(key, (long) Long.valueOf(content));
+				else if(type.equals("boolean")) obj.put(key, (boolean) Boolean.valueOf(content));
 				else throw new ClassCastException();
 			}
 			
@@ -74,7 +74,7 @@ public abstract class Preferences implements Model {
 		
 	};
 
-	public abstract Map<String, ?> getAll();
+	public abstract Map<String, Object> getAll();
 	
 	public abstract boolean contains(String key);
 	
