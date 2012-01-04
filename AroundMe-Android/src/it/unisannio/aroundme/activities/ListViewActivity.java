@@ -2,11 +2,11 @@ package it.unisannio.aroundme.activities;
 
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.adapters.InterestFilterAdapter;
 import it.unisannio.aroundme.adapters.UserAdapter;
+import it.unisannio.aroundme.async.*;
 import it.unisannio.aroundme.client.Identity;
-import it.unisannio.aroundme.client.Setup;
-import it.unisannio.aroundme.client.async.*;
 import it.unisannio.aroundme.model.*;
 
 import java.util.*;
@@ -44,7 +44,7 @@ import android.widget.Toast;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
 
-/* TODO Si dovrebbe accettare una lista di id via Intent, così che possa essere usato
+/* TODO Si dovrebbe accettare una lista di id via Intent, cosÃ¬ che possa essere usato
  * dal Notification service
  */
 public class ListViewActivity extends FragmentActivity 
@@ -76,13 +76,13 @@ public class ListViewActivity extends FragmentActivity
     	super.onCreate(savedInstanceState);
     	
     	if(savedInstanceState == null) {
-    		// L'Activity � stata avviata per la prima volta tramite un Intent
+    		// L'Activity è stata avviata per la prima volta tramite un Intent
     		long[] ids = getIntent().getLongArrayExtra("userIds");
     		if(ids != null) {
         		userQuery = UserQuery.byId(ids);
         	}
     	} else { 
-    		// Controlliamo se c'� uno stato salvato
+    		// Controlliamo se c'è uno stato salvato
     		String serializedQuery = savedInstanceState.getString("userQuery");
     		if(serializedQuery != null) {
     			try {
@@ -94,12 +94,12 @@ public class ListViewActivity extends FragmentActivity
     	}
 
     	if(userQuery == null) {
-    		// Non è stato possibile ricostruire la query. Usiamo le impostazioni di default
+    		// Non Ã¨ stato possibile ricostruire la query. Usiamo le impostazioni di default
     		userQuery = ModelFactory.getInstance().createUserQuery();
     		/**Caricamento delle impostazioni di default
     		 * 	-posizione: 				attuale
     		 * 	-Raggio: 					1km
-    		 * 	-compatibilit�:				60%
+    		 * 	-compatibilità:				60%
     		 * 	-Interessi considerati:		tutti
     		 */
     		//TODO remove toast
@@ -186,6 +186,7 @@ public class ListViewActivity extends FragmentActivity
 		intent.putExtra("userId", ((User) v.getTag(R.id.tag_user)).getId());
 		startActivity(intent);				
 	}
+
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){

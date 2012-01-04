@@ -138,6 +138,8 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 	private Compatibility compatibility;
 	private Set<Long> ids = new HashSet<Long>();
 	
+	public abstract Collection<User> call() throws Exception;
+	
 	public Neighbourhood getNeighbourhood() {
 		return neighbourhood;
 	}

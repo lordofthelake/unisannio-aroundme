@@ -1,8 +1,8 @@
 package it.unisannio.aroundme.services;
 
+import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.client.HttpTask;
 import it.unisannio.aroundme.client.Identity;
-import it.unisannio.aroundme.client.Setup;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
 
@@ -40,7 +40,7 @@ import android.util.Log;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
 
-// TODO Il servizio dovrà  essere fermato quando l'utente fa il logout
+// TODO Il servizio dovrï¿½ essere fermato quando l'utente fa il logout
 public class PositionTrackingService extends Service {
 
 	/**

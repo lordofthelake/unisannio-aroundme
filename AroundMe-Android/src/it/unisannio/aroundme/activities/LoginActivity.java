@@ -1,11 +1,11 @@
 package it.unisannio.aroundme.activities;
 
+import it.unisannio.aroundme.Application;
 import it.unisannio.aroundme.R;
-import it.unisannio.aroundme.client.Application;
+import it.unisannio.aroundme.Setup;
+import it.unisannio.aroundme.async.AsyncQueue;
+import it.unisannio.aroundme.async.FutureListener;
 import it.unisannio.aroundme.client.Identity;
-import it.unisannio.aroundme.client.Setup;
-import it.unisannio.aroundme.client.async.AsyncQueue;
-import it.unisannio.aroundme.client.async.FutureListener;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.services.PositionTrackingService;
 
@@ -35,9 +35,9 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
     private AsyncQueue async;
 	private TextView txtLoading;
 	/**
-	 * Lo scopo di questa activity è quello di ottenere un accesso a facebook ed ottenere tutte le informazioni che occorrono
+	 * Lo scopo di questa activity ï¿½ quello di ottenere un accesso a facebook ed ottenere tutte le informazioni che occorrono
 	 *  
-	 *  La prima cosa da fare è ottenere le seguenti cose:
+	 *  La prima cosa da fare ï¿½ ottenere le seguenti cose:
 	 *  
 	 *  - Oggetto Identity contenente tutte le informazioni dell' utente che sta utilizzando
 	 *  
@@ -108,7 +108,7 @@ public class LoginActivity extends FragmentActivity implements FutureListener<Id
 
 					@Override
 					public void onFacebookError(FacebookError e) {
-						Toast.makeText(getApplicationContext(), "Si è verificato un errore durante l'autorizzazione: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), "Si ï¿½ verificato un errore durante l'autorizzazione: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 					}
 
 					@Override

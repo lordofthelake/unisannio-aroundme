@@ -17,7 +17,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 public class ServletFilter implements Filter {
-	
+
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {}
 
@@ -26,17 +26,19 @@ public class ServletFilter implements Filter {
 		if (req.getProtocol().equals("HTTP/1.1")) {
 			HttpServletRequest request = (HttpServletRequest) req;
 			HttpServletResponse response = (HttpServletResponse) res;
-			if (request.getMethod().equalsIgnoreCase("PUT"))
-				chain.doFilter(req, res);
-			else {
-				String facebookAuthToken = request.getHeader("X-AccessToken");
-				Objectify ofy = ObjectifyService.begin();
-				if(ofy.query(UserImpl.class).filter("authToken", facebookAuthToken).count()==1)
+			String facebookAuthToken = request.getHeader("X-AccessToken");
+			if(facebookAuthToken != null){
+				if (request.getMethod().equalsIgnoreCase("PUT"))
 					chain.doFilter(req, res);
-				else{
-					response.sendError(403);
-				//	System.out.println("Filtered request: "+ request.getPathInfo() + " method: "+ request.getMethod());
+				else {
+					Objectify ofy = ObjectifyService.begin();
+					if(ofy.query(UserImpl.class).filter("authToken", facebookAuthToken).count()==1)
+						chain.doFilter(req, res);
+					else
+						response.sendError(403);
 				}
+			}else{
+				response.sendError(403);
 			}
 		}
 	}

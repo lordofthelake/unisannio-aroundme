@@ -34,6 +34,7 @@ public class UserImpl extends User {
 	private PositionImpl position;	
 	private ArrayList<Key<Interest>> interests;
 	@Transient private ArrayList<Interest> interestsChache;
+	@Indexed
 	private String authToken;
 
 	public UserImpl(long id, String name) {
