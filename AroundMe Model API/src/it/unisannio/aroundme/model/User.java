@@ -113,7 +113,7 @@ public abstract class User implements Model {
 		Collection<E> commonInterests = new HashSet<E>(myInterests);
 		commonInterests.retainAll(otherInterests);
 		
-		return commonInterests.size() / (myInterests.size() + otherInterests.size());
+		return 2 * commonInterests.size() / (myInterests.size() + otherInterests.size());
 	}
 	
 	/**
