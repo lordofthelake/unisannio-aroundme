@@ -138,7 +138,6 @@ public abstract class User implements Model {
 		
 		User other = (User) obj;
 		return getId() == other.getId() 
-				&& getPosition().equals(other.getPosition())
 				&& getName().equals(other.getName())
 				&& getInterests().equals(other.getInterests());
 	}

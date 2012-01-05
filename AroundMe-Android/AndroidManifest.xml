@@ -39,21 +39,14 @@
             </intent-filter>
         </activity>
 
-        <!-- Account selection activity -->
-        <activity android:name=".AccountsActivity" android:label="@string/app_name"
-            android:screenOrientation="portrait">
+        
+        <activity android:name=".activities.ListViewActivity" android:label="@string/app_name">
         </activity>
         
-        <activity android:name=".activities.ListViewActivity" android:label="@string/app_name"
-            android:screenOrientation="portrait">
+        <activity android:name=".activities.MapViewActivity" android:label="@string/app_name">
         </activity>
         
-        <activity android:name=".activities.MapViewActivity" android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        
-        <activity android:name=".activities.ProfileActivity" android:label="@string/app_name"
-            android:screenOrientation="portrait">
+        <activity android:name=".activities.ProfileActivity" android:label="@string/app_name">
         </activity>
 
         <!-- In order to use the C2DM library, an application must declare a class 
@@ -61,7 +54,7 @@
              It must also include this section in the manifest. -->
         <service android:name=".C2DMReceiver" />
         
-        <service android:name=".client.DataService" />
+        <service android:name=".services.PositionTrackingService" />
 
         <!-- Only Google services can send data messages for the app. If permission
              is not set - any other app can generate it -->

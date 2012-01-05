@@ -107,7 +107,7 @@ public interface Setup {
 	 * 
 	 * @see Position
 	 */
-	final String BACKEND_POSITION_PATH = "/user/%d/position";
+	final String BACKEND_POSITION_PATH = "/user/position/%d";
 	
 	/**
 	 * URL completo per il backend degli utenti.

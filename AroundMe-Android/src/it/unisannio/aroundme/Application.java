@@ -14,6 +14,7 @@ import android.widget.Toast;
 import it.unisannio.aroundme.client.HttpTask;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Picture;
+import it.unisannio.aroundme.location.PositionTracker;
 import it.unisannio.aroundme.model.*;
 
 /**
@@ -87,6 +88,7 @@ public class Application extends android.app.Application {
 					@Override
 					public void setPosition(Position position) {
 						this.position = position;
+						PositionTracker.get().notifyPositionChanged(this, position);
 					}
 
 				};
@@ -232,7 +234,7 @@ public class Application extends android.app.Application {
 		ModelFactory f = ModelFactory.getInstance();
 		
 		// FIXME Mock identity
-		/*
+		
 		Collection<Interest> empty =new HashSet<Interest>();
         empty.add(f.createInterest(40796308305L,"Coca cola","notCat"));
         empty.add(f.createInterest(5660597307L,"PinkFloyd","notCat"));
@@ -243,8 +245,7 @@ public class Application extends android.app.Application {
 		addToCache(f.createUser(100000268830695L, "Danilo Iannelli", empty));
 		addToCache(f.createUser(100001053949157L, "Marco Magnetti", empty));
 		addToCache(f.createUser(100000293335056L, "Giuseppe Fusco", empty));
-		addToCache(jessica);
-		*/
+		
 		
 		super.onCreate();
 	}
