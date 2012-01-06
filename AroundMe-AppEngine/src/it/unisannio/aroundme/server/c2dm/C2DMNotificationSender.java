@@ -40,20 +40,25 @@ public class C2DMNotificationSender {
 	private static final Logger log = Logger.getLogger(C2DMNotificationSender.class.getName());
 	
 	public static void sendWithRetry(String registrationId, long userId){
-		Queue queue = QueueFactory.getQueue("c2dm");
-		TaskOptions url = TaskOptions.Builder.withUrl(C2DMSenderTask.URI)
-											.param("registrationId", registrationId)
-											.param("userId", userId+"")
-											.method(Method.POST);
-		/*
-		 * Viene definito a random il tempo tra un retry e un altro.
-		 * I retry sono eventualmente necessari in caso di alcuni
-		 * server error del C2DM per i quali riprovare ad eseguire la task,
-		 * può risolvere il problema.
-		 */
-		long countdownMillis = (int) Math.random() * DATAMESSAGING_MAX_COUNTDOWN_MSEC;
-		url.countdownMillis(countdownMillis);
-		queue.add(url);	
+		if(registrationId != null){
+			Queue queue = QueueFactory.getQueue("c2dm");
+			TaskOptions url = TaskOptions.Builder.withUrl(C2DMSenderTask.URI)
+												.param("registrationId", registrationId)
+												.param("userId", userId+"")
+												.method(Method.POST);
+			/*
+		 	* Viene definito a random il tempo tra un retry e un altro.
+		 	* I retry sono eventualmente necessari in caso di alcuni
+		 	* server error del C2DM per i quali riprovare ad eseguire la task,
+		 	* può risolvere il problema.
+		 	*/
+			long countdownMillis = (int) Math.random() * DATAMESSAGING_MAX_COUNTDOWN_MSEC;
+			url.countdownMillis(countdownMillis);
+			queue.add(url);	
+		}else{
+			log.warning("Warning: invalid devace registrationIn. Message won't be sent.");
+		}
+		
 	}
 	
 	/**

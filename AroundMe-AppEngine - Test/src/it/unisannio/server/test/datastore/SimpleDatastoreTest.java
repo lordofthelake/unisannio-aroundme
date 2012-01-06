@@ -7,13 +7,14 @@ import junit.framework.TestSuite;
 
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.User;
+import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.server.InterestImpl;
 import it.unisannio.aroundme.server.ServerModelFactory;
 import it.unisannio.aroundme.server.UserImpl;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -52,14 +53,28 @@ public class SimpleDatastoreTest extends TestCase{
 		user.addInterest(intAndroid);
 		String facebookAuthToken = "123456";
 		user.setAuthToken(facebookAuthToken);
+		Preferences pr = ModelFactory.getInstance().createPreferences();
+		pr.put("Prova", 30);
+		user.setPreferences(pr);
 		
 		ofy.put(user);
 		
-		User userRetrieved = ofy.get(User.class, 123);
-		assertEquals(user, userRetrieved);
-		assertEquals(user.getPosition(), userRetrieved.getPosition());
-		assertEquals(user.getInterests(), userRetrieved.getInterests());
-		assertEquals(facebookAuthToken, ((UserImpl)userRetrieved).getAuthToken());
+		UserImpl retrievedUser = ofy.get(UserImpl.class, user.getId());
+		assertEquals(user, retrievedUser);
+		assertEquals(user.getPosition(), retrievedUser.getPosition());
+		assertEquals(user.getInterests(), retrievedUser.getInterests());
+		assertEquals(facebookAuthToken, retrievedUser.getAuthToken());
+		assertEquals(user.getPreferences(), retrievedUser.getPreferences());
+		ofy.delete(user);
+		
+		Exception notFoundException = null;
+		try{ 
+			ofy.get(UserImpl.class, user.getId());
+		}catch (NotFoundException e) {
+			notFoundException = e;
+		}
+		assertNotNull(notFoundException);
+		
 	}
 	
 	public void testInterestPersistence() {

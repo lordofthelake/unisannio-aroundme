@@ -16,7 +16,6 @@ import it.unisannio.aroundme.model.Position;
 
 @Indexed
 public class PositionImpl extends Position {
-
 	private static final long serialVersionUID = 1L;
 	
 	private double latitude;
