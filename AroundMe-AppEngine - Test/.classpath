@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe-AppEngine"/>
+	<classpathentry kind="lib" path="/AroundMe-AppEngine/war/WEB-INF/lib/objectify-3.1.jar" sourcepath="/home/danilo/git/aroundme/AroundMe-AppEngine/objectify-3.1/src">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/danilo/git/aroundme/AroundMe-AppEngine/objectify3.1/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe Model API"/>
+	<classpathentry kind="lib" path="lib/appengine-api-stubs.jar"/>
+	<classpathentry kind="lib" path="lib/appengine-testing.jar"/>
+	<classpathentry kind="lib" path="lib/appengine-api-labs-1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/appengine-api-1.0-sdk-1.6.0.jar"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

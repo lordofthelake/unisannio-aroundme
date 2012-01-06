@@ -45,7 +45,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PositionServlet</servlet-name>
-		<url-pattern>/user/*/position</url-pattern>
+		<url-pattern>/user/position/*</url-pattern>
 	</servlet-mapping>
 	
 	
@@ -56,7 +56,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>UserServlet</servlet-name>
-		<url-pattern>/user</url-pattern>
+		<url-pattern>/user/</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Definizione delle servlet usate come tasks -->
