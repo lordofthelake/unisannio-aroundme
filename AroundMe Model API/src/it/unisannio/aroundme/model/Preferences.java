@@ -78,56 +78,56 @@ public abstract class Preferences implements Model {
 	
 	public abstract boolean contains(String key);
 	
-	protected abstract Object get(String key);
+	protected abstract Object getObject(String key);
 	
-	protected abstract void put(String key, Object val);
+	protected abstract void putObject(String key, Object val);
 	
 	public boolean get(String key, boolean def) {
-		return contains(key) ? ((Boolean) get(key)) : def;
+		return contains(key) ? ((Boolean) getObject(key)) : def;
 	}
 	
 	public float get(String key, float def) {
-		return contains(key) ? ((Number) get(key)).floatValue() : def;
+		return contains(key) ? ((Number) getObject(key)).floatValue() : def;
 	}
 	
 	public int get(String key, int def) {
-		return contains(key) ? ((Number) get(key)).intValue() : def;
+		return contains(key) ? ((Number) getObject(key)).intValue() : def;
 	}
 	
 	public long get(String key, long def) {
-		return contains(key) ? ((Number) get(key)).longValue() : def;
+		return contains(key) ? ((Number) getObject(key)).longValue() : def;
 	}
 	
 	public double get(String key, double def) {
-		return contains(key) ? ((Number) get(key)).doubleValue() : def;
+		return contains(key) ? ((Number) getObject(key)).doubleValue() : def;
 	}
 	
 	public String get(String key, String def) {
-		return contains(key) ? ((String) get(key)) : def;
+		return contains(key) ? ((String) getObject(key)) : def;
 	}
 	
 	public void put(String key, boolean val) {
-		put(key, val);
+		putObject(key, val);
 	}
 	
 	public void put(String key, float val) {
-		put(key, val);
+		putObject(key, val);
 	}
 	
 	public void put(String key, int val) {
-		put(key, val);
+		putObject(key, val);
 	}
 	
 	public void put(String key, long val) {
-		put(key, val);
+		putObject(key, val);
 	}
 	
 	public void put(String key, double val) {
-		put(key, val);
+		putObject(key, val);
 	}
 	
 	public void put(String key, String val) {
-		put(key, val);
+		putObject(key, val);
 	}
 	
 	@Override
