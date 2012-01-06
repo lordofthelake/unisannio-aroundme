@@ -36,7 +36,7 @@ public class UserServlet extends HttpServlet{
 			resp.setContentType("text/xml");
 			Serializer.ofCollection(User.class).write(users, resp.getOutputStream());
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}				
 	}
@@ -50,7 +50,7 @@ public class UserServlet extends HttpServlet{
 			user.setAuthToken(req.getHeader("X-AccessToken"));
 			ofy.put(user);
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}
 	}
@@ -67,7 +67,7 @@ public class UserServlet extends HttpServlet{
 		}catch (NullPointerException e) {
 			resp.sendError(404);
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}
 	}

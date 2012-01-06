@@ -27,12 +27,13 @@ public class PreferencesServlet extends HttpServlet{
 			Preferences preferences = Preferences.SERIALIZER.read(req.getInputStream());
 			log.info(Preferences.SERIALIZER.toString(preferences));
 			user.setPreferences(preferences);
+			ofy.put(user);
 		}catch (NumberFormatException e){
 			resp.sendError(401);
 		}catch (NullPointerException e) {
 			resp.sendError(404);
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}
 	}
@@ -48,9 +49,10 @@ public class PreferencesServlet extends HttpServlet{
 		}catch (NumberFormatException e){
 			resp.sendError(401);
 		}catch (NullPointerException e) {
+			e.printStackTrace();
 			resp.sendError(404);
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}
 	}

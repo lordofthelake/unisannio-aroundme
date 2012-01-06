@@ -47,7 +47,7 @@ public class PositionServlet extends HttpServlet{
 		}catch (NullPointerException e) {
 			resp.sendError(404);
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}
 
@@ -66,7 +66,7 @@ public class PositionServlet extends HttpServlet{
 		}catch (NullPointerException e) {
 			resp.sendError(404);
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}
 	}

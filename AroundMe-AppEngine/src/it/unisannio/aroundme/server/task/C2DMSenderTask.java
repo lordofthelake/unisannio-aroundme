@@ -3,6 +3,7 @@ package it.unisannio.aroundme.server.task;
 import it.unisannio.aroundme.server.c2dm.C2DMNotificationSender;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class C2DMSenderTask extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(C2DMSenderTask.class.getName());
 	
 	/**
 	 * L'URI utilizzata per poter raggiungere e  quindi eseguire il {@link C2DMSenderTask}
@@ -34,8 +36,8 @@ public class C2DMSenderTask extends HttpServlet {
 	private final int MAX_RETRY = 3;
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)	throws ServletException, IOException {
+		log.info("Excecuting C2DMSenderTask");
 		String retryCount = req.getHeader(RETRY_COUNT);
 		if (retryCount != null) {
 			int retryCnt = Integer.parseInt(retryCount);
@@ -59,6 +61,7 @@ public class C2DMSenderTask extends HttpServlet {
 			}
 		} catch (IOException e) {
 			resp.setStatus(200);
+			log.severe(e.toString());
 			resp.getOutputStream().write(("Non-retriable error:" + e.toString()).getBytes());
 		}
 	}

@@ -42,6 +42,7 @@ public class PositionQueryTask extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)	throws ServletException, IOException {
 		try {
+			log.info("Excecuting PositionQuryTask");
 			long userId = Long.parseLong(req.getParameter("userId"));
 			Objectify ofy = ObjectifyService.begin();
 			UserImpl user = ofy.get(UserImpl.class, userId);
@@ -52,16 +53,15 @@ public class PositionQueryTask extends HttpServlet{
 			UserQuery query = new UserQueryImpl();
 			query.setNeighbourhood(neighbourhood);
 			query.setCompatibility(compatibility);
-
 			Collection<User> users = query.call();
 			for(User u: users){
 				C2DMNotificationSender.sendWithRetry(((UserImpl)u).getPreferences().get(REGISTRATION_ID, null), userId);
 				C2DMNotificationSender.sendWithRetry(user.getPreferences().get(REGISTRATION_ID, null), u.getId());
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			resp.sendError(520);
+			resp.setStatus(200); //Ritornare un 200 serve per non forzare il retry del task
+			log.severe(e.toString());
+			resp.getOutputStream().write(("Non-retriable error:" + e.toString()).getBytes());
 		}
 
 
