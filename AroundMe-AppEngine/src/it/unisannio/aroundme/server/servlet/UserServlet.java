@@ -7,6 +7,7 @@ import it.unisannio.aroundme.server.UserImpl;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,16 +27,18 @@ import com.googlecode.objectify.ObjectifyService;
  */
 public class UserServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(UserServlet.class.getName());
 
 	@Override
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp)	throws ServletException, IOException {
 		try {
 			UserQuery query = UserQuery.SERIALIZER.read(req.getInputStream());
+			log.info(UserQuery.SERIALIZER.toString(query));
 			Collection<? extends User> users = query.call();
 			resp.setContentType("text/xml");
 			Serializer.ofCollection(User.class).write(users, resp.getOutputStream());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.severe(e.getMessage());
 			resp.sendError(500);
 		}				
 	}
@@ -44,11 +47,12 @@ public class UserServlet extends HttpServlet{
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			UserImpl user = (UserImpl) User.SERIALIZER.read(req.getInputStream());
+			log.info(User.SERIALIZER.toString(user));
 			Objectify ofy = ObjectifyService.begin();
 			user.setAuthToken(req.getHeader("X-AccessToken"));
 			ofy.put(user);
-		} catch (SAXException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			log.severe(e.getMessage());
 			resp.sendError(500);
 		}
 	}

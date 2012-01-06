@@ -5,6 +5,7 @@ import it.unisannio.aroundme.server.UserImpl;
 import it.unisannio.aroundme.server.task.PositionQueryTask;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,15 +25,16 @@ import com.googlecode.objectify.ObjectifyService;
  */
 public class PositionServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-
+	private static final Logger log = Logger.getLogger(PositionServlet.class.getName());
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try{
-			String userId = req.getRequestURI().split("user/(.*?)/position")[0]; //FIXME Usare un altro modo per ottenere l'userId
+			String userId = req.getRequestURI().substring(req.getRequestURI().lastIndexOf('/')+1);
 			Objectify ofy = ObjectifyService.begin();
 			UserImpl user = ofy.get(UserImpl.class, Long.parseLong(userId));
 			Position position = Position.SERIALIZER.read(req.getInputStream());
+			log.info(Position.SERIALIZER.toString(position));
 			user.setPosition(position);
 			ofy.put(user);
 			Queue queue = QueueFactory.getDefaultQueue();
@@ -40,9 +42,12 @@ public class PositionServlet extends HttpServlet{
 					.param("userId", userId)
 					.method(Method.POST);
 			queue.add(url);
-
-		}catch (Exception e){
-			e.printStackTrace();
+		}catch (NumberFormatException e){
+			resp.sendError(401);
+		}catch (NullPointerException e) {
+			resp.sendError(404);
+		} catch (Exception e) {
+			log.severe(e.getMessage());
 			resp.sendError(500);
 		}
 
@@ -50,21 +55,21 @@ public class PositionServlet extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)	throws ServletException, IOException {
-		String userId = req.getRequestURI().split("user/(.*?)/position")[0];
-		Objectify ofy = ObjectifyService.begin();
-		UserImpl user = ofy.get(UserImpl.class, Long.parseLong(userId));
-		if(user != null){
-			try {
+		try {
+			String userId = req.getRequestURI().substring(req.getRequestURI().lastIndexOf('/')+1);
+			Objectify ofy = ObjectifyService.begin();
+			UserImpl user = ofy.get(UserImpl.class, Long.parseLong(userId));
+			if(user != null){
 				resp.setContentType("text/xml");
 				Position.SERIALIZER.write(user.getPosition(), resp.getOutputStream());
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-				resp.sendError(404);
-			} 
-			catch (Exception e) {
-				e.printStackTrace();
-				resp.sendError(500);
 			}
+		}catch (NumberFormatException e){
+			resp.sendError(401);
+		}catch (NullPointerException e) {
+			resp.sendError(404);
+		} catch (Exception e) {
+			log.severe(e.getMessage());
+			resp.sendError(500);
 		}
 	}
 }

@@ -21,6 +21,12 @@ public class PositionImpl extends Position {
 	
 	private double latitude;
 	private double longitude;
+	/**
+	 * List contenente gli hash che identificano un la cella di una posizione
+	 * mediante la tecnica di Geohashing
+	 * 
+	 * @see http://code.google.com/apis/maps/articles/geospatial.html
+	 */
 	private List<String> cells;
 	
 	public PositionImpl() {}
@@ -28,6 +34,9 @@ public class PositionImpl extends Position {
 	public PositionImpl(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
+		/*
+		 * Calcola gli hash della cella della posizione data
+		 */
 		cells = GeocellManager.generateGeoCell(new Point(latitude, longitude));
 	}
 	

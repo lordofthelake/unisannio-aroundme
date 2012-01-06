@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Indexed;
@@ -32,7 +31,7 @@ public class UserImpl extends User {
 	private String name;
 	@Embedded
 	private PositionImpl position;	
-	private ArrayList<Key<Interest>> interests;
+	private ArrayList<Long> interests;
 	@Transient private ArrayList<Interest> interestsChache;
 	@Indexed
 	private String authToken;
@@ -41,12 +40,12 @@ public class UserImpl extends User {
 		this.id = id;
 		this.name = name;
 		position = null;
-		interests = new ArrayList<Key<Interest>>();
+		interests = new ArrayList<Long>();
 		interestsChache = new ArrayList<Interest>();
 	}
 	
 	public UserImpl(){
-		interests = new ArrayList<Key<Interest>>();
+		interests = new ArrayList<Long>();
 		interestsChache = new ArrayList<Interest>();
 	}
 		
@@ -57,7 +56,7 @@ public class UserImpl extends User {
 
 
 	public void addInterest(Interest interest) {
-		interests.add(new Key<Interest>(Interest.class, interest.getId()));
+		interests.add(interest.getId());
 		interestsChache.add(interest);
 	}
 
@@ -84,11 +83,11 @@ public class UserImpl extends User {
 		if(interestsChache.size()==interests.size())
 			return interestsChache;
 		Objectify ofy = ObjectifyService.begin();
-		interestsChache = new ArrayList<Interest>(ofy.get(interests).values());
+		interestsChache = new ArrayList<Interest>(ofy.get(InterestImpl.class, interests).values());
 		return interestsChache;
 	}
 	
-	protected Collection<Key<Interest>> getInterestKeys(){
+	protected Collection<Long> getInterestKeys(){
 		return interests;
 	}
 
@@ -106,6 +105,9 @@ public class UserImpl extends User {
 			Objectify ofy = ObjectifyService.begin();
 			ofy.put(interestsChache);
 		}
+//		Objectify ofy = ObjectifyService.begin();
+//		for(Interest i: interestsChache)
+//			ofy.put((InterestImpl) i);
 	}
 
 	/**
