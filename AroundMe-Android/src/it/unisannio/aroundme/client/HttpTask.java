@@ -84,7 +84,7 @@ public abstract class HttpTask<T> implements Callable<T> {
 			
 			int status = urlConnection.getResponseCode();
 			if(status >= 400)
-				throw new HttpStatusException(status);
+				throw new HttpStatusException(status, method + " " + url);
 
 		    InputStream in = new BufferedInputStream(urlConnection.getInputStream(), Setup.NETWORK_CHUNCK_SIZE);
 		    
