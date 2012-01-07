@@ -117,7 +117,7 @@ public class UserQueryImpl extends UserQuery {
 				UserImpl u = i.next();
 				if(u.getId() == myUser.getId() ){
 					i.remove();
-					u = i.next();
+					continue;
 				}
 				if(myUser.getCompatibilityRank(u) < requiredRank)
 					i.remove();

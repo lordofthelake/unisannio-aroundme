@@ -11,6 +11,7 @@ import it.unisannio.aroundme.server.c2dm.C2DMNotificationSender;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,18 +30,22 @@ import com.googlecode.objectify.ObjectifyService;
  */
 public class PositionQueryTask extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	
+	private static final Logger log = Logger.getLogger(PositionQueryTask.class.getName());
+
+	private final String REGISTRATION_ID = "c2dmRegistrationId";
+
 	/**
 	 * L'URI utilizzata per poter raggiungere e  quindi eseguire il {@link PositionQueryTask}
 	 */
 	public static final String URI = "/task/positionquery";
-		
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)	throws ServletException, IOException {
-		
+		try {
+			log.info("Excecuting PositionQuryTask");
 			long userId = Long.parseLong(req.getParameter("userId"));
 			Objectify ofy = ObjectifyService.begin();
-			User user = ofy.get(UserImpl.class, userId);
+			UserImpl user = ofy.get(UserImpl.class, userId);
 			Position position = user.getPosition();
 			Neighbourhood neighbourhood = new Neighbourhood(position, 100);	
 			Compatibility compatibility = new Compatibility(user.getId(), 0.6f);
@@ -48,19 +53,19 @@ public class PositionQueryTask extends HttpServlet{
 			UserQuery query = new UserQueryImpl();
 			query.setNeighbourhood(neighbourhood);
 			query.setCompatibility(compatibility);
-			try {
-				Collection<? extends User> users = query.call();
-				for(User u: users){
-					C2DMNotificationSender.sendWithRetry("registrationId di u", userId);
-					C2DMNotificationSender.sendWithRetry("registrationId di user", u.getId());
-				}
-								
-			} catch (Exception e) {
-				resp.sendError(520);
+			Collection<User> users = query.call();
+			for(User u: users){
+				C2DMNotificationSender.sendWithRetry(((UserImpl)u).getPreferences().get(REGISTRATION_ID, null), userId);
+				C2DMNotificationSender.sendWithRetry(user.getPreferences().get(REGISTRATION_ID, null), u.getId());
 			}
-			
-			
-			
-			
+		} catch (Exception e) {
+			resp.setStatus(200); //Ritornare un 200 serve per non forzare il retry del task
+			log.severe(e.toString());
+			resp.getOutputStream().write(("Non-retriable error:" + e.toString()).getBytes());
+		}
+
+
+
+
 	}
 }

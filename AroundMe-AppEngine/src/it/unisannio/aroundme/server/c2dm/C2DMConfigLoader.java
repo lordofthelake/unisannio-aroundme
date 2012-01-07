@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.server.c2dm;
 
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -94,8 +95,11 @@ public class C2DMConfigLoader {
 	 */
 	private C2DMConfig retrieveConfig(){
 		Objectify ofy = ObjectifyService.begin();
-		C2DMConfig config =  ofy.get(C2DMConfig.class, 1);
-		if(config == null){
+		
+		C2DMConfig config;
+		try{
+			config =  ofy.get(C2DMConfig.class, 1);
+		}catch (NotFoundException e) {
 			config = new C2DMConfig();
 			ofy.put(config);
 		}

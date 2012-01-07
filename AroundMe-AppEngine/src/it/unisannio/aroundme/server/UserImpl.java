@@ -30,7 +30,9 @@ public class UserImpl extends User {
 	@Unindexed
 	private String name;
 	@Embedded
-	private PositionImpl position;	
+	private PositionImpl position;
+	@Embedded @Unindexed
+	private PreferencesImpl preferences;
 	private ArrayList<Long> interests;
 	@Transient private ArrayList<Interest> interestsChache;
 	@Indexed
@@ -98,6 +100,14 @@ public class UserImpl extends User {
 		this.position = (PositionImpl) ModelFactory.getInstance().createPosition(p.getLatitude(), p.getLongitude());
 	}
 	
+	public Preferences getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(Preferences preferences) {
+		this.preferences = (PreferencesImpl) preferences;
+	}
+
 	@SuppressWarnings("unused")
 	@PrePersist
 	private void prePerist(){
@@ -105,9 +115,6 @@ public class UserImpl extends User {
 			Objectify ofy = ObjectifyService.begin();
 			ofy.put(interestsChache);
 		}
-//		Objectify ofy = ObjectifyService.begin();
-//		for(Interest i: interestsChache)
-//			ofy.put((InterestImpl) i);
 	}
 
 	/**

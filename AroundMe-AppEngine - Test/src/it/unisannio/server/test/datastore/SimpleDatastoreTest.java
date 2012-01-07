@@ -7,13 +7,14 @@ import junit.framework.TestSuite;
 
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.User;
+import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.server.InterestImpl;
 import it.unisannio.aroundme.server.ServerModelFactory;
 import it.unisannio.aroundme.server.UserImpl;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -45,21 +46,42 @@ public class SimpleDatastoreTest extends TestCase{
 		
 	public void testUserPersistence() throws Exception{
 		UserImpl user = (UserImpl) ModelFactory.getInstance().createUser(123, "Danilo", null);
+		
 		user.setPosition(ModelFactory.getInstance().createPosition(41.1315992, 14.7779900));
+		
 		Interest intTheWho = ModelFactory.getInstance().createInterest(5, "The Who", "Musica");
 		Interest intAndroid = ModelFactory.getInstance().createInterest(6, "Android", "Tecnologia");
 		user.addInterest(intTheWho);
 		user.addInterest(intAndroid);
+		
 		String facebookAuthToken = "123456";
 		user.setAuthToken(facebookAuthToken);
 		
+		Preferences pr = ModelFactory.getInstance().createPreferences();
+		pr.put("Prova", "pippo");
+		user.setPreferences(pr);
+		
 		ofy.put(user);
 		
-		User userRetrieved = ofy.get(User.class, 123);
-		assertEquals(user, userRetrieved);
-		assertEquals(user.getPosition(), userRetrieved.getPosition());
-		assertEquals(user.getInterests(), userRetrieved.getInterests());
-		assertEquals(facebookAuthToken, ((UserImpl)userRetrieved).getAuthToken());
+		UserImpl retrievedUser = ofy.get(UserImpl.class, user.getId());
+		
+		assertEquals(user, retrievedUser);
+		assertEquals(user.getPosition(), retrievedUser.getPosition());
+		assertEquals(user.getInterests(), retrievedUser.getInterests());
+		assertEquals(facebookAuthToken, retrievedUser.getAuthToken());
+		assertEquals(user.getPreferences(), retrievedUser.getPreferences());
+		
+		
+		ofy.delete(user);
+		
+		Exception notFoundException = null;
+		try{ 
+			ofy.get(UserImpl.class, user.getId());
+		}catch (NotFoundException e) {
+			notFoundException = e;
+		}
+		assertNotNull(notFoundException);
+		
 	}
 	
 	public void testInterestPersistence() {

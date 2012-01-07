@@ -13,7 +13,7 @@ import com.googlecode.objectify.annotation.Indexed;
 @Indexed
 public class C2DMConfig {
 	@Id
-	private long key;
+	private long key = 1;
 	private String authKey;
 	private String c2dmUrl;
 	

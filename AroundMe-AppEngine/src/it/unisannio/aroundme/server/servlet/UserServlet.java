@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.xml.sax.SAXException;
-
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -34,15 +32,15 @@ public class UserServlet extends HttpServlet{
 		try {
 			UserQuery query = UserQuery.SERIALIZER.read(req.getInputStream());
 			log.info(UserQuery.SERIALIZER.toString(query));
-			Collection<? extends User> users = query.call();
+			Collection<User> users = query.call();
 			resp.setContentType("text/xml");
 			Serializer.ofCollection(User.class).write(users, resp.getOutputStream());
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
 			resp.sendError(500);
 		}				
 	}
-	
+
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
@@ -52,7 +50,24 @@ public class UserServlet extends HttpServlet{
 			user.setAuthToken(req.getHeader("X-AccessToken"));
 			ofy.put(user);
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe(e.toString());
+			resp.sendError(500);
+		}
+	}
+
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try{
+			String userId = req.getRequestURI().substring(req.getRequestURI().lastIndexOf('/')+1);
+			Objectify ofy = ObjectifyService.begin();
+			UserImpl user = ofy.get(UserImpl.class, Long.parseLong(userId));
+			ofy.delete(user);
+		}catch (NumberFormatException e){
+			resp.sendError(401);
+		}catch (NullPointerException e) {
+			resp.sendError(404);
+		} catch (Exception e) {
+			log.severe(e.toString());
 			resp.sendError(500);
 		}
 	}

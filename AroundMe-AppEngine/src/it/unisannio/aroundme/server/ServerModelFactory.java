@@ -39,7 +39,6 @@ public class ServerModelFactory extends ModelFactory{
 
 	@Override
 	public Preferences createPreferences() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PreferencesImpl();
 	}
 }
