@@ -161,8 +161,21 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 		return this;
 	}
 	
+	public UserQuery removeId(long... id) {
+		for(long i : id)
+			ids.remove(i);
+				
+	    return this;
+	}
+	
 	public UserQuery addId(Collection<Long> id) {
 		ids.addAll(id);
+		return this;
+	}
+	
+	public UserQuery removeId(Collection<Long> id) {
+		ids.removeAll(id);
+		
 		return this;
 	}
 	
@@ -176,8 +189,19 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 		return this;
 	}
 	
+	public UserQuery removeInterestId(long... id) {
+		for(long i : id)
+			interestIds.remove(i);
+		return this;
+	}
+	
 	public UserQuery addInterestId(Collection<Long> id) {
 		interestIds.addAll(id);
+		return this;
+	}
+	
+	public UserQuery removeInterestId(Collection<Long> id) {
+		interestIds.removeAll(id);
 		return this;
 	}
 	

@@ -14,7 +14,6 @@ import android.widget.Toast;
 import it.unisannio.aroundme.client.HttpTask;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Picture;
-import it.unisannio.aroundme.location.PositionTracker;
 import it.unisannio.aroundme.model.*;
 
 /**
@@ -27,6 +26,7 @@ public class Application extends android.app.Application {
 	
 	public void addToCache(User u) {
 		cache.put(u.getId(), u);
+		
 	}
 	
 	@Override
@@ -88,7 +88,6 @@ public class Application extends android.app.Application {
 					@Override
 					public void setPosition(Position position) {
 						this.position = position;
-						PositionTracker.get().notifyPositionChanged(this, position);
 					}
 
 				};
@@ -213,12 +212,12 @@ public class Application extends android.app.Application {
 					}
 
 					@Override
-					protected Object get(String key) {
+					protected Object getObject(String key) {
 						return map.get(key);
 					}
 
 					@Override
-					protected void put(String key, Object value) {
+					protected void putObject(String key, Object value) {
 						map.put(key, value);
 					}
 					

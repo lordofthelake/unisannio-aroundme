@@ -38,7 +38,7 @@ import android.widget.*;
 public class LoginActivity extends FragmentActivity 
 	implements FutureListener<Identity>, DialogListener {
 
-	private Facebook facebook = new Facebook(Setup.FACEBOOK_APP_ID);
+	private Facebook facebook;
 	String FILENAME = "AroundMe_AuthData";
 	private SharedPreferences mPrefs;
 	private AsyncQueue async;
@@ -55,7 +55,13 @@ public class LoginActivity extends FragmentActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		facebook = new Facebook(Setup.FACEBOOK_APP_ID);
+		Identity identity = Identity.get();
+		if(identity != null) {
+			onSuccess(identity);
+			return;
+		}
+			
 		this.async = new AsyncQueue();
 
 		setContentView(R.layout.login);

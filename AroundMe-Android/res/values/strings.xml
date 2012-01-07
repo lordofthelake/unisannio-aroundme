@@ -75,5 +75,26 @@
     <string name="connect_with_facebook">Connect with Facebook</string>
     <string name="loading">Loading. Please wait...</string>
     <string name="loadingError">Error during loading</string>
+    <string name="pref_category_notifications">Notifiche</string>
+    <string name="pref_notification_activate">Ricevi notifiche</string>
+    <string name="pref_notification_sound">Suoneria</string>
+    <string name="pref_notification_vibration">Vibrazione</string>
+    <string name="pref_notification_distance">Distanza minima</string>
+    <string name="pref_notification_compatibility">Compatibilità minima</string>
+    <string name="menu_show_map">Vista mappa</string>
+    <string name="menu_show_list">Vista lista</string>
+    <string name="menu_show_list_condensed">Lista</string>
+    <string name="menu_show_map_condensed">Mappa</string>
+    <string name="menu_preferences">Preferenze</string>
+    <string name="menu_profile">Profilo</string>
+    <string name="menu_quit">Esci</string>
+    <string name="pref_category_filter">Filtri</string>
+    <string name="pref_category_account">Account</string>
+    <string name="pref_account_logout">Logout</string>
+    <string name="pref_account_delete">Elimina</string>
+    <string name="pref_filter_defaultview">Vista di default</string>
+    <string name="menu_home">Home</string>
+    <string name="pref_category_tracking">Tracciamento</string>
+    <string name="pref_tracking_enabled">Traccia la mia posizione</string>
 
 </resources>

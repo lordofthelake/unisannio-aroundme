@@ -1,11 +1,14 @@
 package it.unisannio.aroundme.overlay;
 
+import it.unisannio.aroundme.activities.ProfileActivity;
 import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
@@ -50,8 +53,10 @@ public class UserItemizedOverlay extends
 
 	@Override
 	protected boolean onBalloonTap(int index, UserOverlayItem item) {
-		Toast.makeText(getMapView().getContext(), "onBalloonTap for overlay index " + index,
-				Toast.LENGTH_LONG).show();
+		Context ctx = getMapView().getContext();
+		Intent i = new Intent(ctx, ProfileActivity.class);
+		i.putExtra("userId", overlays.get(index).getUser().getId());
+		ctx.startActivity(i);
 		return true;
 	}
 

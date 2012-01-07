@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="home_views_strings">
+        <item >Mappa</item>
+        <item >Lista</item>
+    </string-array>
+    <string-array name="home_views_values">
+        <item >map</item>
+        <item >list</item>
+    </string-array>
+    
+</resources>

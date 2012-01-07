@@ -2,6 +2,7 @@ package it.unisannio.aroundme.activities;
 import java.util.HashSet;
 import java.util.List;
 
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
@@ -43,7 +44,9 @@ public class MapViewActivity extends FragmentMapActivity  {
 		
 		overlays.add(userOverlay);
 		
-		//mapView.getController().animateTo(PositionUtils.toGeoPoint(user1.getPosition()));
+		MapController controller = mapView.getController();
+		controller.setCenter(PositionUtils.toGeoPoint(user1.getPosition()));
+		controller.animateTo(PositionUtils.toGeoPoint(user1.getPosition()));
     }
 
 	@Override

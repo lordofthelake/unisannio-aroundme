@@ -3,12 +3,16 @@ package it.unisannio.aroundme.activities;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
+import it.unisannio.aroundme.activities.UserQueryFragment.OnQueryChangeListener;
+import it.unisannio.aroundme.adapters.ArrayPagerAdapter;
 import it.unisannio.aroundme.adapters.InterestFilterAdapter;
 import it.unisannio.aroundme.adapters.UserAdapter;
 import it.unisannio.aroundme.async.*;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.model.*;
+import it.unisannio.aroundme.services.PositionTrackingService;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 import javax.xml.transform.TransformerException;
@@ -22,9 +26,13 @@ import android.content.DialogInterface.*;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,26 +56,23 @@ import android.widget.Toast;
  * dal Notification service
  */
 public class ListViewActivity extends FragmentActivity 
-		implements OnItemClickListener, OnCancelListener {
-	private static final int MAX_DISTANCE=50;
+		implements OnItemClickListener, OnCancelListener, OnDrawerOpenListener, OnDrawerCloseListener,
+		OnQueryChangeListener {
 	private AsyncQueue async;
 	private AsyncQueue pictureAsync;
 	
 	private UserAdapter usrAdapter;
-	private InterestFilterAdapter interestFilterAdapter;
 	
 	private List<User> users;
-	private List<Interest> myInterests;
 	
 	private ListView nearByList;
 	
 	private SlidingDrawer drawer;
-	private ListView interestsFilter;
 	private ProgressDialog progress;
-	private SeekBar seekDistance;
-	private TextView txtDistanceFilter;
 	
+	private boolean needsRefresh = true;
 	private UserQuery userQuery;
+	private UserQueryFragment fragment;
 	
 	private ListenableFuture<Collection<User>> task = null; 
  
@@ -79,45 +84,7 @@ public class ListViewActivity extends FragmentActivity
     		// TODO Si dovrebbe avviare l'attività di login per procedere all'autenticazione
     	}
     	
-    	if(savedInstanceState == null) {
-    		// L'Activity è stata avviata per la prima volta tramite un Intent
-    		long[] ids = getIntent().getLongArrayExtra("userIds");
-    		if(ids != null) {
-        		userQuery = UserQuery.byId(ids);
-        	}
-    	} else { 
-    		// Controlliamo se c'è uno stato salvato
-    		String serializedQuery = savedInstanceState.getString("userQuery");
-    		if(serializedQuery != null) {
-    			try {
-					userQuery = UserQuery.SERIALIZER.fromString(serializedQuery);
-				} catch (SAXException e1) {
-					Log.d("ListViewActivity", "Error deserializing UserQuery", e1);
-				}
-    		} 
-    	}
-
-    	if(userQuery == null) {
-    		// Non Ã¨ stato possibile ricostruire la query. Usiamo le impostazioni di default
-    		userQuery = ModelFactory.getInstance().createUserQuery();
-    		/**Caricamento delle impostazioni di default
-    		 * 	-posizione: 				attuale
-    		 * 	-Raggio: 					1km
-    		 * 	-compatibilità:				60%
-    		 * 	-Interessi considerati:		tutti
-    		 */
-    		//TODO remove toast
-    		Toast.makeText(ListViewActivity.this, "Loading Default UserQuery", Toast.LENGTH_LONG).show();
-    		Identity.get().setPosition(ModelFactory.getInstance().createPosition(41.1309285, 14.7775555));
-    		Position position = Identity.get().getPosition();
-    		Neighbourhood neighbourhood = new Neighbourhood(position, 1000);	
-    		userQuery.setCompatibility(new Compatibility(Identity.get().getId(), 0.6F));
-    		ArrayList<Interest> interests= new ArrayList<Interest>(Identity.get().getInterests());
-    		for (int i=0;i<interests.size();i++){
-    			userQuery.addInterestId(interests.get(i).getId());
-    		}
-    		userQuery.setNeighbourhood(neighbourhood);
-    	}
+    	
     	
     	setContentView(R.layout.listview);
     	
@@ -125,65 +92,37 @@ public class ListViewActivity extends FragmentActivity
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
     	
     	users = new ArrayList<User>();
-    	myInterests = new ArrayList<Interest>(Identity.get().getInterests());
     	
         nearByList = (ListView) findViewById(R.id.nearByList);
-        drawer = (SlidingDrawer) findViewById(R.id.filterDrawer);
-        seekDistance = (SeekBar) findViewById(R.id.seekDistance);
-        txtDistanceFilter = (TextView) findViewById(R.id.txtDistaceFilter);
         
         nearByList.setOnItemClickListener(this);
-        seekDistance.setMax(MAX_DISTANCE);
-        seekDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-        	
-			@Override
-			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-				int distance= seekDistance.getProgress()*100;
-				if (distance==0){
-					txtDistanceFilter.setText("Off  ");
-				}
-				else if (distance<1000){
-					txtDistanceFilter.setText(distance+" m");
-				}else{
-					txtDistanceFilter.setText(String.format("%.1f Km", (float)distance/1000));
-				}
-			}
-			
-			@Override
-			public void onStartTrackingTouch(SeekBar arg0) {}
-			
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				Position position = Identity.get().getPosition();
-				Neighbourhood neighbourhood = new Neighbourhood(position, seekBar.getProgress() * 100);	
-				userQuery.setNeighbourhood(neighbourhood); //Imposto le preferenze di visualizzazione
-			}
-        });
-        seekDistance.setProgress((int) (userQuery.getNeighbourhood().getRadius())/100);  
-        drawer.setOnDrawerOpenListener(new OnDrawerOpenListener(){
-			@Override
-			public void onDrawerOpened() {
-				nearByList.setEnabled(false);
-			}
-        	
-        });
-        drawer.setOnDrawerCloseListener(new OnDrawerCloseListener(){
-			@Override
-			public void onDrawerClosed() {
-				nearByList.setEnabled(true);
-				ListViewActivity.this.refresh();
-			}
-        	
-        });
-        
-        interestsFilter=(ListView) findViewById(R.id.listInterestFilter);
-        
-        progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
-    	progress.setOnCancelListener(this);
+       
         nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, pictureAsync));
-    	interestsFilter.setAdapter(interestFilterAdapter = new InterestFilterAdapter(ListViewActivity.this,myInterests, pictureAsync,userQuery)); 	
-	    ListViewActivity.this.refresh();
+    	
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment = new UserQueryFragment();
+        fragmentTransaction.add(R.id.listview_layout, fragment);
+        fragmentTransaction.commit();
+        
+        fragment.setOnDrawerOpenListener(this);
+        fragment.setOnDrawerCloseListener(this);
+        fragment.setOnQueryChangeListener(this);
+
+	    
     }
+    
+    @Override
+	public void onDrawerOpened() {
+		nearByList.setEnabled(false);
+	}
+    
+    @Override
+	public void onDrawerClosed() {
+		nearByList.setEnabled(true);
+		if(needsRefresh)
+			refresh();
+	}
     
     public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
 		Intent intent = new Intent(ListViewActivity.this, ProfileActivity.class);
@@ -196,6 +135,7 @@ public class ListViewActivity extends FragmentActivity
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
+	    menu.findItem(R.id.toList).setVisible(false);
 		return true;
 	}
 	
@@ -207,6 +147,14 @@ public class ListViewActivity extends FragmentActivity
 	    case R.id.toMap:
 	        startActivity(new Intent(this, MapViewActivity.class));
 	        return true;
+	    case R.id.preferences:
+	    	startActivity(new Intent(this, PreferencesActivity.class));
+	    	return true;
+	    case R.id.profile:
+	    	Intent i = new Intent(this, ProfileActivity.class);
+	    	i.putExtra("userId", Identity.get().getId());
+	    	startActivity(i);
+	    	return true;
 	    default:
 	        return super.onOptionsItemSelected(item);
 	    }
@@ -235,7 +183,7 @@ public class ListViewActivity extends FragmentActivity
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
+		/*
 		if(userQuery != null) { 
 			try {
 				// Sfruttiamo il serializzatore XML per salvare lo stato della query
@@ -243,7 +191,7 @@ public class ListViewActivity extends FragmentActivity
 			} catch (TransformerException tEx) {
 				Log.d("ListViewActivity", "Error serializing UserQuery", tEx);
 			}
-		}
+		}*/
 		
 		/* TODO Andrebbero cacheati anche i risultati.
 		 * Se l'utente gira il dispositivo non vogliamo che venga fatta un'altra query in rete
@@ -262,17 +210,24 @@ public class ListViewActivity extends FragmentActivity
 	 * nelle impostazioni al datastore remoto
 	 * */
 	private void refresh(){
-		//TODO remove toast
-		Toast.makeText(ListViewActivity.this, "Performing UserQuery", Toast.LENGTH_LONG).show();
+		progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
+    	progress.setOnCancelListener(this);
+    	
+		try {
+			Log.d("UserQuery", UserQuery.SERIALIZER.toString(userQuery));
+		} catch (TransformerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		this.task = async.exec(userQuery, new FutureListener<Collection<User>>(){
         	@Override
         	public void onSuccess(Collection<User> object) {
-        		Log.i("LIST", String.valueOf(object.size()));
         		task = null;
         		progress.dismiss();
         		users.clear();
         		users.addAll(object);
         		usrAdapter.notifyDataSetChanged();
+        		needsRefresh = false;
         	}
         	@Override
         	public void onError(Throwable e) {
@@ -281,5 +236,14 @@ public class ListViewActivity extends FragmentActivity
         		e.printStackTrace();
         	}
         });
+	}
+
+	@Override
+	public void onQueryChanged(UserQuery query) {
+		boolean mustRefreshNow = (userQuery == null);
+		userQuery = query;
+		needsRefresh = true;
+		if(mustRefreshNow)
+			refresh();
 	}
 }
