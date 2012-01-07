@@ -75,7 +75,7 @@ public class PositionTrackingService extends Service {
 		 * @param Location la nuova posizione rilevata
 		 */
 		public void onLocationChanged(Location location) {
-			if(isBetterLocation(location, last)) {
+			if(location != null && isBetterLocation(location, last)) {
 				last = location;
 
 				final Position position = ModelFactory.getInstance().createPosition(
@@ -129,6 +129,9 @@ public class PositionTrackingService extends Service {
 	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
 	 */
 	protected static boolean isBetterLocation(Location location, Location last) {
+		if (location == null)
+			return false;
+		
 		if (last == null) 
 			return true;
 
