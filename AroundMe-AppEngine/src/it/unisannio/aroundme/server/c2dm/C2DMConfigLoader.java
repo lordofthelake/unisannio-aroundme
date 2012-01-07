@@ -1,5 +1,7 @@
 package it.unisannio.aroundme.server.c2dm;
 
+import java.io.IOException;
+
 import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -14,8 +16,6 @@ import com.googlecode.objectify.ObjectifyService;
  */
 public class C2DMConfigLoader {
 	private String authKey;
-	private String c2dmUrl;
-
 
 	//SingletonHolder pattern
 	private static class C2DMConfigLoaderHolder { 
@@ -34,12 +34,21 @@ public class C2DMConfigLoader {
 
 	/**
 	 * Restitusce la chiave necessaria per l'autenticazione sul server C2DM
+	 * Se il Datastore restituisce null, questa viene richiesta al server 
+	 * ClientLogin di Google tramite {@link C2DMAuthenticationUtil}
 	 * 
 	 * @return La Stringa contenente chiave di autenticazione 
+	 * @throws IOException Se si verificano errori durante il recupero 
+	 * del token dal Server ClientLogin di Google
 	 */
-	public String getAuthKey() {
-		if (authKey == null)
+	public String getAuthKey() throws IOException {
+		if (authKey == null){
 			authKey = retrieveConfig().getAuthKey();
+			if (authKey == null){
+				authKey = C2DMAuthenticationUtil.getToken();
+				setAuthKey(authKey);
+			}
+		}
 		return authKey;
 	}
 
@@ -58,36 +67,20 @@ public class C2DMConfigLoader {
 	}
 
 	/**
-	 * Restitusce l'URL del server C2DM
-	 * 
-	 * @return La Stringa contenente l'URL del server C2DM 
-	 */
-	public String getC2dmUrl() {
-		if(c2dmUrl == null)
-			c2dmUrl = retrieveConfig().getC2dmUrl();
-		return c2dmUrl;
-	}
-
-	/**
-	 * Imposta l'URL del server C2DM rendendone persistene il valore sul Datastore.
-	 *  
-	 * @param authKey Il nuovo URL del server C2DM
-	 */
-	public void setC2dmUrl(String c2dmUrl) {
-		this.c2dmUrl = c2dmUrl;
-		C2DMConfig config = retrieveConfig();
-		config.setC2dmUrl(c2dmUrl);
-		Objectify ofy = ObjectifyService.begin();
-		ofy.put(config);
-	}
-	
-	/**
 	 * Invalida il token di registrazione forzandone la lettura dal datastore.
 	 * Utile quando il {@link C2DMConfigLoader} potrebbe non avere in memoria
 	 * l'ultimo token di autenticazione fornito da Google
 	 */
 	public void invalidateAuthToken(){
 		authKey = null;
+	}
+	
+	/**
+	 * Fa in modo che al prossimo getAuthToken(), venga richiesto 
+	 * un nuovo token al server ClientLogin di Google 
+	 */
+	public void regenerateAuthToken(){
+		setAuthKey(null);
 	}
 
 	/**
