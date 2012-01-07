@@ -241,7 +241,7 @@ public class Application extends android.app.Application {
         empty.add(f.createInterest(105955506103417L,"Led Zeppelin","notCat"));
 		User jessica = f.createUser(100003074784184L, "Jessica Rossi", empty);
 		addToCache(f.createUser(1321813090L, "Michele Piccirillo", empty));
-		addToCache(f.createUser(100000268830695L, "Danilo Iannelli", empty));
+		//addToCache(f.createUser(100000268830695L, "Danilo Iannelli", empty));
 		addToCache(f.createUser(100001053949157L, "Marco Magnetti", empty));
 		addToCache(f.createUser(100000293335056L, "Giuseppe Fusco", empty));
 		

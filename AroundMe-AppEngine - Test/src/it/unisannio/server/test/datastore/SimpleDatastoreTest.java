@@ -1,5 +1,7 @@
 package it.unisannio.server.test.datastore;
 
+import java.io.IOException;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -11,6 +13,8 @@ import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.server.InterestImpl;
 import it.unisannio.aroundme.server.ServerModelFactory;
 import it.unisannio.aroundme.server.UserImpl;
+import it.unisannio.aroundme.server.c2dm.C2DMConfig;
+import it.unisannio.aroundme.server.c2dm.C2DMConfigLoader;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -29,6 +33,7 @@ public class SimpleDatastoreTest extends TestCase{
 				ModelFactory.setInstance(new ServerModelFactory());
 				ObjectifyService.register(UserImpl.class);
 				ObjectifyService.register(InterestImpl.class);
+				ObjectifyService.register(C2DMConfig.class);
 			}
 		};
 	}
@@ -88,8 +93,12 @@ public class SimpleDatastoreTest extends TestCase{
 		// TODO testInterestPersistence
 	}
 	
-	public void testC2DMConfigPersistence() {
-		// TODO testC2DMPersistence
+	public void testC2DMConfigPersistence() throws IOException {
+		String mockToken = "prova";
+		C2DMConfigLoader.getInstance().setAuthKey(mockToken);
+		C2DMConfigLoader.getInstance().invalidateAuthToken();
+		String retrievedToken = C2DMConfigLoader.getInstance().getAuthKey();
+		assertEquals(mockToken, retrievedToken);
 	}
 	
 	
