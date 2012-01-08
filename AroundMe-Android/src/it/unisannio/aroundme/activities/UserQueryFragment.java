@@ -20,6 +20,7 @@ import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.widgets.SliderView;
 import it.unisannio.aroundme.widgets.SliderView.OnChangeListener;
+import android.R.anim;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -130,8 +134,15 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         
         ListView interestsFilter=(ListView) page2.findViewById(R.id.listInterestFilter);
         interestFilterAdapter = new InterestFilterAdapter(getActivity(), this, myInterests, async, userQuery);
-        interestsFilter.setAdapter(interestFilterAdapter); 	
-		
+        interestsFilter.setAdapter(interestFilterAdapter); 
+        interestsFilter.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Toast.makeText(getActivity(), "ohi", Toast.LENGTH_LONG).show();
+				CheckBox ck =(CheckBox) arg1.findViewById(R.id.checkUsed);
+				ck.setChecked(!ck.isChecked());
+			}
+        });
         return drawer;
 	}
 	
@@ -218,6 +229,4 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 		icDrawer.setImageResource(R.drawable.ic_menu_drawer_bottom);
 
 	}
-	
-	
 }

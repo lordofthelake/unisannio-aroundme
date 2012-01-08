@@ -44,7 +44,7 @@
                 android:id="@+id/balloon_item_snippet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="balloon_item_snippet"
+                android:text="@string/loading"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="12dip" />
         </LinearLayout>

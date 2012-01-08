@@ -73,7 +73,8 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 		}
 		
 		final Interest interest = getItem(position);	
-		view.setTag(R.id.tag_interest, interest);
+		view.setTag(R.id.tag_interest, interest);		
+		
 		h.ckEnabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
