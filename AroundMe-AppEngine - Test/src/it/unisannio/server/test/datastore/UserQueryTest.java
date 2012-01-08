@@ -270,7 +270,7 @@ public class UserQueryTest extends TestCase{
 	public void positionQueryOnBorders(int radiusOffset) throws Exception {
 		Position rcost = ModelFactory.getInstance().createPosition(41.1315992, 14.7779900);
 		Position sSofia = ModelFactory.getInstance().createPosition(41.1304275, 14.7809672);
-		double radius = rcost.getDistance(sSofia);
+		int radius = rcost.getDistance(sSofia);
 		User user1 = ModelFactory.getInstance().createUser(123, "Danilo", null);
 		User user2 = ModelFactory.getInstance().createUser(124, "Michele", null);
 		user1.setPosition(sSofia);

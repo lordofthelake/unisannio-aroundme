@@ -182,4 +182,14 @@ public interface Setup {
 	 * @see LocationManager#requestLocationUpdates(String, long, float, android.location.LocationListener)
 	 */
 	final float TRACKING_MIN_DISTANCE = 5;
+
+	/**
+	 * Valore di default per il filtro di compatibilita'.
+	 */
+	final float FILTERS_DEFAULT_RANK = 0.6f;
+
+	/**
+	 * Raggio di default per il filtro di distanza (in metri).
+	 */
+	final int FILTERS_DEFAULT_RADIUS = 500;
 }

@@ -22,7 +22,7 @@ public class NeighbourhoodSerializerTest extends TestCase {
 	private Neighbourhood testNeighbourhood;
 	private ModelFactory mockFactory;
 	
-	private String xmlFormat = "<neighbourhood radius=\"987.654321\"><position lat=\"1.23456\" lon=\"-6.54321\" /></neighbourhood>";
+	private String xmlFormat = "<neighbourhood radius=\"987\"><position lat=\"1.23456\" lon=\"-6.54321\" /></neighbourhood>";
 	
 	public void setUp() {
 		serializer = Neighbourhood.SERIALIZER;
@@ -34,7 +34,7 @@ public class NeighbourhoodSerializerTest extends TestCase {
 		replay(mockFactory);
 		ModelFactory.setInstance(mockFactory);
 		
-		testNeighbourhood = new Neighbourhood(mockPosition, 987.654321);
+		testNeighbourhood = new Neighbourhood(mockPosition, 987);
 	}
 	
 	public void testDeserialization() throws SAXException, IOException {
@@ -42,7 +42,7 @@ public class NeighbourhoodSerializerTest extends TestCase {
 			Neighbourhood obj = serializer.fromString(xmlFormat);
 			
 			assertEquals(obj.getPosition(), mockPosition);
-			assertEquals(obj.getRadius(), 987.654321);
+			assertEquals(obj.getRadius(), 987);
 		} catch (IllegalArgumentException rEx) {
 			fail(rEx.getMessage());
 		}

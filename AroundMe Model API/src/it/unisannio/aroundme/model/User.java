@@ -124,7 +124,7 @@ public abstract class User implements Model {
 	 * 
 	 * @see Position#getDistance(Position)
 	 */
-	public double getDistance(User u) {
+	public int getDistance(User u) {
 		Position mine = getPosition();
 		Position hers = u.getPosition();
 		
