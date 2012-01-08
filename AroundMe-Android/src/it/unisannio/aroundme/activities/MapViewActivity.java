@@ -6,6 +6,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentMapActivity;
 
@@ -45,8 +46,10 @@ public class MapViewActivity extends FragmentMapActivity  {
 		overlays.add(userOverlay);
 		
 		MapController controller = mapView.getController();
+		
 		controller.setCenter(PositionUtils.toGeoPoint(user1.getPosition()));
 		controller.animateTo(PositionUtils.toGeoPoint(user1.getPosition()));
+		controller.setZoom(16);
     }
 
 	@Override
