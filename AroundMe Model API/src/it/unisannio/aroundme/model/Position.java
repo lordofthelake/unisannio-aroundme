@@ -51,14 +51,14 @@ public abstract class Position implements Model {
 	 * 
 	 * @author Danilo Iannelli <daniloiannelli6@gmail.com>
 	 */
-	public double getDistance(Position p){
+	public int getDistance(Position p){
 		double lat1 = Math.toRadians(getLatitude());
 		double lat2 = Math.toRadians(p.getLatitude());
 		double lon1 = Math.toRadians(getLongitude());
 		double lon2 = Math.toRadians(p.getLongitude());
 		double dist =  Math.cos(lon1 -lon2) * Math.cos(lat1) * Math.cos(lat2) +  Math.sin(lat1) * Math.sin(lat2);
 		dist = Math.acos(dist) * 6378;
-		return Math.round(dist * 1000);
+		return (int) Math.round(dist * 1000);
 	}
 
 	public abstract double getLatitude();

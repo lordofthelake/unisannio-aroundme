@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<it.unisannio.aroundme.widgets.SliderView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aroundme="http://schemas.android.com/apk/res/it.unisannio.aroundme"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" 
+	    aroundme:multiplier="100"
+	    aroundme:minValue="1"
+	    aroundme:maxValue="50"
+	    aroundme:conversion="0.001"
+	    aroundme:format="{1,choice,0#Off|0&lt;{1,number} m|999&lt;{2,number,.1} Km}"
+	    android:layout_marginRight="10dp"
+	    android:layout_marginLeft="10dp"
+	    />
