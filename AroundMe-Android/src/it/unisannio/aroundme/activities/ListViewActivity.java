@@ -18,12 +18,14 @@ import java.util.*;
 import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlPullParser;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.*;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -37,6 +39,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -68,6 +71,10 @@ public class ListViewActivity extends FragmentActivity
 	private ListView nearByList;
 	
 	private SlidingDrawer drawer;
+	private ImageView icDrawer;
+	private Drawable icDrawerTop;
+	private Drawable icDrawerBottom;
+	
 	private ProgressDialog progress;
 	
 	private boolean needsRefresh = true;
@@ -87,7 +94,9 @@ public class ListViewActivity extends FragmentActivity
     	
     	
     	setContentView(R.layout.listview);
-    	
+    	//FIXME nullPointer
+    	//icDrawer= (ImageView) findViewById(R.id.filterIcon);
+
     	async = new AsyncQueue();
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
     	
@@ -115,11 +124,13 @@ public class ListViewActivity extends FragmentActivity
     @Override
 	public void onDrawerOpened() {
 		nearByList.setEnabled(false);
+		//FIXME cDrawer.setImageResource(R.drawable.ic_menu_drawer_top); nullpointer
 	}
     
     @Override
 	public void onDrawerClosed() {
 		nearByList.setEnabled(true);
+		//FIXME icDrawer.setImageResource(R.drawable.ic_menu_drawer_bottom); nullPointer
 		if(needsRefresh)
 			refresh();
 	}

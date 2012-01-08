@@ -6,7 +6,7 @@
     android:tag="Interessi"
     android:background="#000000">
           <View
-        android:layout_height="3dip"
+        android:layout_height="3dp"
         android:layout_width="match_parent"
         android:background="#ef8d31"
         android:layout_marginBottom="5dp"
@@ -30,7 +30,7 @@
     <ListView
         android:id="@+id/listInterestFilter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent" >
     </ListView>
         
 </LinearLayout>

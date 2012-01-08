@@ -44,7 +44,7 @@ public class C2DMMessageReceiver extends BroadcastReceiver {
 	public void createNotification(Context context, String userName) {
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.ic_app_actionbar,
+		Notification notification = new Notification(R.drawable.alert_light_frame,//FIXME ic_launcher
 				"Amici nei dintorni", System.currentTimeMillis());
 		// Nasconde la notifica dopo che � stata selezionata
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
