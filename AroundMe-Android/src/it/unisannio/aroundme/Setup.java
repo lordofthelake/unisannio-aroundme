@@ -7,6 +7,7 @@ import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.HttpTask;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Picture;
+import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.services.PositionTrackingService;
@@ -110,13 +111,19 @@ public interface Setup {
 	final String BACKEND_POSITION_PATH = "/position/%d";
 	
 	/**
+	 * Path della risorsa "Preferences"
+	 * 
+	 * @see Preferences
+	 */
+	final String BACKEND_PREFERENCES_PATH = "/preferences/%d";
+	
+	/**
 	 * URL completo per il backend degli utenti.
 	 * 
 	 * @see #BACKEND_HOST
 	 * @see #BACKEND_USER_PATH
 	 */
 	final String BACKEND_USER_URL = BACKEND_HOST + BACKEND_USER_PATH;
-	
 
 	/**
 	 * URL completo per il backend delle posizioni.
@@ -125,6 +132,14 @@ public interface Setup {
 	 * @see #BACKEND_POSITION_PATH
 	 */
 	final String BACKEND_POSITION_URL = BACKEND_HOST + BACKEND_POSITION_PATH;
+	
+	/**
+	 * URL completo per il backend delle preferenze
+	 * 
+	 * @see #BACKEND_HOST
+	 * @see #BACKEND_PREFERENCES_PATH
+	 */
+	final String BACKEND_PREFERENCES_URL = BACKEND_HOST + BACKEND_PREFERENCES_PATH;
 	
 	/**
 	 * Nome dell'header che viene usato per autenticarsi con il server.

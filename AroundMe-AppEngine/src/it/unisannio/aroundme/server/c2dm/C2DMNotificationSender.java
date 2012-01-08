@@ -23,14 +23,17 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  */
 public class C2DMNotificationSender {
+	
+	public static final String C2DM_URL = "https://android.clients.google.com/c2dm/send";
+	
 	/*
 	 * Definizione dei nomi dei parametri da includere nei PostData
 	 * necessari per l'utilizzo del C2DM
 	 */
 	private static final String UPDATE_CLIENT_AUTH = "Update-Client-Auth";
-	public static final String PARAM_REGISTRATION_ID = "registration_id";
-	public static final String PARAM_DELAY_WHILE_IDLE = "delay_while_idle";
-	public static final String PARAM_COLLAPSE_KEY = "collapse_key";
+	private static final String PARAM_REGISTRATION_ID = "registration_id";
+//	private static final String PARAM_DELAY_WHILE_IDLE = "delay_while_idle";
+	private static final String PARAM_COLLAPSE_KEY = "collapse_key";
 	
 	/* Massimo intervallo di tempo (in millisecondi) tra i vari
 	 * tentativi per la ripetizione di un Task della Google TaskQueue
@@ -93,7 +96,7 @@ public class C2DMNotificationSender {
 		byte[] postData = postDataBuilder.toString().getBytes("UTF-8");
 
 		//Url utilizzato da Google per l'invio di task al C2DM
-		URL url = new URL(C2DMConfigLoader.getInstance().getC2dmUrl());
+		URL url = new URL(C2DM_URL);
 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);

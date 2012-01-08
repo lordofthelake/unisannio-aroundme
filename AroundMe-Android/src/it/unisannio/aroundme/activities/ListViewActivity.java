@@ -91,8 +91,6 @@ public class ListViewActivity extends FragmentActivity
     		// TODO Si dovrebbe avviare l'attività di login per procedere all'autenticazione
     	}
     	
-    	
-    	
     	setContentView(R.layout.listview);
     	//FIXME nullPointer
     	//icDrawer= (ImageView) findViewById(R.id.filterIcon);
@@ -107,18 +105,22 @@ public class ListViewActivity extends FragmentActivity
         nearByList.setOnItemClickListener(this);
        
         nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, pictureAsync));
-    	
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new UserQueryFragment();
-        fragmentTransaction.add(R.id.listview_layout, fragment);
-        fragmentTransaction.commit();
         
-        fragment.setOnDrawerOpenListener(this);
-        fragment.setOnDrawerCloseListener(this);
-        fragment.setOnQueryChangeListener(this);
+		long[] ids = getIntent().getLongArrayExtra("userIds");
+		if(ids != null) {
+    		userQuery = UserQuery.byId(ids);
+    		refresh();
+		} else {
+			FragmentManager fragmentManager = getSupportFragmentManager();
+	        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+	        fragment = new UserQueryFragment();
+	        fragmentTransaction.add(R.id.listview_layout, fragment);
+	        fragmentTransaction.commit();
 
-	    
+	        fragment.setOnDrawerOpenListener(this);
+	        fragment.setOnDrawerCloseListener(this);
+	        fragment.setOnQueryChangeListener(this);
+		}	    
     }
     
     @Override
@@ -216,10 +218,11 @@ public class ListViewActivity extends FragmentActivity
 		pictureAsync.shutdown();
 	}
 	
-	/*
+	/**
 	 * Effettua il refresh della view inviando la query definita
 	 * nelle impostazioni al datastore remoto
-	 * */
+	 * 
+	 */
 	private void refresh(){
 		progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
     	progress.setOnCancelListener(this);

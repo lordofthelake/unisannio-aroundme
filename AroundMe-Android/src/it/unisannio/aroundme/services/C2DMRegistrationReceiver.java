@@ -1,23 +1,13 @@
 package it.unisannio.aroundme.services;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import it.unisannio.aroundme.Setup;
+import it.unisannio.aroundme.client.HttpTask;
+import it.unisannio.aroundme.client.Identity;
+import it.unisannio.aroundme.model.Preferences;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import android.R;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,12 +19,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
+ * 
+ * 
  * @author Giuseppe Fusco <gfeldiablo@gmail.com>
- *
+ * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  */
 public class C2DMRegistrationReceiver extends BroadcastReceiver {
 
-	public final static String AUTH = "authentication";
+	public final static String C2DM_REGISTRATIONID = "c2dmRegistrationId";
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -43,13 +35,12 @@ public class C2DMRegistrationReceiver extends BroadcastReceiver {
 		if ("com.google.android.c2dm.intent.REGISTRATION".equals(action)) {
 			Log.w("C2DM", "Received registration ID");
 			handleRegistration(context, intent);
-			
 		}
 	}
 	
 	private void handleRegistration(Context context, Intent intent){
-		String regId = intent.getStringExtra("registration_id"); 
-		 String error = intent.getStringExtra("error");
+		String registrationId = intent.getStringExtra("registration_id"); 
+		String error = intent.getStringExtra("error");
 	    if ( error!= null) {
 	        // Registration failed, should try again later.
 	    	Log.e(error, String.format("Received error: %s\n", error));
@@ -68,6 +59,20 @@ public class C2DMRegistrationReceiver extends BroadcastReceiver {
 	         }else{
 	        	 Toast.makeText(context, "Registration Error: " + error, Toast.LENGTH_SHORT).show();
 	         }
+	    } else if (registrationId != null) {
+	    	String deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+	    	
+	    	SharedPreferences prefs = PreferenceManager	.getDefaultSharedPreferences(context);
+			Editor edit = prefs.edit();
+			edit.putString(C2DM_REGISTRATIONID, registrationId);
+			edit.putString("deviceId", deviceId);
+			edit.commit();
+			
+			//TODO Passare da SharedPreferences a it.unisannio.model.Preferences
+	    	final Preferences preferences = null;
+	    	
+			try {
+				(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_PATH, Identity.get().getId()) {
 	    } else if (regId != null) {
 	    	String deviceId = Secure.getString(context.getContentResolver(),
 					Secure.ANDROID_ID);
@@ -92,39 +97,21 @@ public class C2DMRegistrationReceiver extends BroadcastReceiver {
 				"Registration successful", System.currentTimeMillis());
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-		Intent intent = new Intent(context, C2DMRegistrationReceiver.class);
-		intent.putExtra("registration_id", registrationId);
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-				intent, 0);
-		notification.setLatestEventInfo(context, "Registration",
-				"Successfully registered", pendingIntent);
-		notificationManager.notify(0, notification);
-	}
+					@Override
+					protected Void read(InputStream in) throws Exception {
+						return null;
+					}
 
-	private void sendRegistrationIdToServer(String deviceId,
-			String registrationId) {
-		Log.d("C2DM", "Sending registration ID to my application server");
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost("http://google.com/register");
-		try {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-			nameValuePairs.add(new BasicNameValuePair("deviceid", deviceId));
-			nameValuePairs.add(new BasicNameValuePair("registrationid",
-					registrationId));
-
-			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			HttpResponse response = client.execute(post);
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
-
-			String line = "";
-			while ((line = rd.readLine()) != null) {
-				Log.e("HttpResponse", line);
+					@Override
+					protected void write(OutputStream out) throws Exception {
+						Preferences.SERIALIZER.write(preferences, out);
+					}
+					
+				}).call();
+				
+			} catch (Exception e) {
+				Log.d("C2DMRegistrationReceiver", "Http Error", e);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    }
 	}
-
-
 }

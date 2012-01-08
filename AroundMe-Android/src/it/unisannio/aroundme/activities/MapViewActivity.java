@@ -6,8 +6,11 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentMapActivity;
+import android.support.v4.app.FragmentTransaction;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.async.AsyncQueue;
@@ -21,12 +24,14 @@ import it.unisannio.aroundme.overlay.UserItemizedOverlay;
 public class MapViewActivity extends FragmentMapActivity  {
 	private MapView mapView;
 	
-	private AsyncQueue pictureAsync;
+	private UserQuery userQuery;
+	private UserQueryFragment fragment;
+	private AsyncQueue async;
 	
     protected void onCreate(Bundle savedStateInstance) {
     	super.onCreate(savedStateInstance);
     	
-    	pictureAsync = new AsyncQueue(); // 1 thread. Nelle mappe viene visualizzata un'immagine alla volta
+    	async = new AsyncQueue(); // 1 thread. Nelle mappe viene visualizzata un'immagine alla volta
 		
     	setContentView(R.layout.map_view);	
 		
@@ -35,7 +40,7 @@ public class MapViewActivity extends FragmentMapActivity  {
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		
-		UserItemizedOverlay userOverlay = new UserItemizedOverlay(R.drawable.marker_red, mapView, pictureAsync);
+		UserItemizedOverlay userOverlay = new UserItemizedOverlay(R.drawable.marker_red, mapView, async);
 
 		ModelFactory f = ModelFactory.getInstance();
 		User user1 = f.createUser(1321813090L, "Michele Piccirillo", new HashSet<Interest>());
@@ -45,8 +50,29 @@ public class MapViewActivity extends FragmentMapActivity  {
 		overlays.add(userOverlay);
 		
 		MapController controller = mapView.getController();
+		
 		controller.setCenter(PositionUtils.toGeoPoint(user1.getPosition()));
 		controller.animateTo(PositionUtils.toGeoPoint(user1.getPosition()));
+
+		controller.setZoom(16);
+
+		 
+		long[] ids = getIntent().getLongArrayExtra("userIds");
+		if(ids != null) {
+    		userQuery = UserQuery.byId(ids);
+    		//refresh();
+		} else {
+			FragmentManager fragmentManager = getSupportFragmentManager();
+	        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+	        fragment = new UserQueryFragment();
+	        fragmentTransaction.add(R.id.mapview_layout, fragment);
+	        fragmentTransaction.commit();
+
+	        //fragment.setOnDrawerOpenListener(this);
+	        //fragment.setOnDrawerCloseListener(this);
+	        //fragment.setOnQueryChangeListener(this);
+		}	
+
     }
 
 	@Override
@@ -57,18 +83,18 @@ public class MapViewActivity extends FragmentMapActivity  {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		pictureAsync.pause();
+		async.pause();
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		pictureAsync.resume();
+		async.resume();
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		pictureAsync.shutdown();
+		async.shutdown();
 	}
 }

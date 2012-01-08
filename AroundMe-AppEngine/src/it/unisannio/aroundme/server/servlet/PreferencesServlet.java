@@ -57,5 +57,4 @@ public class PreferencesServlet extends HttpServlet{
 		}
 	}
 
-
 }

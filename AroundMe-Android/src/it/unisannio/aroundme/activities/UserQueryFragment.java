@@ -21,6 +21,7 @@ import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.widgets.SliderView;
 import it.unisannio.aroundme.widgets.SliderView.OnChangeListener;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -47,6 +48,10 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 	private Identity me;
 	
 	private SlidingDrawer drawer;
+	private SliderView distance;
+	private SliderView rank;
+	private InterestFilterAdapter interestFilterAdapter;
+	
 	private OnDrawerCloseListener onDrawerCloseListener;
 	private OnDrawerOpenListener onDrawerOpenListener;
 	
@@ -60,45 +65,23 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 		
 		me = Identity.get();
 		myInterests = new ArrayList<Interest>(me.getInterests());
-		
-		if(savedInstanceState == null) {
-    		// L'Activity è stata avviata per la prima volta tramite un Intent
-    		long[] ids = getActivity().getIntent().getLongArrayExtra("userIds");
-    		if(ids != null) {
-        		userQuery = UserQuery.byId(ids);
-        	}
-    	} else { 
-    		// Controlliamo se c'è uno stato salvato
-    		String serializedQuery = savedInstanceState.getString("userQuery");
-    		if(serializedQuery != null) {
-    			try {
-					userQuery = UserQuery.SERIALIZER.fromString(serializedQuery);
-				} catch (SAXException e1) {
-					Log.d("ListViewActivity", "Error deserializing UserQuery", e1);
-				}
-    		} 
-    	}
-
-    	if(userQuery == null) {
-    		// Non Ã¨ stato possibile ricostruire la query. Usiamo le impostazioni di default
-    		userQuery = ModelFactory.getInstance().createUserQuery();
-    		/**Caricamento delle impostazioni di default
-    		 * 	-posizione: 				attuale
-    		 * 	-Raggio: 					1km
-    		 * 	-compatibilità:				60%
-    		 * 	-Interessi considerati:		tutti
-    		 */
-    		// FIXME
-    		me.setPosition(ModelFactory.getInstance().createPosition(41.1309285, 14.7775555));
-    		
-    		Position position = Identity.get().getPosition();
-    		Neighbourhood neighbourhood = new Neighbourhood(position, 1000); // FIXME	
-    		userQuery.setCompatibility(new Compatibility(Identity.get().getId(), 0.6F)); // FIXME
-    		
-    		userQuery.setNeighbourhood(neighbourhood);
-    	}
-    	notifyQueryChangeListener();
     	async = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
+    	
+    	userQuery = ModelFactory.getInstance().createUserQuery();
+		/**Caricamento delle impostazioni di default
+		 * 	-posizione: 				attuale
+		 * 	-Raggio: 					1km
+		 * 	-compatibilità:				60%
+		 * 	-Interessi considerati:		tutti
+		 */
+		// FIXME
+		me.setPosition(ModelFactory.getInstance().createPosition(41.1309285, 14.7775555));
+		
+		Position position = Identity.get().getPosition();
+		Neighbourhood neighbourhood = new Neighbourhood(position, 1000); // FIXME	
+		userQuery.setCompatibility(new Compatibility(Identity.get().getId(), 0.6F)); // FIXME
+		
+		userQuery.setNeighbourhood(neighbourhood);
 	}
 	
 	@Override
@@ -115,7 +98,8 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         View page2 = inflater.inflate(R.layout.filters_page_interests, null);
         pager.setAdapter(new ArrayPagerAdapter(page1, page2));
         
-        SliderView distance = (SliderView) page1.findViewById(R.id.sliderDistance);
+        distance = (SliderView) page1.findViewById(R.id.sliderDistance);
+        distance.setMultipliedValue((int) userQuery.getNeighbourhood().getRadius());
         distance.setOnChangeListener(new OnChangeListener() {
 
 			@Override
@@ -127,8 +111,9 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			}
 		});
         
-        SliderView compatibility = (SliderView) page1.findViewById(R.id.sliderCompatibility);
-        compatibility.setOnChangeListener(new OnChangeListener() {
+        rank = (SliderView) page1.findViewById(R.id.sliderCompatibility);
+        rank.setConvertedValue(userQuery.getCompatibility().getRank());
+        rank.setOnChangeListener(new OnChangeListener() {
 			
 			@Override
 			public void onSliderChanged(SliderView view) {
@@ -140,7 +125,8 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 		});
         
         ListView interestsFilter=(ListView) page2.findViewById(R.id.listInterestFilter);
-        interestsFilter.setAdapter(new InterestFilterAdapter(getActivity(), this, myInterests, async, userQuery)); 	
+        interestFilterAdapter = new InterestFilterAdapter(getActivity(), this, myInterests, async, userQuery);
+        interestsFilter.setAdapter(interestFilterAdapter); 	
 		
         return drawer;
 	}
@@ -170,12 +156,43 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 	public void onPause() {
 		super.onPause();
 		async.pause();
+		
+		try {
+			SharedPreferences queryState = getSupportActivity().getSharedPreferences("QueryState", 0);
+			SharedPreferences.Editor editor = queryState.edit();
+			editor.putString("UserQuery", UserQuery.SERIALIZER.toString(userQuery));
+			editor.commit();
+		} catch (Exception e) {
+			Log.w("UserQueryFragment", "UserQuery cannot be persisted", e);
+		}
 	}
 	
+	@Override
 	public void onResume() {
 		super.onResume();
 		async.resume();
-	};
+		
+		try {
+			SharedPreferences queryState = getSupportActivity().getSharedPreferences("QueryState", 0);
+			String state = queryState.getString("UserQuery", null);
+			if(state != null) {
+				userQuery = UserQuery.SERIALIZER.fromString(state);
+			
+				Neighbourhood n = userQuery.getNeighbourhood();
+				if(n != null)
+					distance.setMultipliedValue((int) n.getRadius());
+				
+				Compatibility c = userQuery.getCompatibility();
+				rank.setConvertedValue(c == null ? 0.0f : c.getRank());
+				
+				interestFilterAdapter.notifyDataSetChanged();
+			}
+			
+			notifyQueryChangeListener();
+		} catch (Exception e) {
+			Log.w("UserQueryFragment", "UserQuery can't be restored", e);
+		}
+	}
 	
 	@Override
 	public void onDestroy() {
@@ -195,4 +212,6 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 		if(onDrawerCloseListener != null)
 			onDrawerCloseListener.onDrawerClosed();
 	}
+	
+	
 }
