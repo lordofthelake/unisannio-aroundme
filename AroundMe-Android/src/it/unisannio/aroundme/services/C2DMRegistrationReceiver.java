@@ -73,29 +73,6 @@ public class C2DMRegistrationReceiver extends BroadcastReceiver {
 	    	
 			try {
 				(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_PATH, Identity.get().getId()) {
-	    } else if (regId != null) {
-	    	String deviceId = Secure.getString(context.getContentResolver(),
-					Secure.ANDROID_ID);
-			createNotification(context, regId);
-			sendRegistrationIdToServer(deviceId, regId);
-			saveRegistrationId(context, regId);
-	    }
-	}
-	
-	private void saveRegistrationId(Context context, String registrationId) {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		Editor edit = prefs.edit();
-		edit.putString(AUTH, registrationId);
-		edit.commit();
-	}
-	
-	private void createNotification(Context context, String registrationId) {
-		NotificationManager notificationManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.alert_light_frame,//FIXME ic_launcher
-				"Registration successful", System.currentTimeMillis());
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 					@Override
 					protected Void read(InputStream in) throws Exception {

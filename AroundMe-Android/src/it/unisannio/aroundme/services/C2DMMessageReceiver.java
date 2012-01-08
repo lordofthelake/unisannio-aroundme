@@ -37,18 +37,11 @@ public class C2DMMessageReceiver extends BroadcastReceiver {
 	private void createNotification(Context context, String userName) {
 		
 		//FIXME Non è stato gestita una notifica diversa a seconda del numero di notifiche non lette
-		// Ora la notifica viene semplicemente sostituita con la più nuova 
+		// Ora la notifica viene semplicemente sostituita con la piu' nuova 
 		NotificationManager notificationManager = (NotificationManager) context	.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.ic_app_actionbar,"Amici nei dintorni", System.currentTimeMillis());
+		Notification notification = new Notification(R.drawable.ic_notification,"Qualcuno nei dintorni", System.currentTimeMillis());
 		
 		// Nasconde la notifica dopo che è stata selezionata
-
-	public void createNotification(Context context, String userName) {
-		NotificationManager notificationManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.alert_light_frame,//FIXME ic_launcher
-				"Amici nei dintorni", System.currentTimeMillis());
-		// Nasconde la notifica dopo che � stata selezionata
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
