@@ -19,5 +19,6 @@ public class UserOverlayItem extends OverlayItem {
 	public User getUser() {
 		return user;
 	}
+	
 
 }

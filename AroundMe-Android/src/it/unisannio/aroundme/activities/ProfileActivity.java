@@ -42,6 +42,7 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 	private TextView txtDistance;
 	private ImageView imgPhoto;
 	
+	
 	private ProgressDialog progress;
 	private long userId;
 

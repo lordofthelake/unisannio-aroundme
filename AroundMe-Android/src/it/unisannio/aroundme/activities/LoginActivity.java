@@ -56,11 +56,11 @@ public class LoginActivity extends FragmentActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		facebook = new Facebook(Setup.FACEBOOK_APP_ID);
-		Identity identity = Identity.get();
-		if(identity != null) {
-			onSuccess(identity);
-			return;
-		}
+//		Identity identity = Identity.get();
+//		if(identity != null) {
+//			onSuccess(identity);
+//			return;
+//		}
 			
 		this.async = new AsyncQueue();
 

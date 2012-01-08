@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
@@ -34,6 +36,7 @@ public class UserItemizedOverlay extends
 	
 	public void addUser(User user) {
 		addOverlay(new UserOverlayItem(user));
+//		addOverlay(new OverlayItem(new GeoPoint((int)(user.getPosition().getLatitude() * 1e6),(int)( user.getPosition().getLongitude()* 1e6)), user.getName(), "prova"));
 	}
 
 	public void addOverlay(UserOverlayItem overlay) {

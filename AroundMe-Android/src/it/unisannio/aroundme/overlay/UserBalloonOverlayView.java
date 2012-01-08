@@ -59,6 +59,5 @@ public class UserBalloonOverlayView extends BalloonOverlayView<UserOverlayItem> 
 		// get remote image from network.
 		// bitmap results would normally be cached, but this is good enough for demo purpose.
 		Picture.get(item.getUser().getId()).asyncUpdate(async, image, R.drawable.img_downloading, R.drawable.img_error);
-		
 	}
 }
