@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SlidingDrawer;
@@ -48,6 +49,8 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 	private Identity me;
 	
 	private SlidingDrawer drawer;
+	private ImageView icDrawer;
+
 	private SliderView distance;
 	private SliderView rank;
 	private InterestFilterAdapter interestFilterAdapter;
@@ -91,6 +94,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         drawer = (SlidingDrawer) inflater.inflate(R.layout.filters_drawer, container, false);
         drawer.setOnDrawerCloseListener(this);
         drawer.setOnDrawerOpenListener(this);
+        icDrawer=(ImageView) drawer.findViewById(R.id.filterIcon);
         
         ViewPager pager = (ViewPager) drawer.findViewById(R.id.pager);
         
@@ -204,13 +208,15 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 	public void onDrawerOpened() {
 		if(onDrawerOpenListener != null)
 			onDrawerOpenListener.onDrawerOpened();
-		
+		icDrawer.setImageResource(R.drawable.ic_menu_drawer_top);
 	}
 
 	@Override
 	public void onDrawerClosed() {
 		if(onDrawerCloseListener != null)
 			onDrawerCloseListener.onDrawerClosed();
+		icDrawer.setImageResource(R.drawable.ic_menu_drawer_bottom);
+
 	}
 	
 	

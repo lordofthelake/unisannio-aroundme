@@ -4,49 +4,34 @@ package it.unisannio.aroundme.activities;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.activities.UserQueryFragment.OnQueryChangeListener;
-import it.unisannio.aroundme.adapters.ArrayPagerAdapter;
-import it.unisannio.aroundme.adapters.InterestFilterAdapter;
 import it.unisannio.aroundme.adapters.UserAdapter;
 import it.unisannio.aroundme.async.*;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.model.*;
-import it.unisannio.aroundme.services.PositionTrackingService;
 
-import java.text.MessageFormat;
 import java.util.*;
 
 import javax.xml.transform.TransformerException;
 
-import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParser;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.*;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.SlidingDrawer;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -70,11 +55,6 @@ public class ListViewActivity extends FragmentActivity
 	
 	private ListView nearByList;
 	
-	private SlidingDrawer drawer;
-	private ImageView icDrawer;
-	private Drawable icDrawerTop;
-	private Drawable icDrawerBottom;
-	
 	private ProgressDialog progress;
 	
 	private boolean needsRefresh = true;
@@ -92,8 +72,6 @@ public class ListViewActivity extends FragmentActivity
     	}
     	
     	setContentView(R.layout.listview);
-    	//FIXME nullPointer
-    	//icDrawer= (ImageView) findViewById(R.id.filterIcon);
 
     	async = new AsyncQueue();
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
@@ -132,7 +110,6 @@ public class ListViewActivity extends FragmentActivity
     @Override
 	public void onDrawerClosed() {
 		nearByList.setEnabled(true);
-		//FIXME icDrawer.setImageResource(R.drawable.ic_menu_drawer_bottom); nullPointer
 		if(needsRefresh)
 			refresh();
 	}
@@ -157,6 +134,11 @@ public class ListViewActivity extends FragmentActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle item selection
 	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	Intent i =new Intent(this, ProfileActivity.class);
+	    	i.putExtra("userId", Identity.get().getId());
+	    	startActivity(i);
+	    	return true;
 	    case R.id.toMap:
 	        startActivity(new Intent(this, MapViewActivity.class));
 	        return true;
@@ -164,9 +146,9 @@ public class ListViewActivity extends FragmentActivity
 	    	startActivity(new Intent(this, PreferencesActivity.class));
 	    	return true;
 	    case R.id.profile:
-	    	Intent i = new Intent(this, ProfileActivity.class);
-	    	i.putExtra("userId", Identity.get().getId());
-	    	startActivity(i);
+	    	Intent i1 = new Intent(this, ProfileActivity.class);
+	    	i1.putExtra("userId", Identity.get().getId());
+	    	startActivity(i1);
 	    	return true;
 	    default:
 	        return super.onOptionsItemSelected(item);

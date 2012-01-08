@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:showDividers="middle" 
-    android:tag="Distanza"
+    android:tag="Tolleranza"
     android:background="#000000">
   <View
         android:layout_height="3dip"
@@ -37,17 +37,18 @@
 	    aroundme:conversion="0.001"
 	    aroundme:format="{1,choice,0#Off|0&lt;{1,number} m|999&lt;{2,number,.1} Km}"
 	    android:layout_marginRight="10dp"
-	    android:layout_marginLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingLeft="10dp"
 	    />
 	
 	<View
-        android:layout_height="2dip"
+        android:layout_height="1dip"
         android:layout_width="match_parent"
         android:background="#FF909090" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
      	android:layout_marginLeft="10dp"
      	android:layout_marginTop="5dp"
@@ -66,7 +67,8 @@
 	    aroundme:conversion="0.01"
 	    aroundme:format="{1,choice,0#Off|0&lt;{2,number,percent}}"
 	    android:layout_marginRight="10dp"
-	    android:layout_marginLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingLeft="10dp"
 	    />
 
 </LinearLayout>

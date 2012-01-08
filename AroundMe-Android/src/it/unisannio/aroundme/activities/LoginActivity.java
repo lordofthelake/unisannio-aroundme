@@ -2,7 +2,6 @@ package it.unisannio.aroundme.activities;
 
 import java.util.NoSuchElementException;
 
-import it.unisannio.aroundme.Application;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.async.AsyncQueue;
@@ -10,7 +9,6 @@ import it.unisannio.aroundme.async.FutureListener;
 import it.unisannio.aroundme.client.HttpStatusException;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Registration;
-import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.services.PositionTrackingService;
 
 import com.facebook.android.DialogError;
@@ -26,8 +24,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.*;
 
 /**
