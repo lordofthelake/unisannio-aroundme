@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
         <item android:id="@+id/toMap" android:title="@string/menu_show_map" android:icon="@drawable/ic_menu_mapview" android:showAsAction="ifRoom" android:titleCondensed="@string/menu_show_map_condensed"></item>
         <item android:id="@+id/toList" android:titleCondensed="@string/menu_show_list_condensed" android:icon="@drawable/ic_menu_listview" android:title="@string/menu_show_list" android:showAsAction="ifRoom"></item>
-        <item android:id="@+id/preferences" android:title="@string/menu_preferences"></item>
-        <item android:id="@+id/profile" android:title="@string/menu_profile"></item>
+        <item android:id="@+id/preferences" android:title="@string/menu_preferences" android:icon="@android:drawable/ic_menu_manage"></item>
+        <item android:id="@+id/profile" android:title="@string/menu_profile" android:icon="@drawable/ic_menu"></item>
 </menu>

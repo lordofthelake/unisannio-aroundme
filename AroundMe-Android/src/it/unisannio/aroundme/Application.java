@@ -224,28 +224,7 @@ public class Application extends android.app.Application {
 				};
 			}
 
-		});
-		
-		
-		/* FIXME Aggiunti utenti alla cache in modo che non vengano fatte 
-		 * query via network. Mock da rimuovere.
-		 */
-		ModelFactory f = ModelFactory.getInstance();
-		
-		// FIXME Mock identity
-		
-		Collection<Interest> empty =new HashSet<Interest>();
-        empty.add(f.createInterest(40796308305L,"Coca cola","notCat"));
-        empty.add(f.createInterest(5660597307L,"PinkFloyd","notCat"));
-        empty.add(f.createInterest(316314086430L,"Google+","notCat"));
-        empty.add(f.createInterest(105955506103417L,"Led Zeppelin","notCat"));
-		User jessica = f.createUser(100003074784184L, "Jessica Rossi", empty);
-		addToCache(f.createUser(1321813090L, "Michele Piccirillo", empty));
-		//addToCache(f.createUser(100000268830695L, "Danilo Iannelli", empty));
-		addToCache(f.createUser(100001053949157L, "Marco Magnetti", empty));
-		addToCache(f.createUser(100000293335056L, "Giuseppe Fusco", empty));
-		
-		
+		});		
 		super.onCreate();
 	}
 }

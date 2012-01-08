@@ -16,11 +16,13 @@ import it.unisannio.aroundme.model.UserQuery;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
+import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -135,7 +137,8 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.user_menu, menu);
+	    inflater.inflate(R.menu.main_menu, menu);
+	    menu.findItem(R.id.profile).setVisible(false);
 	    return true;
 	}
 
@@ -145,6 +148,29 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 			task.cancel(true);
 		
 		finish();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.toList:
+	    	startActivity(new Intent(this, ListViewActivity.class));
+	        return true;
+	    case R.id.toMap:
+	        startActivity(new Intent(this, MapViewActivity.class));
+	        return true;
+	    case R.id.preferences:
+	    	startActivity(new Intent(this, PreferencesActivity.class));
+	    	return true;
+	    case R.id.profile:
+	    	Intent i1 = new Intent(this, ProfileActivity.class);
+	    	i1.putExtra("userId", Identity.get().getId());
+	    	startActivity(i1);
+	    	return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	@Override
