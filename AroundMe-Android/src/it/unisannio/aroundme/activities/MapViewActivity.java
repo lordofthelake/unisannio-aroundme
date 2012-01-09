@@ -39,7 +39,7 @@ public class MapViewActivity extends FragmentMapActivity  {
     	setContentView(R.layout.map_view);	
 		
 		mapView = (MapView) findViewById(R.id.map);
-		mapView.setBuiltInZoomControls(true);
+		mapView.setBuiltInZoomControls(false);
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		

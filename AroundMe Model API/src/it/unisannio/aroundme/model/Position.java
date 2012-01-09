@@ -73,4 +73,9 @@ public abstract class Position implements Model {
 		Position other = (Position) obj;
 		return other.getLatitude() == getLatitude() && other.getLongitude() == getLongitude();
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + getLatitude() + ", " + getLongitude() + ")";
+	}
 }

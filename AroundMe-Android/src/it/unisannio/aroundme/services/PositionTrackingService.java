@@ -40,7 +40,7 @@ import android.util.Log;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
 
-// TODO Il servizio dovr� essere fermato quando l'utente fa il logout
+// TODO Il servizio dovra' essere fermato quando l'utente fa il logout
 public class PositionTrackingService extends Service {
 
 	/**
@@ -81,10 +81,11 @@ public class PositionTrackingService extends Service {
 				final Position position = ModelFactory.getInstance().createPosition(
 						location.getLatitude(), location.getLongitude());
 
-				long id = Identity.get().getId();
+				Identity me = Identity.get();
+				me.setPosition(position);
 
 				try {
-					(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_URL, id) {
+					(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_URL, me.getId()) {
 
 						@Override
 						protected Void read(InputStream in) throws Exception {
@@ -97,23 +98,11 @@ public class PositionTrackingService extends Service {
 						}
 					}).call();
 				} catch (Exception e) {
-					Log.d("PositionTrackingService", "Http Error", e);
+					Log.w("PositionTrackingService", "Http Error", e);
 				}
 			}
 		}
-	};
-	
-	public static Position getLastKnownPosition(Context ctx) {
-		LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
-		Location gpsLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		Location networkLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		
-		Location best = isBetterLocation(networkLocation, gpsLocation) ? networkLocation : gpsLocation;
-		if(best == null)
-			return null;
-		
-		return ModelFactory.getInstance().createPosition(best.getLatitude(), best.getLongitude());
-	}
+	};	
 
 	/** 
 	 * Determina se la nuova posizione rilevata &egrave; migliore dell'ultima. 
@@ -128,7 +117,7 @@ public class PositionTrackingService extends Service {
 	 * 
 	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
 	 */
-	protected static boolean isBetterLocation(Location location, Location last) {
+	public static boolean isBetterLocation(Location location, Location last) {
 		if (location == null)
 			return false;
 		
@@ -137,11 +126,11 @@ public class PositionTrackingService extends Service {
 
 		long timeDelta = location.getTime() - last.getTime();
 
-		// Se la rilevazione è stata presa molto più di recente, viene considerata migliore
+		// Se la rilevazione e' stata presa molto piu' di recente, viene considerata migliore
 		if (timeDelta > Setup.TRACKING_TIME_WINDOW) 
 			return true;
 
-		// Se è molto più vecchia dell'ultima, viene scartata
+		// Se e' molto piu' vecchia dell'ultima, viene scartata
 		if (timeDelta < -Setup.TRACKING_TIME_WINDOW) 
 			return false;
 
@@ -149,11 +138,11 @@ public class PositionTrackingService extends Service {
 		int accuracyDelta = (int) (location.getAccuracy() - last.getAccuracy());
 
 
-		// L'ultima posizione è più accurata
+		// L'ultima posizione e' piu' accurata
 		if (accuracyDelta < 0) 
 			return true;
 
-		// La posizione ha la stessa accuratezza ma è più recente
+		// La posizione ha la stessa accuratezza ma e' piu' recente
 		if (timeDelta > 0 && accuracyDelta == 0) 
 			return true;
 
@@ -162,8 +151,8 @@ public class PositionTrackingService extends Service {
 		String provider2 = location.getProvider();
 		boolean isFromSameProvider = (provider1 == null && provider2 == null) || (provider1.equals(provider2));
 
-		// La posizione è più recente e viene dallo stesso provider
-		// L'accuratezza è inferiore ma entro un range accettabile
+		// La posizione e' piu' recente e viene dallo stesso provider
+		// L'accuratezza e' inferiore ma entro un range accettabile
 		if (timeDelta > 0 && accuracyDelta <= 200 && isFromSameProvider) 
 			return true;
 

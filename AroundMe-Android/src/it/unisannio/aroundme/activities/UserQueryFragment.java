@@ -78,8 +78,6 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
     	userQuery = ModelFactory.getInstance().createUserQuery();
 
     	Log.d("UserQueryFragment", "Creating UserQuery from default values");
-		// FIXME Remove mock position
-		me.setPosition(ModelFactory.getInstance().createPosition(41.1309285, 14.7775555));
 		
 		Position position = Identity.get().getPosition();
 		Neighbourhood neighbourhood = new Neighbourhood(position, Setup.FILTERS_DEFAULT_RADIUS); 
