@@ -3,6 +3,7 @@ package it.unisannio.aroundme.activities;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
+import it.unisannio.aroundme.activities.UserQueryExecutorFragment.UserQueryExecutionListener;
 import it.unisannio.aroundme.activities.UserQueryFragment.OnQueryChangeListener;
 import it.unisannio.aroundme.adapters.UserAdapter;
 import it.unisannio.aroundme.async.*;
@@ -44,9 +45,7 @@ import android.widget.Toast;
  * dal Notification service
  */
 public class ListViewActivity extends FragmentActivity 
-		implements OnItemClickListener, OnCancelListener, OnDrawerOpenListener, OnDrawerCloseListener,
-		OnQueryChangeListener {
-	private AsyncQueue async;
+		implements OnItemClickListener, OnDrawerOpenListener, OnDrawerCloseListener, UserQueryExecutionListener {
 	private AsyncQueue pictureAsync;
 	
 	private UserAdapter usrAdapter;
@@ -55,14 +54,12 @@ public class ListViewActivity extends FragmentActivity
 	
 	private ListView nearByList;
 	
-	private ProgressDialog progress;
-	
 	private boolean needsRefresh = true;
 	private UserQuery userQuery;
-	private UserQueryFragment fragment;
 	
-	private ListenableFuture<Collection<User>> task = null; 
- 
+	private UserQueryFragment queryFragment;
+	private UserQueryExecutorFragment execFragment; 
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -73,7 +70,6 @@ public class ListViewActivity extends FragmentActivity
     	
     	setContentView(R.layout.listview);
 
-    	async = new AsyncQueue();
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
     	
     	users = new ArrayList<User>();
@@ -82,36 +78,47 @@ public class ListViewActivity extends FragmentActivity
         
         nearByList.setOnItemClickListener(this);
        
-        nearByList.setAdapter(usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, pictureAsync));
+        usrAdapter = new UserAdapter(ListViewActivity.this, Identity.get(), users, pictureAsync);
+        nearByList.setAdapter(usrAdapter);
         
+
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		
+		execFragment = new UserQueryExecutorFragment();
+		fragmentTransaction.add(R.id.listview_layout, execFragment);
+		
 		long[] ids = getIntent().getLongArrayExtra("userIds");
 		if(ids != null) {
     		userQuery = UserQuery.byId(ids);
-    		refresh();
 		} else {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-	        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-	        fragment = new UserQueryFragment();
-	        fragmentTransaction.add(R.id.listview_layout, fragment);
-	        fragmentTransaction.commit();
+	        queryFragment = new UserQueryFragment();
+	        fragmentTransaction.add(R.id.listview_layout, queryFragment);
+		}
+		
+		fragmentTransaction.commit();
 
-	        fragment.setOnDrawerOpenListener(this);
-	        fragment.setOnDrawerCloseListener(this);
-	        fragment.setOnQueryChangeListener(this);
-		}	    
+		if(queryFragment == null) {
+			execFragment.onQueryChanged(userQuery);
+			execFragment.refresh();
+		} else {
+	        queryFragment.setOnDrawerOpenListener(this);
+	        queryFragment.setOnDrawerCloseListener(this);
+	        queryFragment.setOnQueryChangeListener(execFragment);
+		}	 
+		
+		execFragment.setExecutionListener(this);
     }
     
     @Override
 	public void onDrawerOpened() {
 		nearByList.setEnabled(false);
-		//FIXME cDrawer.setImageResource(R.drawable.ic_menu_drawer_top); nullpointer
 	}
     
     @Override
 	public void onDrawerClosed() {
 		nearByList.setEnabled(true);
-		if(needsRefresh)
-			refresh();
+		execFragment.refreshIfChanged();
 	}
     
     public void onItemClick(AdapterView<?> arg0, View v, int index,long id) {
@@ -135,7 +142,7 @@ public class ListViewActivity extends FragmentActivity
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case android.R.id.home:
-	    	Intent i =new Intent(this, ProfileActivity.class);
+	    	Intent i = new Intent(this, ProfileActivity.class);
 	    	i.putExtra("userId", Identity.get().getId());
 	    	startActivity(i);
 	    	return true;
@@ -155,91 +162,31 @@ public class ListViewActivity extends FragmentActivity
 	    }
 	}
 
-	@Override
-	public void onCancel(DialogInterface dialog) {
-		if(task != null)
-			task.cancel(true);
-	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		async.pause();
 		pictureAsync.pause();
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		async.resume();
 		pictureAsync.resume();
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		/*
-		if(userQuery != null) { 
-			try {
-				// Sfruttiamo il serializzatore XML per salvare lo stato della query
-				outState.putString("userQuery", UserQuery.SERIALIZER.toString(userQuery));
-			} catch (TransformerException tEx) {
-				Log.d("ListViewActivity", "Error serializing UserQuery", tEx);
-			}
-		}*/
-		
-		/* TODO Andrebbero cacheati anche i risultati.
-		 * Se l'utente gira il dispositivo non vogliamo che venga fatta un'altra query in rete
-		 */
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		async.shutdown();
 		pictureAsync.shutdown();
-	}
-	
-	/**
-	 * Effettua il refresh della view inviando la query definita
-	 * nelle impostazioni al datastore remoto
-	 * 
-	 */
-	private void refresh(){
-		progress = ProgressDialog.show(ListViewActivity.this, "", ListViewActivity.this.getString(R.string.loading), true, true);
-    	progress.setOnCancelListener(this);
-    	
-		try {
-			Log.d("UserQuery", UserQuery.SERIALIZER.toString(userQuery));
-		} catch (TransformerException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		this.task = async.exec(userQuery, new FutureListener<Collection<User>>(){
-        	@Override
-        	public void onSuccess(Collection<User> object) {
-        		task = null;
-        		progress.dismiss();
-        		users.clear();
-        		users.addAll(object);
-        		usrAdapter.notifyDataSetChanged();
-        		needsRefresh = false;
-        	}
-        	@Override
-        	public void onError(Throwable e) {
-        		progress.dismiss();
-        		Toast.makeText(ListViewActivity.this, R.string.loadingError, Toast.LENGTH_LONG).show();	
-        		e.printStackTrace();
-        	}
-        });
 	}
 
 	@Override
-	public void onQueryChanged(UserQuery query) {
-		boolean mustRefreshNow = (userQuery == null);
-		userQuery = query;
-		needsRefresh = true;
-		if(mustRefreshNow)
-			refresh();
+	public void onUserQueryExecutionResults(Collection<User> results) {
+		users.clear();
+		users.addAll(results);
+		usrAdapter.notifyDataSetChanged();
+		Log.i("ListViewActivity", "Query completed");
 	}
+
 }
