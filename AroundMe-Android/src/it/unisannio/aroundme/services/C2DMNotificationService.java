@@ -15,7 +15,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * {@link IntentService} che si occupa di le mostrare notifiche riguardando la presenza
@@ -24,21 +23,19 @@ import android.widget.Toast;
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  * @author Giuseppe Fusco <gfeldiablo@gmail.com>
  */
-public class NotificationService extends IntentService{
+public class C2DMNotificationService extends IntentService{
 	
 	private final int NOTIFICATION_ID = 1;
 	private static int unreadNotifications;
  
 	
-	public NotificationService() {
-		super("NotificationService");
+	public C2DMNotificationService() {
+		super("C2DMNotificationService");
 	}
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d("NotificationService", "Almeno sono stato creato");
-		Toast.makeText(this, "Almeno sono stato creato", Toast.LENGTH_LONG).show();
 	}
 
 	
@@ -53,18 +50,19 @@ public class NotificationService extends IntentService{
 				NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 				String tickerTitle, contentTitle, contentText;
 				PendingIntent pendingIntent = PendingIntent.getActivity(context, 5,	profileActivityIntent, PendingIntent.FLAG_NO_CREATE);
-				if(pendingIntent==null){
+				if(pendingIntent==null){ //FIXME Gestione della notifica in base al numero di non lette
 					tickerTitle = "C'è gente intorno a te!"; //FIXME Esternalizzare le stringhe
 					contentTitle = "Una nuova persona da conoscere!";
 					contentText = user.getName();
 					pendingIntent = PendingIntent.getActivity(context, 5, profileActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-					unreadNotifications  = 0;
+					unreadNotifications  = 1;
 				}else{
 					unreadNotifications++;
 					tickerTitle = "C'è gente intorno a te!";
 					contentTitle = "Nuove persone da conoscere!";
 					contentText = unreadNotifications+" nuove persone nelle vicinanze!";
 					notificationManager.cancelAll();
+//					PendingIntent.getActivity(context, 5, profileActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT).cancel();
 					pendingIntent = PendingIntent.getActivity(context, 5, listActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 					
 				}
@@ -77,7 +75,9 @@ public class NotificationService extends IntentService{
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				if(prefs.getBoolean("notification.active", true)){
 					notification.defaults |= Notification.DEFAULT_LIGHTS;
-					notification.sound = Uri.parse(prefs.getString("notification.sound", "DEFAULT_RINGTONE_URI"));
+					notification.defaults |= Notification.DEFAULT_SOUND; //FIXME Prendere i valori dalle preferenze
+//					notification.sound = Uri.parse(prefs.getString("notification.sound", "DEFAULT_RINGTONE_URI"));
+//					notification.sound = Uri.parse("DEFAULT_RINGTONE_URI");
 					if(prefs.getBoolean("notification.vibrate", true));
 					notification.defaults |= Notification.DEFAULT_VIBRATE;
 				}
@@ -85,7 +85,7 @@ public class NotificationService extends IntentService{
 				notificationManager.notify(NOTIFICATION_ID, notification);
 				
 			} catch (Exception e) {
-				Log.w("NotificationService", e);
+				Log.w("C2DMNotificationService", e);
 			}	
 		}
 		
