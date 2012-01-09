@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.LinearLayout;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.async.AsyncQueue;
@@ -36,7 +37,6 @@ public class MapViewActivity extends FragmentMapActivity  {
     	setContentView(R.layout.map_view);	
 		
 		mapView = (MapView) findViewById(R.id.map);
-		mapView.setBuiltInZoomControls(true);
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		

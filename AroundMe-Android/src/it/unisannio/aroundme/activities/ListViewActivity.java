@@ -10,6 +10,7 @@ import it.unisannio.aroundme.adapters.UserAdapter;
 import it.unisannio.aroundme.async.*;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.model.*;
+import it.unisannio.aroundme.services.NotificationService;
 import it.unisannio.aroundme.services.PositionTrackingService;
 
 import java.text.MessageFormat;
@@ -69,11 +70,6 @@ public class ListViewActivity extends FragmentActivity
 	private List<User> users;
 	
 	private ListView nearByList;
-	
-	private SlidingDrawer drawer;
-	private ImageView icDrawer;
-	private Drawable icDrawerTop;
-	private Drawable icDrawerBottom;
 	
 	private ProgressDialog progress;
 	

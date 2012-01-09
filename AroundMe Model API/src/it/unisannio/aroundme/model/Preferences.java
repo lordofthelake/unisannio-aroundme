@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.model;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import org.w3c.dom.Document;
@@ -138,4 +139,34 @@ public abstract class Preferences implements Model {
 		Preferences other = (Preferences) obj;
 		return other.getAll().equals(getAll());
 	}
+	/**
+	 * Include tutte le entry dalla mappa speficata
+	 *  
+	 * @param map la mappa da cui includere le entry 
+	 */
+	public void putAll(Map<String, ?> map){
+		Iterator<String> keyItereator = map.keySet().iterator();
+		while(keyItereator.hasNext()){
+			String key = keyItereator.next();
+			Object value = map.get(key);
+			if (value instanceof String)
+				value = (String) value;
+			else if (value instanceof Integer)
+				value = (Integer) value;
+			else if (value instanceof Long)
+				value = (Long) value;
+			else if (value instanceof Boolean)
+				value = (Boolean) value;
+			else if (value instanceof Float)
+				value = (Float) value;
+			else if (value instanceof Double)
+				value = (Double) value;
+			else
+				throw new ClassCastException("Cannot store values of type " +value.getClass().getName() );
+			putObject(key, value);
+		}
+	}
+	
+	
+	
 }

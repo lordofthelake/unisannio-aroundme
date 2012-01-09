@@ -55,7 +55,7 @@ public abstract class BalloonItemizedOverlay<Item extends OverlayItem> extends I
 	 * @param mapView - The view upon which the overlay items are to be drawn.
 	 */
 	public BalloonItemizedOverlay(Drawable defaultMarker, MapView mapView) {
-		super(boundCenterBottom((defaultMarker)));
+		super(boundCenter(defaultMarker));
 		this.mapView = mapView;
 		viewOffset = 0;
 		mc = mapView.getController();
