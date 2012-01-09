@@ -82,23 +82,27 @@ public class PositionTrackingService extends Service {
 						location.getLatitude(), location.getLongitude());
 
 				Identity me = Identity.get();
-				me.setPosition(position);
-
-				try {
-					(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_URL, me.getId()) {
-
-						@Override
-						protected Void read(InputStream in) throws Exception {
-							return null;
-						}
-
-						@Override
-						protected void write(OutputStream out) throws Exception {
-							Position.SERIALIZER.write(position, out);
-						}
-					}).call();
-				} catch (Exception e) {
-					Log.w("PositionTrackingService", "Http Error", e);
+				if(me != null) {
+					me.setPosition(position);
+	
+					try {
+						(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_URL, me.getId()) {
+	
+							@Override
+							protected Void read(InputStream in) throws Exception {
+								return null;
+							}
+	
+							@Override
+							protected void write(OutputStream out) throws Exception {
+								Position.SERIALIZER.write(position, out);
+							}
+						}).call();
+					} catch (Exception e) {
+						Log.w("PositionTrackingService", "Http Error", e);
+					}
+				} else {
+					Log.e("PositionTrackingService", "No Identity set!");
 				}
 			}
 		}

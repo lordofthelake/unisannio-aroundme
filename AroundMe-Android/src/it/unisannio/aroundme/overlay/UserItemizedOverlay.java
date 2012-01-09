@@ -5,6 +5,7 @@ import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.model.User;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import android.content.Context;
@@ -34,14 +35,29 @@ public class UserItemizedOverlay extends
 		this.async = async;
 	}
 	
-	public void addUser(User user) {
+	public void add(User user) {
 		addOverlay(new UserOverlayItem(user));
-//		addOverlay(new OverlayItem(new GeoPoint((int)(user.getPosition().getLatitude() * 1e6),(int)( user.getPosition().getLongitude()* 1e6)), user.getName(), "prova"));
+	}
+	
+	public void addAll(Collection<User> users) {
+		for(User u : users) 
+			overlays.add(new UserOverlayItem(u));
+		refresh();
 	}
 
+	public void clear() {
+		overlays.clear();
+		refresh();
+	}
+	
 	public void addOverlay(UserOverlayItem overlay) {
 	    overlays.add(overlay);
-	    populate();
+	    refresh();
+	}
+	
+	public void refresh() {
+		populate();
+	    setLastFocusedIndex(-1);
 	}
 
 	@Override

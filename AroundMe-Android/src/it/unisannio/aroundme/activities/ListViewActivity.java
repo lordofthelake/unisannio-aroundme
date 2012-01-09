@@ -4,7 +4,6 @@ package it.unisannio.aroundme.activities;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.activities.UserQueryExecutorFragment.UserQueryExecutionListener;
-import it.unisannio.aroundme.activities.UserQueryFragment.OnQueryChangeListener;
 import it.unisannio.aroundme.adapters.UserAdapter;
 import it.unisannio.aroundme.async.*;
 import it.unisannio.aroundme.client.Identity;
@@ -12,12 +11,6 @@ import it.unisannio.aroundme.model.*;
 
 import java.util.*;
 
-import javax.xml.transform.TransformerException;
-
-
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.*;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -33,7 +26,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
-import android.widget.Toast;
 
 /**
  * 
@@ -54,7 +46,6 @@ public class ListViewActivity extends FragmentActivity
 	
 	private ListView nearByList;
 	
-	private boolean needsRefresh = true;
 	private UserQuery userQuery;
 	
 	private UserQueryFragment queryFragment;

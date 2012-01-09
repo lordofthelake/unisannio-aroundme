@@ -54,8 +54,12 @@ public abstract class Preferences implements Model {
 			Element preferences = document.createElement("preferences");
 			for(Map.Entry<String, ?> e : map.entrySet()) {
 				Element entry = document.createElement(e.getKey());
-				entry.setTextContent(e.getValue().toString());
-				Class<?> clazz = e.getValue().getClass();
+				Object value = e.getValue();
+				if(value == null)
+					continue;
+				
+				entry.setTextContent(value.toString());
+				Class<?> clazz = value.getClass();
 				String type = null;
 				
 				if(clazz.equals(String.class)) type = "string";
