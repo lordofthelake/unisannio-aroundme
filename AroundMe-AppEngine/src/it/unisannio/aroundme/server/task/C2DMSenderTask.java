@@ -42,8 +42,8 @@ public class C2DMSenderTask extends HttpServlet {
 		if (retryCount != null) {
 			int retryCnt = Integer.parseInt(retryCount);
 			if (retryCnt > MAX_RETRY) {
-				resp.setStatus(200);
-				return; // La task non verrà ulteriormente riprovata
+				resp.setStatus(200); // La task non verrà ulteriormente riprovata
+				return; 
 			}
 		}
 		
@@ -57,7 +57,7 @@ public class C2DMSenderTask extends HttpServlet {
 				resp.getOutputStream().write("OK".getBytes());
 			} else {
 				resp.setStatus(500);
-				// La Task Queue è implementata in modo tale da riprovare il task nel caso di errore 500
+				// La Task Queue è implementata in modo tale da riprovare il task nel caso di errori
 			}
 		} catch (IOException e) {
 			resp.setStatus(200);

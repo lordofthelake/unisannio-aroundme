@@ -66,32 +66,21 @@
             android:name=".activities.ProfileActivity" >
         </activity>
 
-        <!--
-             In order to use the C2DM library, an application must declare a class 
-             with the name C2DMReceiver, extending com.google.android.c2dm.C2DMBaseReceiver.
-             It must also include this section in the manifest.
-       
-        <service android:name=".C2DMReceiver" />  -->
+   
         <service android:name=".services.PositionTrackingService" />
-        <service android:name="it.unisannio.services.NotificationService"/>
-       
-        <receiver
-            android:name=".C2DMRegistrationReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter >
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" >
-                </action>
+        <service android:name=".services.C2DMNotificationService"/>
+		<service android:name=".C2DMReceiver" />
 
+        <receiver android:name="com.google.android.c2dm.C2DMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <!-- Receive the actual message -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="it.unisannio.aroundme" />
             </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".C2DMMessageReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter >
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" >
-                </action>
-
+            <!-- Receive the registration id -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
                 <category android:name="it.unisannio.aroundme" />
             </intent-filter>
         </receiver>

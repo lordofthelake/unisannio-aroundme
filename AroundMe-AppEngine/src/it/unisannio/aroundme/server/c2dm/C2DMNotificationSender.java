@@ -59,7 +59,7 @@ public class C2DMNotificationSender {
 			url.countdownMillis(countdownMillis);
 			queue.add(url);	
 		}else{
-			log.warning("Warning: invalid devace registrationIn. Message won't be sent.");
+			log.warning("Warning: invalid device registrationId. Message won't be sent.");
 		}
 		
 	}
