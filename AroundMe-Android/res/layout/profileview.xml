@@ -39,16 +39,16 @@
 				    android:id="@+id/txtName"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:text="Name Sourname"
+				    android:text="@string/loading"
 				    android:textColor="#111111"
-				    android:textSize="20dp" />
+				    android:textSize="25dp" />
 
 				<ImageView
 				    android:id="@+id/imgfbProfile"
 				    android:layout_width="match_parent"
-				    android:layout_height="50dp"
-				    android:layout_gravity="left"
-				    android:src="@drawable/fb_icona" />
+				    android:layout_height="40dp"
+				    android:gravity="right"
+				    android:src="@drawable/ic_facebook" />
 			</LinearLayout>
 	</LinearLayout>
     </RelativeLayout>

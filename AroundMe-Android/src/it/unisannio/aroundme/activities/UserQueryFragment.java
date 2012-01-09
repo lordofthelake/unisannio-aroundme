@@ -20,15 +20,21 @@ import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.widgets.SliderView;
 import it.unisannio.aroundme.widgets.SliderView.OnChangeListener;
+import android.R.anim;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SlidingDrawer;
@@ -48,6 +54,8 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 	private Identity me;
 	
 	private SlidingDrawer drawer;
+	private ImageView icDrawer;
+
 	private SliderView distance;
 	private SliderView rank;
 	private InterestFilterAdapter interestFilterAdapter;
@@ -68,18 +76,14 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
     	async = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
     	
     	userQuery = ModelFactory.getInstance().createUserQuery();
-		/**Caricamento delle impostazioni di default
-		 * 	-posizione: 				attuale
-		 * 	-Raggio: 					1km
-		 * 	-compatibilità:				60%
-		 * 	-Interessi considerati:		tutti
-		 */
-		// FIXME
+
+    	Log.d("UserQueryFragment", "Creating UserQuery from default values");
+		// FIXME Remove mock position
 		me.setPosition(ModelFactory.getInstance().createPosition(41.1309285, 14.7775555));
 		
 		Position position = Identity.get().getPosition();
-		Neighbourhood neighbourhood = new Neighbourhood(position, 1000); // FIXME	
-		userQuery.setCompatibility(new Compatibility(Identity.get().getId(), 0.6F)); // FIXME
+		Neighbourhood neighbourhood = new Neighbourhood(position, Setup.FILTERS_DEFAULT_RADIUS); 
+		userQuery.setCompatibility(new Compatibility(Identity.get().getId(), Setup.FILTERS_DEFAULT_RANK)); 
 		
 		userQuery.setNeighbourhood(neighbourhood);
 	}
@@ -91,12 +95,14 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         drawer = (SlidingDrawer) inflater.inflate(R.layout.filters_drawer, container, false);
         drawer.setOnDrawerCloseListener(this);
         drawer.setOnDrawerOpenListener(this);
+        icDrawer=(ImageView) drawer.findViewById(R.id.filterIcon);
         
         ViewPager pager = (ViewPager) drawer.findViewById(R.id.pager);
         
         View page1 = inflater.inflate(R.layout.filters_page_nearby, null);
         View page2 = inflater.inflate(R.layout.filters_page_interests, null);
         pager.setAdapter(new ArrayPagerAdapter(page1, page2));
+        
         
         distance = (SliderView) page1.findViewById(R.id.sliderDistance);
         distance.setMultipliedValue((int) userQuery.getNeighbourhood().getRadius());
@@ -105,7 +111,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			@Override
 			public void onSliderChanged(SliderView view) {
 				Position position = Identity.get().getPosition();
-				Neighbourhood neighbourhood = new Neighbourhood(position, view.getValue()*100);	
+				Neighbourhood neighbourhood = new Neighbourhood(position, view.getMultipliedValue());	
 				userQuery.setNeighbourhood(neighbourhood);
 				notifyQueryChangeListener();
 			}
@@ -126,8 +132,15 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         
         ListView interestsFilter=(ListView) page2.findViewById(R.id.listInterestFilter);
         interestFilterAdapter = new InterestFilterAdapter(getActivity(), this, myInterests, async, userQuery);
-        interestsFilter.setAdapter(interestFilterAdapter); 	
-		
+        interestsFilter.setAdapter(interestFilterAdapter); 
+        interestsFilter.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Toast.makeText(getActivity(), "ohi", Toast.LENGTH_LONG).show();
+				CheckBox ck =(CheckBox) arg1.findViewById(R.id.checkUsed);
+				ck.setChecked(!ck.isChecked());
+			}
+        });
         return drawer;
 	}
 	
@@ -162,6 +175,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			SharedPreferences.Editor editor = queryState.edit();
 			editor.putString("UserQuery", UserQuery.SERIALIZER.toString(userQuery));
 			editor.commit();
+			Log.d("UserQueryFragment", "Persisted UserQuery");
 		} catch (Exception e) {
 			Log.w("UserQueryFragment", "UserQuery cannot be persisted", e);
 		}
@@ -180,12 +194,13 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			
 				Neighbourhood n = userQuery.getNeighbourhood();
 				if(n != null)
-					distance.setMultipliedValue((int) n.getRadius());
+					distance.setMultipliedValue(n.getRadius());
 				
 				Compatibility c = userQuery.getCompatibility();
 				rank.setConvertedValue(c == null ? 0.0f : c.getRank());
 				
 				interestFilterAdapter.notifyDataSetChanged();
+				Log.d("UserQueryFragment", "Restored UserQuery from saved state");
 			}
 			
 			notifyQueryChangeListener();
@@ -204,14 +219,14 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 	public void onDrawerOpened() {
 		if(onDrawerOpenListener != null)
 			onDrawerOpenListener.onDrawerOpened();
-		
+		icDrawer.setImageResource(R.drawable.ic_menu_drawer_top);
 	}
 
 	@Override
 	public void onDrawerClosed() {
 		if(onDrawerCloseListener != null)
 			onDrawerCloseListener.onDrawerClosed();
+		icDrawer.setImageResource(R.drawable.ic_menu_drawer_bottom);
+
 	}
-	
-	
 }

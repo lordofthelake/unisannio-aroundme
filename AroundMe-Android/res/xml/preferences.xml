@@ -7,9 +7,8 @@
 	    <CheckBoxPreference android:title="@string/pref_notification_vibration" android:key="notification.vibrate" android:dependency="notification.active" android:defaultValue="true"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_category_filter">
-	    <EditTextPreference android:title="@string/pref_notification_compatibility" android:key="query.rank" android:defaultValue="0.6" android:persistent="true"/>
-	    <EditTextPreference android:title="@string/pref_notification_distance" android:key="query.radius" android:defaultValue="100" android:persistent="true"/>
-		<ListPreference android:title="@string/pref_filter_defaultview" android:entryValues="@array/home_views_values" android:entries="@array/home_views_strings" android:key="home" android:persistent="true" android:defaultValue="0"/>
+	    <it.unisannio.aroundme.widgets.RankSliderDialogPreference android:title="@string/pref_notification_compatibility" android:key="query.rank" android:persistent="true"/>
+	    <it.unisannio.aroundme.widgets.RadiusSliderDialogPreference android:title="@string/pref_notification_distance" android:key="query.radius" android:persistent="true"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_category_tracking">
 		<CheckBoxPreference android:title="@string/pref_tracking_enabled" android:key="tracking.enabled" android:defaultValue="true" android:persistent="true" />

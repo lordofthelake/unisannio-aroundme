@@ -36,7 +36,7 @@ public class UserQueySerializerTest extends TestCase {
 		serializer = UserQuery.SERIALIZER;
 		
 		mockPosition = MockHelper.createMockPosition(19.9, -17.2);
-		mockNeighbourhood = new Neighbourhood(mockPosition, 123456.3234);
+		mockNeighbourhood = new Neighbourhood(mockPosition, 123456);
 		mockCompatibility = new Compatibility(12345, 0.6f);
 		
 		testIds = Arrays.asList(1L, 2L, 3L);
@@ -57,7 +57,7 @@ public class UserQueySerializerTest extends TestCase {
 		
 		testXml = "<query>"
 				+ "<compatibility userid=\"12345\" rank=\"0.6\" />"
-				+ "<neighbourhood radius =\"123456.3234\">"
+				+ "<neighbourhood radius=\"123456\">"
 				+ "<position lat=\"19.9\" lon=\"-17.2\" />"
 				+ "</neighbourhood>"
 				+ "<interest-ids>"

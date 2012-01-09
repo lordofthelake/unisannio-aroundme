@@ -6,15 +6,18 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.LinearLayout;
+import android.support.v4.view.Menu;
+import android.support.v4.view.MenuItem;
+import android.view.MenuInflater;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.async.AsyncQueue;
+import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.location.PositionUtils;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
@@ -24,7 +27,6 @@ import it.unisannio.aroundme.overlay.UserItemizedOverlay;
 
 public class MapViewActivity extends FragmentMapActivity  {
 	private MapView mapView;
-	
 	private UserQuery userQuery;
 	private UserQueryFragment fragment;
 	private AsyncQueue async;
@@ -37,6 +39,7 @@ public class MapViewActivity extends FragmentMapActivity  {
     	setContentView(R.layout.map_view);	
 		
 		mapView = (MapView) findViewById(R.id.map);
+		mapView.setBuiltInZoomControls(true);
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		
@@ -74,6 +77,42 @@ public class MapViewActivity extends FragmentMapActivity  {
 		}	
 
     }
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu){
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main_menu, menu);
+	    menu.findItem(R.id.toMap).setVisible(false);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	Intent i =new Intent(this, ProfileActivity.class);
+	    	i.putExtra("userId", Identity.get().getId());
+	    	startActivity(i);
+	    	return true;
+	    case R.id.toList:
+	    	startActivity(new Intent(this, ListViewActivity.class));
+	        return true;
+	    case R.id.toMap:
+	        startActivity(new Intent(this, MapViewActivity.class));
+	        return true;
+	    case R.id.preferences:
+	    	startActivity(new Intent(this, PreferencesActivity.class));
+	    	return true;
+	    case R.id.profile:
+	    	Intent i1 = new Intent(this, ProfileActivity.class);
+	    	i1.putExtra("userId", Identity.get().getId());
+	    	startActivity(i1);
+	    	return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
 
 	@Override
 	protected boolean isRouteDisplayed() {

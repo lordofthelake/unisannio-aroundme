@@ -15,24 +15,32 @@ import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
+import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
- * 
  * @author Marco Magnetti <marcomagnetti@gmail.com>
- *
  */
-public class ProfileActivity extends FragmentActivity implements FutureListener<User>, OnCancelListener {
+public class ProfileActivity extends FragmentActivity implements 
+FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 	private AsyncQueue async;
 	private AsyncQueue pictureAsync;
 
@@ -41,6 +49,8 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 	private TextView txtCompatibility;
 	private TextView txtDistance;
 	private ImageView imgPhoto;
+	private ImageView fbButton;
+	private ArrayList<Interest> interests;
 	
 	
 	private ProgressDialog progress;
@@ -62,6 +72,10 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 		txtCompatibility = (TextView) findViewById(R.id.txtCompatibility);
 		txtDistance = (TextView) findViewById(R.id.txtDistance);
 		grdInterests = (GridView) findViewById(R.id.grdInterests);
+		fbButton=(ImageView) findViewById(R.id.imgfbProfile);
+		
+		fbButton.setOnClickListener(this);
+		grdInterests.setOnItemClickListener(this);
 		
 		async = new AsyncQueue();
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
@@ -88,7 +102,7 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 			// txtCompatibility.setText(me.getCompatibilityRank(user)+" %");
 		}
 		
-		ArrayList<Interest> interests = new ArrayList<Interest>(user.getInterests());
+		interests = new ArrayList<Interest>(user.getInterests());
 		grdInterests.setAdapter(new InterestAdapter(ProfileActivity.this, interests, pictureAsync));	
 		
 		 // TODO Al click di un interesse apre la pagina facebook di quell' interesse
@@ -135,7 +149,8 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.user_menu, menu);
+	    inflater.inflate(R.menu.main_menu, menu);
+	    menu.findItem(R.id.profile).setVisible(false);
 	    return true;
 	}
 
@@ -146,6 +161,30 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 		
 		finish();
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.toList:
+	    	startActivity(new Intent(this, ListViewActivity.class));
+	        return true;
+	    case R.id.toMap:
+	        startActivity(new Intent(this, MapViewActivity.class));
+	        return true;
+	    case R.id.preferences:
+	    	startActivity(new Intent(this, PreferencesActivity.class));
+	    	return true;
+	    case R.id.profile:
+	    	Intent i1 = new Intent(this, ProfileActivity.class);
+	    	i1.putExtra("userId", Identity.get().getId());
+	    	startActivity(i1);
+	    	return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 	
 	@Override
 	protected void onPause() {
@@ -165,5 +204,37 @@ public class ProfileActivity extends FragmentActivity implements FutureListener<
 		super.onDestroy();
 		async.shutdown();
 		pictureAsync.shutdown();
+	}
+
+	@Override
+	public void onClick(View arg0) {
+		try{
+			//String url = "facebook://facebook.com/wall?user=100000482047542";//+userId;
+			String url="fb://profile/"+ userId +"/wall";
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(url));
+			startActivity(i);
+		}catch(Exception e){
+			String url = "http://www.facebook.com/profile.php?id="+userId;
+			Intent browser = new Intent(Intent.ACTION_VIEW);
+			browser.setData(Uri.parse(url));
+			startActivity(browser);
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		try{
+			//String url = "facebook://facebook.com/wall?user=144439451478";//+ interests.get(arg2).getId();
+			String url="fb://profile/"+ interests.get(arg2).getId() +"/wall";
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(url));
+			startActivity(i);
+		}catch(Exception e){
+			String url = "http://www.facebook.com/profile.php?id="+interests.get(arg2).getId();
+			Intent browser = new Intent(Intent.ACTION_VIEW);
+			browser.setData(Uri.parse(url));
+			startActivity(browser);
+		}	
 	}
 }

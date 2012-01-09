@@ -21,7 +21,7 @@ public class Neighbourhood implements Model {
 		public Neighbourhood fromXML(Element node) {
 			validateTagName(node, "neighbourhood");
 			
-			double radius = Double.parseDouble(getRequiredAttribute(node, "radius"));
+			int radius = Integer.parseInt(getRequiredAttribute(node, "radius"));
 			Element position = getSingleElementByTagName(node, "position");
 			
 			if(position == null) {
@@ -47,9 +47,9 @@ public class Neighbourhood implements Model {
 	private static final long serialVersionUID = 1L;
 	
 	private final Position position;
-	private final double radius;
+	private final int radius;
 	
-	public Neighbourhood(Position position, double radius) {
+	public Neighbourhood(Position position, int radius) {
 		if(position == null)
 			throw new IllegalArgumentException("Position cannot be null");
 		
@@ -61,7 +61,7 @@ public class Neighbourhood implements Model {
 		return position;
 	}
 	
-	public double getRadius() {
+	public int getRadius() {
 		return radius;
 	}
 	
