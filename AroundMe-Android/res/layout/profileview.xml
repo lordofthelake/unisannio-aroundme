@@ -39,7 +39,7 @@
 				    android:id="@+id/txtName"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:text="Name Sourname"
+				    android:text="@string/loading"
 				    android:textColor="#111111"
 				    android:textSize="25dp" />
 

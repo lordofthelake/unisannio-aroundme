@@ -31,7 +31,7 @@
         android:id="@+id/txtMyInterest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="loading" 
+        android:text="" 
         android:textSize="15dp"
         android:textColor="#FFFFFF"
         android:gravity="center_vertical"
