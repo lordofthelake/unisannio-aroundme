@@ -36,11 +36,12 @@ import android.util.Log;
  * <p>Ad ogni rilevazione ritenuta affidabile, il servizio provvede ad aggiornare la posizione dell'utente
  * sul server di backend.</p>
  * 
- * @author Giuseppe Fusco?? <gfeldiablo@gmail.com>
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ * @author Giuseppe Fusco <gfeldiablo@gmail.com>
+ * 
  */
 
-// TODO Il servizio dovra' essere fermato quando l'utente fa il logout
+// FIXME Il servizio dovra' essere fermato quando l'utente fa il logout
 public class PositionTrackingService extends Service {
 
 	/**

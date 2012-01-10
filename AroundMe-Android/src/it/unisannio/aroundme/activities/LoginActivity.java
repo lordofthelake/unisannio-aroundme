@@ -10,7 +10,6 @@ import it.unisannio.aroundme.client.HttpStatusException;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Registration;
 import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.services.PositionTrackingService;
 
 import com.facebook.android.DialogError;
@@ -41,11 +40,15 @@ import android.widget.*;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */ 
+
+// FIXME Externalize strings
 public class LoginActivity extends FragmentActivity 
 	implements FutureListener<Identity>, DialogListener, LocationListener {
 	private static final int ACTIVITY_LOCATION_SETTINGS_REQUEST = 0;
 
 	private Facebook facebook;
+	
+	// FIXME Sposta in Setup
 	String FILENAME = "AroundMe_AuthData";
 	private SharedPreferences mPrefs;
 	private AsyncQueue async;
@@ -59,6 +62,8 @@ public class LoginActivity extends FragmentActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		facebook = new Facebook(Setup.FACEBOOK_APP_ID);
+		
+		// FIXME Controlla se funziona
 //		Identity identity = Identity.get();
 //		if(identity != null) {
 //			onSuccess(identity);
@@ -268,6 +273,7 @@ public class LoginActivity extends FragmentActivity
 		}
 		
 		startActivity(new Intent(this, ListViewActivity.class));
+		// FIXME Il servizio deve essere avviato solo se e' impostato nelle preferenze
 		startService(new Intent(this, PositionTrackingService.class));
 		finish();
 	}

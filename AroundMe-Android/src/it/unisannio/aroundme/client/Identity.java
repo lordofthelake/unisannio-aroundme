@@ -1,18 +1,13 @@
 package it.unisannio.aroundme.client;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.concurrent.Callable;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import com.facebook.android.Facebook;
 
-import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.model.*;
 
 /**

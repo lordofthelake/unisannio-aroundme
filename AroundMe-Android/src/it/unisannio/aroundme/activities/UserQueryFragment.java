@@ -3,13 +3,11 @@ package it.unisannio.aroundme.activities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.adapters.ArrayPagerAdapter;
 import it.unisannio.aroundme.adapters.InterestFilterAdapter;
-import it.unisannio.aroundme.adapters.UserAdapter;
 import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.model.Compatibility;
@@ -20,11 +18,8 @@ import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.widgets.SliderView;
 import it.unisannio.aroundme.widgets.SliderView.OnChangeListener;
-import android.R.anim;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -36,14 +31,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SeekBar;
 import android.widget.SlidingDrawer;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class UserQueryFragment extends Fragment implements OnDrawerCloseListener, OnDrawerOpenListener {
 	public static interface OnQueryChangeListener {
 		void onQueryChanged(UserQuery query);

@@ -33,9 +33,6 @@ import android.widget.SlidingDrawer.OnDrawerOpenListener;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  */
 
-/* TODO Si dovrebbe accettare una lista di id via Intent, cosÃ¬ che possa essere usato
- * dal Notification service
- */
 public class ListViewActivity extends FragmentActivity 
 		implements OnItemClickListener, OnDrawerOpenListener, OnDrawerCloseListener, UserQueryExecutionListener {
 	private AsyncQueue pictureAsync;
@@ -56,7 +53,7 @@ public class ListViewActivity extends FragmentActivity
     	super.onCreate(savedInstanceState);
     	
     	if(Identity.get() == null) {
-    		// TODO Si dovrebbe avviare l'attività di login per procedere all'autenticazione
+    		// FIXME Si dovrebbe avviare l'attivita' di login per procedere all'autenticazione
     	}
     	
     	setContentView(R.layout.listview);

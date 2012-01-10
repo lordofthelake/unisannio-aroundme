@@ -1,6 +1,5 @@
 package it.unisannio.aroundme.activities;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import com.google.android.maps.MapController;
@@ -23,12 +22,15 @@ import it.unisannio.aroundme.activities.UserQueryExecutorFragment.UserQueryExecu
 import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.location.PositionUtils;
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.overlay.UserItemizedOverlay;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpenListener, OnDrawerCloseListener, UserQueryExecutionListener  {
 	private MapView mapView;
 	private UserQuery userQuery;

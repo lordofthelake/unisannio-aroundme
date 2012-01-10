@@ -1,7 +1,6 @@
 package it.unisannio.aroundme.model.test.serializer;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import it.unisannio.aroundme.model.Compatibility;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.Serializer;
@@ -16,6 +15,11 @@ import org.xml.sax.SAXException;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class PositionSerializerTest extends TestCase {
 	private Serializer<Position> serializer;
 	private ModelFactory mockFactory;
@@ -32,7 +36,7 @@ public class PositionSerializerTest extends TestCase {
 	
 	public void testDeserialization() throws SAXException, IOException {
 		try {
-			Position obj = serializer.fromString("<position lat=\"0.9\" lon=\"-0.9\" />");
+			serializer.fromString("<position lat=\"0.9\" lon=\"-0.9\" />");
 			verify(mockFactory);
 			
 		} catch (RuntimeException rEx) {

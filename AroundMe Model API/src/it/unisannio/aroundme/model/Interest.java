@@ -1,7 +1,5 @@
 package it.unisannio.aroundme.model;
 
-import javax.xml.transform.TransformerException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

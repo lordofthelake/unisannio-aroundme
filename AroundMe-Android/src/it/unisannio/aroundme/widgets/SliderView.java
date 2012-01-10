@@ -4,17 +4,19 @@ import java.text.MessageFormat;
 
 import it.unisannio.aroundme.R;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class SliderView extends LinearLayout implements OnSeekBarChangeListener {
 	public static interface OnChangeListener {
 		void onSliderChanged(SliderView view);
@@ -91,15 +93,11 @@ public class SliderView extends LinearLayout implements OnSeekBarChangeListener 
 	}
 
 	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
+	public void onStartTrackingTouch(SeekBar seekBar) {	
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public int getValue() {

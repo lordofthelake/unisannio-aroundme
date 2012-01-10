@@ -1,12 +1,14 @@
 package it.unisannio.aroundme.model.test;
 
 import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.Neighbourhood;
 import it.unisannio.aroundme.model.Position;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class MockHelper {
 	public static Interest createMockInterest(long id, String name, String category) {
 		Interest mockInterest = createMock(Interest.class);

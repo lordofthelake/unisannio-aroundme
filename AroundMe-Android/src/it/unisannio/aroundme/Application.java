@@ -5,14 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
-import org.w3c.dom.Node;
-
-import android.content.Context;
 import android.support.v4.util.LruCache;
-import android.widget.Toast;
+
 
 import it.unisannio.aroundme.client.HttpTask;
-import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Picture;
 import it.unisannio.aroundme.model.*;
 
@@ -175,6 +171,7 @@ public class Application extends android.app.Application {
 						return (new HttpTask<Collection<User>>("POST", Setup.BACKEND_USER_URL) { 
 							
 								protected Collection<User> read(InputStream input) throws Exception {
+									@SuppressWarnings("unchecked")
 									Collection<User> results = (Collection<User>) Serializer.ofCollection(User.class).read(input);
 									
 									for(User u : results) {

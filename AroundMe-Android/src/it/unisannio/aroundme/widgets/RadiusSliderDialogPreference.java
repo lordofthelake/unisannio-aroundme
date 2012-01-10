@@ -11,6 +11,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class RadiusSliderDialogPreference extends DialogPreference {
 
 	private SliderView slider;

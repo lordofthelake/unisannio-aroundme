@@ -8,7 +8,6 @@ import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import static org.easymock.EasyMock.*;
@@ -16,6 +15,11 @@ import static org.easymock.EasyMock.*;
 import it.unisannio.aroundme.model.*;
 import it.unisannio.aroundme.model.test.MockHelper;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class NeighbourhoodSerializerTest extends TestCase {
 	private Serializer<Neighbourhood> serializer;
 	private Position mockPosition;

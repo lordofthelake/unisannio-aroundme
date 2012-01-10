@@ -15,7 +15,6 @@ import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
@@ -33,7 +32,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 /**
@@ -46,8 +44,6 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 
 	private GridView grdInterests;
 	private TextView txtName;
-	private TextView txtCompatibility;
-	private TextView txtDistance;
 	private ImageView imgPhoto;
 	private ImageView fbButton;
 	private ArrayList<Interest> interests;
@@ -69,8 +65,6 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 		
 		txtName = (TextView) findViewById(R.id.txtName);
 		imgPhoto = (ImageView) findViewById(R.id.imgPhoto);	
-		txtCompatibility = (TextView) findViewById(R.id.txtCompatibility);
-		txtDistance = (TextView) findViewById(R.id.txtDistance);
 		grdInterests = (GridView) findViewById(R.id.grdInterests);
 		fbButton=(ImageView) findViewById(R.id.imgfbProfile);
 		
@@ -92,22 +86,10 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 	
 	@Override
 	public void onSuccess(User user) {
-		Identity me = Identity.get();
-		
 		txtName.setText(user.getName());
-		
-		if(me != null && me.getId() != userId) {
-			// FIXME Al momento mancano i campi
-			// txtDistance.setText(String.format("%.1f m", me.getDistance(user)));
-			// txtCompatibility.setText(me.getCompatibilityRank(user)+" %");
-		}
 		
 		interests = new ArrayList<Interest>(user.getInterests());
 		grdInterests.setAdapter(new InterestAdapter(ProfileActivity.this, interests, pictureAsync));	
-		
-		 // TODO Al click di un interesse apre la pagina facebook di quell' interesse
-		 // TODO Al click dell' icona di facebook mostra il profilo facebook della persona
-		
 		
 		async.exec(Picture.get(userId), new FutureListener<Bitmap>() {
 			@Override
@@ -209,7 +191,6 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 	@Override
 	public void onClick(View arg0) {
 		try{
-			//String url = "facebook://facebook.com/wall?user=100000482047542";//+userId;
 			String url="fb://profile/"+ userId +"/wall";
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(url));
@@ -225,7 +206,6 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		try{
-			//String url = "facebook://facebook.com/wall?user=144439451478";//+ interests.get(arg2).getId();
 			String url="fb://profile/"+ interests.get(arg2).getId() +"/wall";
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(url));

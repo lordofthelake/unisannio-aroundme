@@ -11,14 +11,16 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class UserItemizedOverlay extends
 		BalloonItemizedOverlay<UserOverlayItem> {
 	
@@ -81,7 +83,6 @@ public class UserItemizedOverlay extends
 
 	@Override
 	protected BalloonOverlayView<UserOverlayItem> createBalloonOverlayView() {
-		// use our custom balloon view with our custom overlay item type:
 		return new UserBalloonOverlayView(getMapView().getContext(), getBalloonBottomOffset(), async);
 	}
 
