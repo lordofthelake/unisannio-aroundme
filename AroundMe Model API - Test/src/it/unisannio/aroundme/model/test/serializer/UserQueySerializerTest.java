@@ -11,13 +11,16 @@ import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
-import org.easymock.Capture;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.model.*;
 import it.unisannio.aroundme.model.test.MockHelper;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class UserQueySerializerTest extends TestCase {
 	private Serializer<UserQuery> serializer;
 	

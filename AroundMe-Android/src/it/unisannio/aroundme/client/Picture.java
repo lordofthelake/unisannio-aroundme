@@ -18,7 +18,6 @@ import java.util.concurrent.Callable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -131,7 +130,6 @@ public class Picture implements Callable<Bitmap> {
 	}
 	
 	public void asyncUpdate(AsyncQueue async, final ImageView view, int defaultRes, final int errorRes) {
-		// Log.d("Picture", "Replacing icon #" + getId());
 		Long pictureId = (Long) view.getTag(R.id.tag_pictureid);
 		if(pictureId != null) {
 			if(pictureId.equals(getId())) 
@@ -157,13 +155,10 @@ public class Picture implements Callable<Bitmap> {
 			public void onSuccess(Bitmap object) {
 				view.setImageBitmap(object);
 				view.setTag(R.id.tag_task, null);
-				// Log.d("Picture", "Replaced icon #" + getId());
 			}
 
 			@Override
 			public void onError(Throwable e) {
-
-				// Log.d("Picture", "#" + getId(), e);
 				view.setImageResource(errorRes);
 				view.setTag(R.id.tag_task, null);
 				

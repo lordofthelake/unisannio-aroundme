@@ -4,6 +4,11 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class ArrayPagerAdapter extends PagerAdapter {
 	private View[] views;
 	public ArrayPagerAdapter(View... views) {

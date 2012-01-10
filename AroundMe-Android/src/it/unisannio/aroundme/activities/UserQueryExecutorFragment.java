@@ -9,7 +9,6 @@ import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.xml.transform.TransformerException;
 
@@ -21,6 +20,11 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class UserQueryExecutorFragment extends Fragment implements OnCancelListener, OnQueryChangeListener {
 	public static interface UserQueryExecutionListener {
 		void onUserQueryExecutionResults(Collection<User> results);
@@ -107,7 +111,7 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 			refresh();
 	}
 	
-
+	// FIXME All'apertura la query non viene eseguita
 	@Override
 	public void onQueryChanged(UserQuery query) {
 		userQuery = query;

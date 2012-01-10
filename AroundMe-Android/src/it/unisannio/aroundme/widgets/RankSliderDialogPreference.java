@@ -2,7 +2,6 @@ package it.unisannio.aroundme.widgets;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
-import it.unisannio.aroundme.widgets.SliderView.OnChangeListener;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +11,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class RankSliderDialogPreference extends DialogPreference {
 
 	private SliderView slider;

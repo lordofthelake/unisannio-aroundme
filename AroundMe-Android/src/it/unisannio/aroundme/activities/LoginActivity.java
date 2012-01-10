@@ -9,6 +9,7 @@ import it.unisannio.aroundme.async.FutureListener;
 import it.unisannio.aroundme.client.HttpStatusException;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.client.Registration;
+import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.services.PositionTrackingService;
 
 import com.facebook.android.DialogError;
@@ -19,11 +20,17 @@ import com.facebook.android.FacebookError;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.*;
@@ -33,27 +40,30 @@ import android.widget.*;
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */ 
+
+// FIXME Externalize strings
 public class LoginActivity extends FragmentActivity 
-	implements FutureListener<Identity>, DialogListener {
+	implements FutureListener<Identity>, DialogListener, LocationListener {
+	private static final int ACTIVITY_LOCATION_SETTINGS_REQUEST = 0;
 
 	private Facebook facebook;
+	
+	// FIXME Sposta in Setup
 	String FILENAME = "AroundMe_AuthData";
 	private SharedPreferences mPrefs;
 	private AsyncQueue async;
 	private TextView txtLoading;
-	/**
-	 * Lo scopo di questa activity ÔøΩ quello di ottenere un accesso a facebook ed ottenere tutte le informazioni che occorrono
-	 *  
-	 *  La prima cosa da fare ÔøΩ ottenere le seguenti cose:
-	 *  
-	 *  - Oggetto Identity contenente tutte le informazioni dell' utente che sta utilizzando
-	 *  
-	 * */
-
+	
+	LocationManager locationManager;
+	private boolean otherLocationProviderExists = true;
+	private AlertDialog locationDialog = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		facebook = new Facebook(Setup.FACEBOOK_APP_ID);
+		
+		// FIXME Controlla se funziona
 //		Identity identity = Identity.get();
 //		if(identity != null) {
 //			onSuccess(identity);
@@ -78,7 +88,7 @@ public class LoginActivity extends FragmentActivity
 
 		if(facebook.isSessionValid()) {
 			Log.d("LoginActivity", "Session valid");
-			// L'utente ha gi√† effettuato un accesso su questo dispositivo
+			// L'utente ha gia' effettuato un accesso su questo dispositivo
 			async.exec(Identity.login(facebook), this);
 		} else {
 			// Chiediamo l'autorizzazione
@@ -145,40 +155,49 @@ public class LoginActivity extends FragmentActivity
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
-		facebook.authorizeCallback(requestCode, resultCode, data);
+		if(requestCode == ACTIVITY_LOCATION_SETTINGS_REQUEST)
+			requestLocation();
+		else
+			facebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
 
 	@Override
-	public void onSuccess(Identity object) {
+	public void onSuccess(Identity me) {
 		SharedPreferences.Editor editor = mPrefs.edit();
 
 		editor.putString("access_token", facebook.getAccessToken());
 		editor.putLong("access_expires", facebook.getAccessExpires());
 		editor.commit();
 
-		txtLoading.setText("Ciao " + object.getName() + "!");
+		txtLoading.setText("Ciao " + me.getName() + "!");
+		requestLocation();		
+	}
+	
+	private void requestLocation() {
+		if(locationDialog != null)
+			locationDialog.dismiss();
 		
-		if(object.getPosition() == null) {
-			object.setPosition(PositionTrackingService.getLastKnownPosition(this));
+		Identity me = Identity.get();
+		
+		if(me.getPosition() == null) {
+			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			Location gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			Location networkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			
+			Location lastFix = PositionTrackingService.isBetterLocation(networkLocation, gpsLocation) ? networkLocation : gpsLocation;
+			if(lastFix != null) {
+				Log.d("LoginActivity", "Using last known position");
+				onLocationChanged(lastFix);
+			} else {
+				txtLoading.setText("In attesa di rilevare la posizione");
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+			} 
+		} else {
+			Log.d("LoginActivity", "Using in-memory position");
+			startApplication();
 		}
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String c2dmRegistrationId = prefs.getString("c2dmRegistrationId", null);
-		if (c2dmRegistrationId == null){
-			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-			registrationIntent.putExtra("sender", "aroundmeproject@gmail.com"); //FIXME Metterle e-mail e nome pref  c2dm nel setup
-			startService(registrationIntent);
-		}
-		
-		//if(!getIntent().getAction().equals("relogin"))
-			startActivity(new Intent(this, ListViewActivity.class));
-		
-		startService(new Intent(this, PositionTrackingService.class));
-		finish();
-		
 	}
 
 
@@ -233,4 +252,68 @@ public class LoginActivity extends FragmentActivity
 		super.onDestroy();
 		async.shutdown();
 	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		locationManager.removeUpdates(this);
+		Identity me = Identity.get();
+		me.setPosition(ModelFactory.getInstance().createPosition(location.getLatitude(), location.getLongitude()));
+		startApplication();
+	}
+	
+	private void startApplication() {
+		Log.d("LoginActivity", "Ready to start application. User in " + Identity.get().getPosition());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String c2dmRegistrationId = prefs.getString("c2dmRegistrationId", null);
+		if (c2dmRegistrationId == null){
+			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+			registrationIntent.putExtra("sender", "aroundmeproject@gmail.com"); //FIXME Metterle e-mail e nome pref  c2dm nel setup
+			startService(registrationIntent);
+		}
+		
+		startActivity(new Intent(this, ListViewActivity.class));
+		// FIXME Il servizio deve essere avviato solo se e' impostato nelle preferenze
+		startService(new Intent(this, PositionTrackingService.class));
+		finish();
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		if(!otherLocationProviderExists) {
+			AlertDialog.Builder b = new AlertDialog.Builder(this);
+			b.setTitle("Rilevamento posizione");
+			b.setMessage("Non è disponibile un provider per la posizione. Per favore attivane uno dalle impostazioni.");
+			b.setPositiveButton("Impostazioni", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);	
+				}
+			});
+			
+			b.setNegativeButton("Riprova", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					requestLocation();
+				}
+			});
+			
+			AlertDialog dialog = b.create();
+			dialog.show();
+			locationDialog = dialog;
+		}
+			
+		otherLocationProviderExists = false;
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		otherLocationProviderExists = true;		
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {}
+	
 }

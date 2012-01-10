@@ -1,7 +1,5 @@
 package it.unisannio.aroundme.model;
 
-import javax.xml.parsers.DocumentBuilder;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -72,5 +70,10 @@ public abstract class Position implements Model {
 		
 		Position other = (Position) obj;
 		return other.getLatitude() == getLatitude() && other.getLongitude() == getLongitude();
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + getLatitude() + ", " + getLongitude() + ")";
 	}
 }

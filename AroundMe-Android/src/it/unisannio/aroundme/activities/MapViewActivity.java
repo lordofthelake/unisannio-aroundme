@@ -1,5 +1,5 @@
 package it.unisannio.aroundme.activities;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.android.maps.MapController;
@@ -14,69 +14,102 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
+import android.widget.SlidingDrawer.OnDrawerCloseListener;
+import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
 import it.unisannio.aroundme.R;
+import it.unisannio.aroundme.activities.UserQueryExecutorFragment.UserQueryExecutionListener;
 import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.location.PositionUtils;
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.overlay.UserItemizedOverlay;
 
-public class MapViewActivity extends FragmentMapActivity  {
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
+public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpenListener, OnDrawerCloseListener, UserQueryExecutionListener  {
 	private MapView mapView;
 	private UserQuery userQuery;
-	private UserQueryFragment fragment;
+	
+	private UserQueryFragment queryFragment;
+	private UserQueryExecutorFragment execFragment;
+	
 	private AsyncQueue async;
+	
+	private UserItemizedOverlay myOverlay;
+	private UserItemizedOverlay nearbyOverlay;
 	
     protected void onCreate(Bundle savedStateInstance) {
     	super.onCreate(savedStateInstance);
-    	
+    	Identity me = Identity.get();
+		if(me == null) {
+			// TODO Request login
+		}
+			
     	async = new AsyncQueue(); // 1 thread. Nelle mappe viene visualizzata un'immagine alla volta
 		
     	setContentView(R.layout.map_view);	
 		
 		mapView = (MapView) findViewById(R.id.map);
-		mapView.setBuiltInZoomControls(true);
+		mapView.setBuiltInZoomControls(false);
 		
 		List<Overlay> overlays = mapView.getOverlays();
 		
-		UserItemizedOverlay userOverlay = new UserItemizedOverlay(R.drawable.marker_red, mapView, async);
-
-		ModelFactory f = ModelFactory.getInstance();
-		User user1 = f.createUser(1321813090L, "Michele Piccirillo", new HashSet<Interest>());
-		user1.setPosition(f.createPosition(41.057502,14.280308));
-		userOverlay.addUser(user1);
+		myOverlay = new UserItemizedOverlay(R.drawable.marker_green, mapView, async);
+		myOverlay.add(me);
+		overlays.add(myOverlay);
 		
-		overlays.add(userOverlay);
+		nearbyOverlay = new UserItemizedOverlay(R.drawable.marker_red, mapView, async);
+		overlays.add(nearbyOverlay);
 		
 		MapController controller = mapView.getController();
-		
-		controller.setCenter(PositionUtils.toGeoPoint(user1.getPosition()));
-		controller.animateTo(PositionUtils.toGeoPoint(user1.getPosition()));
-
+		controller.animateTo(PositionUtils.toGeoPoint(me.getPosition()));
 		controller.setZoom(16);
 
 		 
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		
+		execFragment = new UserQueryExecutorFragment();
+		fragmentTransaction.add(R.id.mapview_layout, execFragment);
+		
 		long[] ids = getIntent().getLongArrayExtra("userIds");
 		if(ids != null) {
     		userQuery = UserQuery.byId(ids);
-    		//refresh();
 		} else {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-	        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-	        fragment = new UserQueryFragment();
-	        fragmentTransaction.add(R.id.mapview_layout, fragment);
-	        fragmentTransaction.commit();
+	        queryFragment = new UserQueryFragment();
+	        fragmentTransaction.add(R.id.mapview_layout, queryFragment);
+		}
+		
+		fragmentTransaction.commit();
 
-	        //fragment.setOnDrawerOpenListener(this);
-	        //fragment.setOnDrawerCloseListener(this);
-	        //fragment.setOnQueryChangeListener(this);
-		}	
-
+		if(queryFragment == null) {
+			execFragment.onQueryChanged(userQuery);
+			execFragment.refresh();
+		} else {
+	        queryFragment.setOnDrawerOpenListener(this);
+	        queryFragment.setOnDrawerCloseListener(this);
+	        queryFragment.setOnQueryChangeListener(execFragment);
+		}	 
+		
+		execFragment.setExecutionListener(this);
     }
+    
+    
+    @Override
+	public void onDrawerOpened() {
+		mapView.setEnabled(false);
+	}
+    
+    @Override
+	public void onDrawerClosed() {
+		mapView.setEnabled(true);
+		execFragment.refreshIfChanged();
+	}
     
     @Override
 	public boolean onCreateOptionsMenu(Menu menu){
@@ -135,5 +168,14 @@ public class MapViewActivity extends FragmentMapActivity  {
 	protected void onDestroy() {
 		super.onDestroy();
 		async.shutdown();
+	}
+
+
+	@Override
+	public void onUserQueryExecutionResults(Collection<User> results) {
+		nearbyOverlay.clear();
+		nearbyOverlay.addAll(results);
+		
+		mapView.getController().zoomToSpan(nearbyOverlay.getLatSpanE6(), nearbyOverlay.getLonSpanE6());
 	}
 }

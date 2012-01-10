@@ -12,6 +12,11 @@ import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.model.*;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class CompatibilitySerializerTest extends TestCase {
 	private Serializer<Compatibility> serializer;
 	

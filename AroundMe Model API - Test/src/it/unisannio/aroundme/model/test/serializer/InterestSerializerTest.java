@@ -1,14 +1,11 @@
 package it.unisannio.aroundme.model.test.serializer;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 
 import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.model.*;
@@ -17,6 +14,11 @@ import it.unisannio.aroundme.model.test.MockHelper;
 import static org.easymock.EasyMock.*;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class InterestSerializerTest extends TestCase {
 	private Serializer<Interest> serializer;
 	private Interest mockInterest;

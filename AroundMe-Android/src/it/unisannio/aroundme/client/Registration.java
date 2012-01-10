@@ -3,18 +3,14 @@ package it.unisannio.aroundme.client;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.Serializer;
 import it.unisannio.aroundme.model.User;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -32,6 +28,11 @@ import android.util.Log;
 
 import com.facebook.android.Facebook;
 
+/**
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ *
+ */
 public class Registration implements Callable<Identity> {
 	public static Callable<Registration> create(final Facebook fb) {
 		return new Callable<Registration>() {
