@@ -15,12 +15,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,44 +55,55 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 		TextView txtMyInterest;
 		CheckBox ckEnabled;
 		ImageView imgMyInterest;
+		LinearLayout entry;
 	}
 	
 	public View getView(final int position, View view, ViewGroup parent) {
-		ViewHolder h = null;
-		
+		ViewHolder h;
 		if(view == null){
 			LayoutInflater layoutInflater = ((Activity)getContext()).getLayoutInflater();
 			view = layoutInflater.inflate(ITEM_RESOURCE, null);
-			
 			h = new ViewHolder();
 			h.txtMyInterest = (TextView) view.findViewById(R.id.txtMyInterest);
 			h.imgMyInterest = (ImageView) view.findViewById(R.id.imgMyInterest);
 			h.ckEnabled=(CheckBox) view.findViewById(R.id.checkUsed);
+			h.entry=(LinearLayout) view.findViewById(R.id.entry);
 			
 			view.setTag(R.id.tag_viewholder, h);
 		} else {
 			h = (ViewHolder) view.getTag(R.id.tag_viewholder);
 		}
+		final ViewHolder h1=h;
 		
 		final Interest interest = getItem(position);	
-		view.setTag(R.id.tag_interest, interest);		
-		
-		h.ckEnabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		view.setTag(R.id.tag_interest, interest);				
+		h.entry.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked)
-					userQuery.addId(interest.getId());
+			public void onClick(View arg0) {
+				h1.ckEnabled.setChecked(!h1.ckEnabled.isChecked());
+				if (h1.ckEnabled.isChecked())
+					userQuery.addInterestId(interest.getId());
 				else
 					userQuery.removeInterestId(interest.getId());
+				
 				
 				fragment.notifyQueryChangeListener();
 			}
 		});
 		
 		h.txtMyInterest.setText(interest.getName());
+		//h.ckEnabled.setChecked(this.checkThis(interest.getId()));
 		h.ckEnabled.setChecked(userQuery.getInterestIds().contains(interest.getId()));
+		//Toast.makeText(getContext()," "+userQuery.getInterestIds().contains(interest.getId()),Toast.LENGTH_SHORT).show();
 		Picture.get(interest.getId()).asyncUpdate(async, h.imgMyInterest, R.drawable.img_downloading, R.drawable.img_error);
 		return view;
 	}
-	
+	private boolean checkThis(long interestId){
+		ArrayList<Long> interests = new ArrayList<Long>(userQuery.getInterestIds());
+		for (int i=0;i<interests.size();i++){
+			if (interests.get(i).equals(new Long(interestId)));
+				return true;
+		}
+		return false;
+	}
 }

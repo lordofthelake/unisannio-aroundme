@@ -175,7 +175,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			SharedPreferences.Editor editor = queryState.edit();
 			editor.putString("UserQuery", UserQuery.SERIALIZER.toString(userQuery));
 			editor.commit();
-			Log.d("UserQueryFragment", "Persisted UserQuery");
+			Log.d("UserQueryFragment", "Persisted UserQuery: "+UserQuery.SERIALIZER.toString(userQuery));
 		} catch (Exception e) {
 			Log.w("UserQueryFragment", "UserQuery cannot be persisted", e);
 		}
@@ -190,6 +190,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			SharedPreferences queryState = getSupportActivity().getSharedPreferences("QueryState", 0);
 			String state = queryState.getString("UserQuery", null);
 			if(state != null) {
+				Log.d("UserQueryFragment", "state: "+state);
 				userQuery = UserQuery.SERIALIZER.fromString(state);
 			
 				Neighbourhood n = userQuery.getNeighbourhood();
@@ -201,6 +202,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 				
 				interestFilterAdapter.notifyDataSetChanged();
 				Log.d("UserQueryFragment", "Restored UserQuery from saved state");
+				Log.d("UserQueryFragment", UserQuery.SERIALIZER.toString(userQuery));
 			}
 			
 			notifyQueryChangeListener();
