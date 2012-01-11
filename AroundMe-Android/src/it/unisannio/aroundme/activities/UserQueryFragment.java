@@ -175,7 +175,6 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			SharedPreferences queryState = getSupportActivity().getSharedPreferences("QueryState", 0);
 			String state = queryState.getString("UserQuery", null);
 			if(state != null) {
-				Log.d("UserQueryFragment", "state: "+state);
 				userQuery = UserQuery.SERIALIZER.fromString(state);
 			
 				Neighbourhood n = userQuery.getNeighbourhood();
@@ -186,13 +185,12 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 				rank.setConvertedValue(c == null ? 0.0f : c.getRank());
 				
 				interestFilterAdapter.notifyDataSetChanged();
-				Log.d("UserQueryFragment", "Restored UserQuery from saved state ");
-				Log.d("UserQueryFragment", UserQuery.SERIALIZER.toString(userQuery));
+				Log.d("UserQueryFragment", "Restored UserQuery: " + UserQuery.SERIALIZER.toString(userQuery));
 			}
 			
 			notifyQueryChangeListener();
 		} catch (Exception e) {
-			Log.w("UserQueryFragment", "UserQuery can't be restored", e);
+			Log.w("UserQueryFragment", "UserQuery cannot be restored", e);
 		}
 	}
 	

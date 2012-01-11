@@ -174,7 +174,6 @@ public class ListViewActivity extends FragmentActivity
 		users.clear();
 		users.addAll(results);
 		usrAdapter.notifyDataSetChanged();
-		Log.i("ListViewActivity", "Query completed");
 	}
 
 }

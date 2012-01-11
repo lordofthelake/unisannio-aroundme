@@ -251,7 +251,7 @@ public class LoginActivity extends FragmentActivity
 	}
 	
 	private void startApplication() {
-		Log.d("LoginActivity", "Ready to start application. User in " + Identity.get().getPosition());
+		Log.d("LoginActivity", "Login ok! User in " + Identity.get().getPosition());
 		
 		String c2dmRegistrationId = preferences.getString("c2dmRegistrationId", null);
 		if (c2dmRegistrationId == null){

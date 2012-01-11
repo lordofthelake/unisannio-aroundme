@@ -95,12 +95,13 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
         		progress.dismiss();
         		notifyUserQueryExecutionListener(object);
         		needsRefresh = false;
+        		Log.i("UserQueryExecutorFragment", "Query completed with " + object.size() + " results.");
         	}
         	@Override
         	public void onError(Throwable e) {
         		progress.dismiss();
         		Toast.makeText(getActivity(), R.string.loadingError, Toast.LENGTH_LONG).show();	
-        		e.printStackTrace();
+        		Log.w("UserQueryExecutorFragment", "Query completed with errors", e);
         	}
         });
 		

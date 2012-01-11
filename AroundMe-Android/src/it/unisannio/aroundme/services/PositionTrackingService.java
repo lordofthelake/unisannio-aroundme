@@ -18,6 +18,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Process;
 import android.util.Log;
 
@@ -187,6 +188,7 @@ public class PositionTrackingService extends Service {
 		// Un servizio puo' essere avviato piu' volte. 
 		// Avviamo il worker thread e ci registriamo per le posizioni solo la prima volta.
 		if(worker == null) {
+			Log.i("PositionTrackingService", "Service started");
 			worker = new HandlerThread("PositionTrackingService", Process.THREAD_PRIORITY_BACKGROUND);
 			worker.start();
 
@@ -211,10 +213,13 @@ public class PositionTrackingService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		worker.stop();
+		Looper looper = worker.getLooper();
+		if(looper != null)
+			looper.quit();
 		worker = null;
 
 		locationManager.removeUpdates(locationListener);
+		Log.i("PositionTrackingService", "Service stopped");
 	}
 
 	@Override
