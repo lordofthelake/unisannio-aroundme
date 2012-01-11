@@ -98,5 +98,15 @@
     <string name="pref_tracking_enabled">Traccia la mia posizione</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Annulla</string>
+    <string name="login_auth_error">Errore di autenticazione</string>
+    <string name="dialog_retry">Riprova</string>
+    <string name="dialog_exit">Esci</string>
+    <string name="login_welcome_message">Ciao %s!</string>
+    <string name="login_waiting_position">In attesa di rilevare la posizione.</string>
+    <string name="login_facebook_import">Importazione dati da Facebook</string>
+    <string name="dialog_missingprovider_title">Rilevamento posizione</string>
+    <string name="dialog_missingprovider_message">Non è disponibile un provider per la posizione. Per favore attivane uno dalle impostazioni.</string>
+    <string name="dialog_settings">Impostazioni</string>
+    <string name="login_loggingin">Login in corso</string>
 
 </resources>

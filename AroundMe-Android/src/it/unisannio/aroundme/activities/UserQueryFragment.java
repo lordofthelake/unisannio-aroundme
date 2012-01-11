@@ -10,12 +10,7 @@ import it.unisannio.aroundme.adapters.ArrayPagerAdapter;
 import it.unisannio.aroundme.adapters.InterestFilterAdapter;
 import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.Identity;
-import it.unisannio.aroundme.model.Compatibility;
-import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.Neighbourhood;
-import it.unisannio.aroundme.model.Position;
-import it.unisannio.aroundme.model.UserQuery;
+import it.unisannio.aroundme.model.*;
 import it.unisannio.aroundme.widgets.SliderView;
 import it.unisannio.aroundme.widgets.SliderView.OnChangeListener;
 import android.content.SharedPreferences;
@@ -26,13 +21,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SlidingDrawer;
-import android.widget.Toast;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
@@ -132,7 +122,6 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         interestsFilter.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				Toast.makeText(getActivity(), "ohi", Toast.LENGTH_LONG).show();
 				CheckBox ck =(CheckBox) arg1.findViewById(R.id.checkUsed);
 				ck.setChecked(!ck.isChecked());
 			}
@@ -171,7 +160,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			SharedPreferences.Editor editor = queryState.edit();
 			editor.putString("UserQuery", UserQuery.SERIALIZER.toString(userQuery));
 			editor.commit();
-			Log.d("UserQueryFragment", "Persisted UserQuery: "+UserQuery.SERIALIZER.toString(userQuery));
+			Log.d("UserQueryFragment", "Persisted UserQuery: " + UserQuery.SERIALIZER.toString(userQuery));
 		} catch (Exception e) {
 			Log.w("UserQueryFragment", "UserQuery cannot be persisted", e);
 		}
@@ -197,7 +186,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 				rank.setConvertedValue(c == null ? 0.0f : c.getRank());
 				
 				interestFilterAdapter.notifyDataSetChanged();
-				Log.d("UserQueryFragment", "Restored UserQuery from saved state");
+				Log.d("UserQueryFragment", "Restored UserQuery from saved state ");
 				Log.d("UserQueryFragment", UserQuery.SERIALIZER.toString(userQuery));
 			}
 			

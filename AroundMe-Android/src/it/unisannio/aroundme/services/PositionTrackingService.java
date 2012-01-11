@@ -40,8 +40,6 @@ import android.util.Log;
  * @author Giuseppe Fusco <gfeldiablo@gmail.com>
  * 
  */
-
-// FIXME Il servizio dovra' essere fermato quando l'utente fa il logout
 public class PositionTrackingService extends Service {
 
 	/**

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 /**
  * 
- * @author @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
 public class SliderView extends LinearLayout implements OnSeekBarChangeListener {

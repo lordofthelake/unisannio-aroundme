@@ -67,7 +67,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 		view.setTag(R.id.tag_user, user);
 		
 		h.txtName.setText(user.getName());
-		// TODO Externalize strings
+		// FIXME Externalize strings
 		int dist=(int) me.getDistance(user);
 		if (dist!=-1){
 			h.txtDistance.setText(String.format("%d m", dist));

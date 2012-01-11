@@ -41,7 +41,7 @@ public class AsyncQueue {
 				} catch (Exception e) {}
 			}
 			
-			// TODO Set background priority
+			// XXX La priorita' dei thread potrebbe essere abbassata per lasciare piu' risorse alla UI
 		}
 
 		protected void beforeExecute(Thread t, Runnable r) {

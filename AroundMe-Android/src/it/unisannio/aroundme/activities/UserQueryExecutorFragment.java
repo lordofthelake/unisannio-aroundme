@@ -111,10 +111,14 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 			refresh();
 	}
 	
-	// FIXME All'apertura la query non viene eseguita
 	@Override
 	public void onQueryChanged(UserQuery query) {
+		boolean needsRefreshNow = (userQuery == null);
+		
 		userQuery = query;
 		needsRefresh = true;
+		
+		if(needsRefreshNow)
+			refresh();
 	}	
 }

@@ -41,46 +41,35 @@ import android.widget.*;
  *
  */ 
 
-// FIXME Externalize strings
 public class LoginActivity extends FragmentActivity 
 	implements FutureListener<Identity>, DialogListener, LocationListener {
 	private static final int ACTIVITY_LOCATION_SETTINGS_REQUEST = 0;
 
 	private Facebook facebook;
 	
-	// FIXME Sposta in Setup
-	String FILENAME = "AroundMe_AuthData";
-	private SharedPreferences mPrefs;
+	private SharedPreferences preferences;
 	private AsyncQueue async;
 	private TextView txtLoading;
 	
-	LocationManager locationManager;
+	private LocationManager locationManager;
 	private boolean otherLocationProviderExists = true;
 	private AlertDialog locationDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		facebook = new Facebook(Setup.FACEBOOK_APP_ID);
-		
-		// FIXME Controlla se funziona
-//		Identity identity = Identity.get();
-//		if(identity != null) {
-//			onSuccess(identity);
-//			return;
-//		}
-		
 		
 		this.async = new AsyncQueue();
 
 		setContentView(R.layout.login);
-		txtLoading=(TextView) findViewById(R.id.txtLoginWait);
-		mPrefs = getPreferences(MODE_PRIVATE);
-		final String access_token = mPrefs.getString("access_token", null);
-		long expires = mPrefs.getLong("access_expires", 0);
+		txtLoading= (TextView) findViewById(R.id.txtLoginWait);
+		final String accessToken = preferences.getString("access_token", null);
+		long expires = preferences.getLong("access_expires", 0);
 
-		if(access_token != null) {
-			facebook.setAccessToken(access_token);
+		if(accessToken != null) {
+			facebook.setAccessToken(accessToken);
 		}
 		if(expires != 0) {
 			facebook.setAccessExpires(expires);
@@ -97,7 +86,7 @@ public class LoginActivity extends FragmentActivity
 	}
 	
 	private void startAuthorizationProcess() {
-		SharedPreferences.Editor editor = mPrefs.edit();
+		SharedPreferences.Editor editor = preferences.edit();
 		editor.remove("access_token");
 		editor.remove("access_expires");
 		editor.commit();
@@ -107,10 +96,10 @@ public class LoginActivity extends FragmentActivity
 	
 	private void showErrorDialog(String message) {
 		AlertDialog.Builder b = new AlertDialog.Builder(this);
-		b.setTitle("Errore di autenticazione");
+		b.setTitle(R.string.login_auth_error);
 		if(message != null)
 			b.setMessage(message);
-		b.setPositiveButton("Riprova", new Dialog.OnClickListener() {
+		b.setPositiveButton(R.string.dialog_retry, new Dialog.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -118,7 +107,7 @@ public class LoginActivity extends FragmentActivity
 			}
 		});
 		
-		b.setNegativeButton("Esci", new Dialog.OnClickListener() {
+		b.setNegativeButton(R.string.dialog_exit, new Dialog.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -133,7 +122,7 @@ public class LoginActivity extends FragmentActivity
 
 	@Override
 	public void onComplete(Bundle values) {
-		txtLoading.setText("Login in corso");
+		txtLoading.setText(R.string.login_loggingin);
 		async.exec(Identity.login(facebook), this);
 	}
 
@@ -164,13 +153,13 @@ public class LoginActivity extends FragmentActivity
 
 	@Override
 	public void onSuccess(Identity me) {
-		SharedPreferences.Editor editor = mPrefs.edit();
+		SharedPreferences.Editor editor = preferences.edit();
 
 		editor.putString("access_token", facebook.getAccessToken());
 		editor.putLong("access_expires", facebook.getAccessExpires());
 		editor.commit();
 
-		txtLoading.setText("Ciao " + me.getName() + "!");
+		txtLoading.setText(String.format(getString(R.string.login_welcome_message), me.getName()));
 		requestLocation();		
 	}
 	
@@ -190,7 +179,7 @@ public class LoginActivity extends FragmentActivity
 				Log.d("LoginActivity", "Using last known position");
 				onLocationChanged(lastFix);
 			} else {
-				txtLoading.setText("In attesa di rilevare la posizione");
+				txtLoading.setText(R.string.login_waiting_position);
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 			} 
@@ -206,7 +195,7 @@ public class LoginActivity extends FragmentActivity
 		if((e instanceof NoSuchElementException) || 
 				(e instanceof HttpStatusException 
 						&& ((HttpStatusException) e).getStatusCode() == 403)) {
-			txtLoading.setText("Importazione dati da Facebook");
+			txtLoading.setText(R.string.login_facebook_import);
 			async.exec(Registration.create(facebook), new FutureListener<Registration>() {
 
 				@Override
@@ -263,8 +252,8 @@ public class LoginActivity extends FragmentActivity
 	
 	private void startApplication() {
 		Log.d("LoginActivity", "Ready to start application. User in " + Identity.get().getPosition());
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String c2dmRegistrationId = prefs.getString("c2dmRegistrationId", null);
+		
+		String c2dmRegistrationId = preferences.getString("c2dmRegistrationId", null);
 		if (c2dmRegistrationId == null){
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
@@ -273,8 +262,9 @@ public class LoginActivity extends FragmentActivity
 		}
 		
 		startActivity(new Intent(this, ListViewActivity.class));
-		// FIXME Il servizio deve essere avviato solo se e' impostato nelle preferenze
-		startService(new Intent(this, PositionTrackingService.class));
+		if(preferences.getBoolean("tracking.enabled", true)) {
+			startService(new Intent(this, PositionTrackingService.class));
+		}
 		finish();
 	}
 
@@ -282,9 +272,9 @@ public class LoginActivity extends FragmentActivity
 	public void onProviderDisabled(String provider) {
 		if(!otherLocationProviderExists) {
 			AlertDialog.Builder b = new AlertDialog.Builder(this);
-			b.setTitle("Rilevamento posizione");
-			b.setMessage("Non è disponibile un provider per la posizione. Per favore attivane uno dalle impostazioni.");
-			b.setPositiveButton("Impostazioni", new OnClickListener() {
+			b.setTitle(R.string.dialog_missingprovider_title);
+			b.setMessage(R.string.dialog_missingprovider_message);
+			b.setPositiveButton(R.string.dialog_settings, new OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -292,7 +282,7 @@ public class LoginActivity extends FragmentActivity
 				}
 			});
 			
-			b.setNegativeButton("Riprova", new OnClickListener() {
+			b.setNegativeButton(R.string.dialog_retry, new OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {

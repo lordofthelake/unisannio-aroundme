@@ -47,7 +47,7 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
     	super.onCreate(savedStateInstance);
     	Identity me = Identity.get();
 		if(me == null) {
-			// TODO Request login
+			// FIXME Se l'utente non e' settato, redireziona al login
 		}
 			
     	async = new AsyncQueue(); // 1 thread. Nelle mappe viene visualizzata un'immagine alla volta

@@ -10,9 +10,9 @@ import android.support.v4.app.SherlockPreferenceActivity;
  *
  */
 
-// FIXME Gestisci opzione "Tracciamento della posizione"
-// FIXME Gestisci opzione "Logout"
-// FIXME Gestisci opzione "Elimina"
+// FIXME Gestisci preferenza "Tracciamento della posizione"
+// FIXME Gestisci preferenza "Logout"
+// FIXME Gestisci preferenza "Elimina"
 public class PreferencesActivity extends SherlockPreferenceActivity {
 
 	@Override
