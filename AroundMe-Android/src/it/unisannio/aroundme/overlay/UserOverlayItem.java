@@ -1,5 +1,7 @@
 package it.unisannio.aroundme.overlay;
 
+import java.text.MessageFormat;
+
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.location.PositionUtils;
 import it.unisannio.aroundme.model.User;
@@ -15,8 +17,17 @@ public class UserOverlayItem extends OverlayItem {
 	private final User user;
 	
 	public UserOverlayItem(User user) {
-		// FIXME Migliora snippet
-		super(PositionUtils.toGeoPoint(user.getPosition()), user.getName(), String.valueOf(user.getCompatibilityRank(Identity.get())));
+		// FIXME Externalize strings
+		super(
+				PositionUtils.toGeoPoint(user.getPosition()), 
+				user.getName(), 
+				(user.equals(Identity.get()) 
+						? "Sei tu" 
+						: MessageFormat.format("Compatibile al {0,number,percent}", Identity.get().getCompatibilityRank(user))
+				)
+				
+		);
+		
 		this.user = user;
 	}
 	

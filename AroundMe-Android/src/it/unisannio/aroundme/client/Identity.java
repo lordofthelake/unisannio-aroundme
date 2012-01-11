@@ -88,5 +88,10 @@ public class Identity extends User {
 	public Collection<Interest> getInterests() {
 		return self.getInterests();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return self.equals(obj);
+	}
 
 }
