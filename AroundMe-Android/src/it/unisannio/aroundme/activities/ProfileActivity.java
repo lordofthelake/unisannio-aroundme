@@ -13,6 +13,7 @@ import it.unisannio.aroundme.client.Picture;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
+import it.unisannio.aroundme.services.C2DMNotificationService;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -62,6 +63,8 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 
 		// User ID dell' utente da visualizzare
 		userId = (Long) getIntent().getExtras().get("userId");
+		if(getIntent().getBooleanExtra("fromNotification", false)==true)
+			C2DMNotificationService.markAsRead(userId);
 		
 		txtName = (TextView) findViewById(R.id.txtName);
 		imgPhoto = (ImageView) findViewById(R.id.imgPhoto);	

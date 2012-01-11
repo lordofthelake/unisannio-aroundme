@@ -62,7 +62,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     	Log.i("C2DMRegistrationReceiver", "Received c2dmRegistrationId "+ registrationId);
 		SharedPreferences prefs = PreferenceManager	.getDefaultSharedPreferences(context);
 		Editor edit = prefs.edit();
-		edit.putString("c2dmRegistrationId", registrationId);
+		edit.putString(Setup.C2DM_REGISTRATIONID, registrationId);
 		edit.commit();
 
 		final Preferences preferences = ModelFactory.getInstance().createPreferences();
@@ -81,7 +81,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     public void onUnregistered(Context context) {
     	SharedPreferences prefs = PreferenceManager	.getDefaultSharedPreferences(context);
 		Editor edit = prefs.edit();
-		edit.putString("c2dmRegistrationId", null);
+		edit.putString(Setup.C2DM_REGISTRATIONID, null);
 		edit.commit();
 
 		final Preferences preferences = ModelFactory.getInstance().createPreferences();
@@ -108,7 +108,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     @Override
     public void onMessage(Context context, Intent intent) {
     	long userId = Long.parseLong(intent.getStringExtra("userId"));
-    	Log.w("C2DMReceiver", "Arrived message cointaining "+userId);
+    	Log.i("C2DMReceiver", "Arrived message cointaining "+userId);
     	Intent notificationIntent = new Intent(context, C2DMNotificationService.class);
 		notificationIntent.putExtra("userId", userId);
 		context.startService(notificationIntent);

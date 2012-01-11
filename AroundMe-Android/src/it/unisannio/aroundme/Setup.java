@@ -192,4 +192,14 @@ public interface Setup {
 	 * Raggio di default per il filtro di distanza (in metri).
 	 */
 	final int FILTERS_DEFAULT_RADIUS = 500;
+	
+	/**
+	 * L'Id per il C2DM con quale possiamo ricevere notifiche 
+	 */
+	final String SENDER_ID = "aroundmeproject@gmail.com";
+	
+	/**
+	 * Il nome della SharedPreference contenente il registrationId per il C2DM
+	 */
+	final String C2DM_REGISTRATIONID = "c2dmRegistrationId";
 }

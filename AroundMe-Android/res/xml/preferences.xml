@@ -3,7 +3,7 @@
 
 	<PreferenceCategory android:title="@string/pref_category_notifications">
 	    <CheckBoxPreference android:title="@string/pref_notification_activate" android:key="notification.active" android:defaultValue="true" android:persistent="true"/>
-	    <RingtonePreference android:title="@string/pref_notification_sound" android:ringtoneType="notification|alarm" android:key="notification.sound" android:dependency="notification.active"/>
+	    <RingtonePreference android:title="@string/pref_notification_sound" android:ringtoneType="notification|alarm" android:key="notification.sound" android:dependency="notification.active" android:defaultValue="content://settings/system/notification_sound"/>
 	    <CheckBoxPreference android:title="@string/pref_notification_vibration" android:key="notification.vibrate" android:dependency="notification.active" android:defaultValue="true"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_category_filter">

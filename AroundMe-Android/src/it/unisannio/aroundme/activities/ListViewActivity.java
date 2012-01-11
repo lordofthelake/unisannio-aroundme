@@ -8,6 +8,7 @@ import it.unisannio.aroundme.adapters.UserAdapter;
 import it.unisannio.aroundme.async.*;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.model.*;
+import it.unisannio.aroundme.services.C2DMNotificationService;
 
 import java.util.*;
 
@@ -83,6 +84,7 @@ public class ListViewActivity extends FragmentActivity
 	        queryFragment = new UserQueryFragment();
 	        fragmentTransaction.add(R.id.listview_layout, queryFragment);
 		}
+		C2DMNotificationService.markAllAsRead(getApplicationContext());
 		
 		fragmentTransaction.commit();
 

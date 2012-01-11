@@ -42,6 +42,7 @@ import android.widget.*;
  */ 
 
 // FIXME Externalize strings
+// FIXME Lamentarsi se non si √® connessi
 public class LoginActivity extends FragmentActivity 
 	implements FutureListener<Identity>, DialogListener, LocationListener {
 	private static final int ACTIVITY_LOCATION_SETTINGS_REQUEST = 0;
@@ -264,11 +265,11 @@ public class LoginActivity extends FragmentActivity
 	private void startApplication() {
 		Log.d("LoginActivity", "Ready to start application. User in " + Identity.get().getPosition());
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String c2dmRegistrationId = prefs.getString("c2dmRegistrationId", null);
+		String c2dmRegistrationId = prefs.getString(Setup.C2DM_REGISTRATIONID, null);
 		if (c2dmRegistrationId == null){
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-			registrationIntent.putExtra("sender", "aroundmeproject@gmail.com"); //FIXME Metterle e-mail e nome pref  c2dm nel setup
+			registrationIntent.putExtra("sender", Setup.SENDER_ID);
 			startService(registrationIntent);
 		}
 		
@@ -283,7 +284,7 @@ public class LoginActivity extends FragmentActivity
 		if(!otherLocationProviderExists) {
 			AlertDialog.Builder b = new AlertDialog.Builder(this);
 			b.setTitle("Rilevamento posizione");
-			b.setMessage("Non è disponibile un provider per la posizione. Per favore attivane uno dalle impostazioni.");
+			b.setMessage("Non ÔøΩ disponibile un provider per la posizione. Per favore attivane uno dalle impostazioni.");
 			b.setPositiveButton("Impostazioni", new OnClickListener() {
 				
 				@Override

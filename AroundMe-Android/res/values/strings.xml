@@ -98,5 +98,9 @@
     <string name="pref_tracking_enabled">Traccia la mia posizione</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Annulla</string>
+    <string name="notif_tickerTitle">Around You!</string>
+    <string name="notif_contentTitle_sng">Una nuova persona da conoscere!</string>
+    <string name="notif_contentTitle_plr">Nuove persone da conoscere!</string>
+    <string name="notif_contentText">%d nuove persone nelle vicinanze!</string>
 
 </resources>
