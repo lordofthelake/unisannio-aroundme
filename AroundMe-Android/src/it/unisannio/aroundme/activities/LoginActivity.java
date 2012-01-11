@@ -41,6 +41,8 @@ import android.widget.*;
  *
  */ 
 
+// FIXME Externalize strings
+// FIXME Lamentarsi se non si è connessi
 public class LoginActivity extends FragmentActivity 
 	implements FutureListener<Identity>, DialogListener, LocationListener {
 	private static final int ACTIVITY_LOCATION_SETTINGS_REQUEST = 0;
@@ -253,11 +255,11 @@ public class LoginActivity extends FragmentActivity
 	private void startApplication() {
 		Log.d("LoginActivity", "Login ok! User in " + Identity.get().getPosition());
 		
-		String c2dmRegistrationId = preferences.getString("c2dmRegistrationId", null);
+		String c2dmRegistrationId = preferences.getString(Setup.C2DM_REGISTRATIONID, null);
 		if (c2dmRegistrationId == null){
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-			registrationIntent.putExtra("sender", "aroundmeproject@gmail.com"); //FIXME Metterle e-mail e nome pref  c2dm nel setup
+			registrationIntent.putExtra("sender", Setup.SENDER_ID);
 			startService(registrationIntent);
 		}
 		

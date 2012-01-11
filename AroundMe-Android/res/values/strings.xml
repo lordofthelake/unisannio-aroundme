@@ -108,5 +108,9 @@
     <string name="dialog_missingprovider_message">Non è disponibile un provider per la posizione. Per favore attivane uno dalle impostazioni.</string>
     <string name="dialog_settings">Impostazioni</string>
     <string name="login_loggingin">Login in corso</string>
+    <string name="notif_tickerTitle">Around You!</string>
+    <string name="notif_contentTitle_sng">Una nuova persona da conoscere!</string>
+    <string name="notif_contentTitle_plr">Nuove persone da conoscere!</string>
+    <string name="notif_contentText">%d nuove persone nelle vicinanze!</string>
 
 </resources>
