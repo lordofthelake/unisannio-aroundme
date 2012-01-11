@@ -23,7 +23,7 @@ public class UserOverlayItem extends OverlayItem {
 				user.getName(), 
 				(user.equals(Identity.get()) 
 						? "Sei tu" 
-						: MessageFormat.format("Compatibile al {0,number,percent}", Identity.get().getCompatibilityRank(user))
+						: MessageFormat.format("Compatibile {0,choice,0#allo |0.01#all'|0.08#all'|0.08<al }{0,number,percent}", Math.round(Identity.get().getCompatibilityRank(user)*100)/100f)
 				)
 				
 		);

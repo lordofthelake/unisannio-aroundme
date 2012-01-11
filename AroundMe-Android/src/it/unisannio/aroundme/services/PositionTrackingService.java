@@ -25,7 +25,7 @@ import android.util.Log;
  * Servizio di tracciamento della posizione.
  * 
  * <p>Il servizio, eseguito in background, rileva la posizione dell'utente solo per spostamenti di un'entit&agrave;
- * minima definita in {@link Setup#TRACKING_MIN_DISTANCE} e ad intervalli regolari di tempo (la quantit&agrave; esatta
+ * minima definita in {@link Setup#TRACKING_MIN_DISTANCE} e ad intervalli regolari di tempo (la cui durata minima 
  * &egrave; definita in {@link Setup#TRACKING_MIN_TIME}). Rilevazioni pi&ugrave; distanziate nel tempo
  * e nello spazio comportano un miglioramento della durata della batteria, a discapito di una minore
  * accuratezza.</p>
@@ -184,7 +184,7 @@ public class PositionTrackingService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 
-		// Un servizio può essere avviato più volte. 
+		// Un servizio puo' essere avviato piu' volte. 
 		// Avviamo il worker thread e ci registriamo per le posizioni solo la prima volta.
 		if(worker == null) {
 			worker = new HandlerThread("PositionTrackingService", Process.THREAD_PRIORITY_BACKGROUND);

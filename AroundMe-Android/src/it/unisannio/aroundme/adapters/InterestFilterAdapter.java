@@ -5,10 +5,8 @@ import it.unisannio.aroundme.activities.UserQueryFragment;
 import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.client.Picture;
 import it.unisannio.aroundme.model.Interest;
-import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.UserQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -19,12 +17,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 /**
@@ -32,16 +27,15 @@ import android.widget.Toast;
  * @author Marco Magnetti <marcomagnetti@gmail.com>
  *
  */
+// FIXME Stato delle checkbox degli interessi non persiste
 public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 	private static final int ITEM_RESOURCE = R.layout.interest_filter_entry;
 	private AsyncQueue async;
-	private Context context;
 	private UserQuery userQuery;
 	private UserQueryFragment fragment;
 
 	public InterestFilterAdapter(Context context, UserQueryFragment f, List<Interest> interests, AsyncQueue async,UserQuery userQuery) {
 		super(context, ITEM_RESOURCE, interests);
-		this.context=context;
 		this.async = async;
 		this.userQuery=userQuery;
 		this.fragment = f;
@@ -92,18 +86,8 @@ public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 		});
 		
 		h.txtMyInterest.setText(interest.getName());
-		//h.ckEnabled.setChecked(this.checkThis(interest.getId()));
 		h.ckEnabled.setChecked(userQuery.getInterestIds().contains(interest.getId()));
-		//Toast.makeText(getContext()," "+userQuery.getInterestIds().contains(interest.getId()),Toast.LENGTH_SHORT).show();
 		Picture.get(interest.getId()).asyncUpdate(async, h.imgMyInterest, R.drawable.img_downloading, R.drawable.img_error);
 		return view;
-	}
-	private boolean checkThis(long interestId){
-		ArrayList<Long> interests = new ArrayList<Long>(userQuery.getInterestIds());
-		for (int i=0;i<interests.size();i++){
-			if (interests.get(i).equals(new Long(interestId)));
-				return true;
-		}
-		return false;
 	}
 }

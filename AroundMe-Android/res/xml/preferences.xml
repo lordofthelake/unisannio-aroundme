@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<PreferenceCategory android:title="@string/pref_category_notifications">
-	    <CheckBoxPreference android:title="@string/pref_notification_activate" android:key="notification.active" android:defaultValue="true" android:persistent="true"/>
+	    <SwitchPreference android:title="@string/pref_notification_activate" android:key="notification.active" android:defaultValue="true" android:persistent="true"/>
 	    <RingtonePreference android:title="@string/pref_notification_sound" android:ringtoneType="notification|alarm" android:key="notification.sound" android:dependency="notification.active"/>
 	    <CheckBoxPreference android:title="@string/pref_notification_vibration" android:key="notification.vibrate" android:dependency="notification.active" android:defaultValue="true"/>
 	</PreferenceCategory>
@@ -11,7 +11,7 @@
 	    <it.unisannio.aroundme.widgets.RadiusSliderDialogPreference android:title="@string/pref_notification_distance" android:key="query.radius" android:persistent="true"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_category_tracking">
-		<CheckBoxPreference android:title="@string/pref_tracking_enabled" android:key="tracking.enabled" android:defaultValue="true" android:persistent="true" />
+		<SwitchPreference android:title="@string/pref_tracking_enabled" android:key="tracking.enabled" android:defaultValue="true" android:persistent="true" />
 	</PreferenceCategory><PreferenceCategory android:title="@string/pref_category_account">
 		<Preference android:title="@string/pref_account_logout" android:persistent="false" android:key="logout"/>
 		<Preference android:title="@string/pref_account_delete" android:persistent="false" android:key="delete"/>

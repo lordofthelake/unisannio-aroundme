@@ -81,7 +81,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         drawer = (SlidingDrawer) inflater.inflate(R.layout.filters_drawer, container, false);
         drawer.setOnDrawerCloseListener(this);
         drawer.setOnDrawerOpenListener(this);
-        icDrawer=(ImageView) drawer.findViewById(R.id.filterIcon);
+        icDrawer = (ImageView) drawer.findViewById(R.id.filterIcon);
         
         ViewPager pager = (ViewPager) drawer.findViewById(R.id.pager);
         
@@ -116,7 +116,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			}
 		});
         
-        ListView interestsFilter=(ListView) page2.findViewById(R.id.listInterestFilter);
+        ListView interestsFilter = (ListView) page2.findViewById(R.id.listInterestFilter);
         interestFilterAdapter = new InterestFilterAdapter(getActivity(), this, myInterests, async, userQuery);
         interestsFilter.setAdapter(interestFilterAdapter); 
         interestsFilter.setOnItemClickListener(new OnItemClickListener(){

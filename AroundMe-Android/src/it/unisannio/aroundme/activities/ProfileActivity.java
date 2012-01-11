@@ -113,13 +113,13 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 		// FIXME Externalize strings
 		builder.setMessage("Problema di caricamento. Si vuole riprovare?")
 		       .setCancelable(false)
-		       .setPositiveButton("Riprova", new DialogInterface.OnClickListener() {
+		       .setPositiveButton(R.string.dialog_retry, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   dialog.cancel();
 		        	   asyncLoadUser();
 		           }
 		       })
-		       .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+		       .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   finish();
 		           }
