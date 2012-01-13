@@ -2,9 +2,12 @@ package it.unisannio.aroundme.overlay;
 
 import java.text.MessageFormat;
 
+import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.location.PositionUtils;
 import it.unisannio.aroundme.model.User;
+
+import android.content.Context;
 
 import com.google.android.maps.OverlayItem;
 
@@ -16,14 +19,13 @@ import com.google.android.maps.OverlayItem;
 public class UserOverlayItem extends OverlayItem {
 	private final User user;
 	
-	public UserOverlayItem(User user) {
-		// FIXME Externalize strings
+	public UserOverlayItem(Context ctx, User user) {
 		super(
 				PositionUtils.toGeoPoint(user.getPosition()), 
 				user.getName(), 
 				(user.equals(Identity.get()) 
-						? "Sei tu" 
-						: MessageFormat.format("Compatibile {0,choice,0#allo |0.01#all'|0.08#all'|0.08<al }{0,number,percent}", Math.round(Identity.get().getCompatibilityRank(user)*100)/100f)
+						? ctx.getString(R.string.balloon_snippet_itsyou) 
+						: MessageFormat.format(ctx.getString(R.string.balloon_snippet_format), Math.round(Identity.get().getCompatibilityRank(user)*100)/100f)
 				)
 				
 		);

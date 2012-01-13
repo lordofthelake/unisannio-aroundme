@@ -15,6 +15,7 @@ import android.support.v4.app.SherlockPreferenceActivity;
  *
  */
 
+// FIXME Invia tutto al server quando l'Activity termina
 public class PreferencesActivity extends SherlockPreferenceActivity {
 
 	@Override

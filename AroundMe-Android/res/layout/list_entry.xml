@@ -39,7 +39,7 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
                 android:padding="5dp"
-                android:text="test"
+                android:text=""
                 android:gravity="center_vertical"
                 android:textStyle="bold"
                 android:textColor="#ffffff"
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
-                android:text="65%"
+                android:text=""
                 android:textStyle="italic"
                 android:textColor="#222222"
                 android:textSize="18dp" />

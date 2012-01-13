@@ -1,5 +1,6 @@
 package it.unisannio.aroundme.client;
 
+import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
@@ -100,7 +101,7 @@ public class Registration implements Callable<Identity> {
 	}
 	
     public Dialog createInterestEditorDialog(Context ctx, OnClickListener onEditFinishListener) {
-    	// FIXME Externalize strings
+
 		AlertDialog.Builder b = new AlertDialog.Builder(ctx);
 		
 		final Interest[] items = new Interest[interests.size()];
@@ -117,7 +118,7 @@ public class Registration implements Callable<Identity> {
 
 		b.setTitle(getName());
 		b.setCancelable(false);
-		b.setPositiveButton("Importa", onEditFinishListener);
+		b.setPositiveButton(R.string.dialog_import, onEditFinishListener);
 		
 		b.setMultiChoiceItems(names, checked, new OnMultiChoiceClickListener() {
 			@Override

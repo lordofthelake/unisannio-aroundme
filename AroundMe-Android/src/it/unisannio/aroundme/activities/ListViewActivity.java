@@ -89,6 +89,7 @@ public class ListViewActivity extends FragmentActivity
 		fragmentTransaction.commit();
 
 		if(queryFragment == null) {
+			// FIXME Si deve aspettare che il fragment sia collegato all'activity
 			execFragment.onQueryChanged(userQuery);
 			execFragment.refresh();
 		} else {

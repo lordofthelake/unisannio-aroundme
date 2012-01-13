@@ -1,85 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="hello">Hello World, AroundMeGUIActivity!</string>
-
     <string name="list_view">Lista Persone</string>
     <string name="Profile_view">Profilo</string>
 
 
-    <!-- Menu item text [CHAR LIMIT=NONE] -->
-    <string name="accounts">Accounts</string>
-
-    <!-- Dialog button [CHAR LIMIT=NONE] -->
-    <string name="add_account">Add account...</string>
-
     <!--  Name of the application in the launcher [CHAR LIMIT=NONE] -->
     <string name="app_name">AroundMe</string>
 
-    <!-- Dialog title text [CHAR LIMIT=NONE] -->
-    <string name="attention">Attention</string>
 
-    <!-- Button text [CHAR LIMIT=NONE] -->
-    <string name="connect">Connect</string>
-
-    <!-- Message text for "Connect" screen [CHAR LIMIT=NONE] -->
-    <string name="connect_text">This application requests permission to connect your mobile device to the cloud.</string>
-
-    <!-- Header text for "Connect" screen [CHAR LIMIT=NONE] -->
-    <string name="connect_to_the_cloud">Connect To The Cloud</string>
-
-    <!-- Header text for "Connected" screen [CHAR LIMIT=NONE] -->
-    <string name="connected_to_the_cloud">Connected To The Cloud</string>
 
     <!-- Message text [CHAR LIMIT=NONE] -->
-    <string name="contacting_server">Contacting server...</string>
+    <string name="contacting_server">Contattando il server&#8230;</string>
 
-    <!-- Button text [CHAR LIMIT=NONE] -->
-    <string name="disconnect">Disconnect</string>
-
-    <!-- Informational text for "Connected" screen with placeholder for account name [CHAR LIMIT=NONE] -->
-    <string name="disconnect_text">This device is currently connected to the cloud as %1$s.</string>
-
-    <!-- Footer text for "Connect" screen [CHAR LIMIT=NONE] -->
-    <string name="do_you_want_to_connect">Do you want to connect?</string>
-
-    <!-- Footer text for "Disconnect" screen [CHAR LIMIT=NONE] -->
-    <string name="do_you_want_to_disconnect">Do you want to disconnect?</string>
-
-    <!-- Initial "hello, world" informational message [CHAR LIMIT=NONE] -->
-    <string name="hello_world_info_text">Press the \"Say Hello\" button to receive a message from the App Engine server.</string>
-
-    <!-- Initial "hello, world" response message [CHAR LIMIT=NONE] -->
-    <string name="hello_world_text"></string>
-
-    <!-- Dialog message text [CHAR LIMIT=NONE] -->
-    <string name="needs_account">To receive notifications from this app, you must first create an account.</string>
-
-    <!-- Notification message [CHAR LIMIT=NONE] -->
-    <string name="registration_error">Failed to register/unregister %1$s.</string>
-
-    <!-- Notification message [CHAR LIMIT=NONE] -->
-    <string name="registration_succeeded">Registered %1$s for C2DM messaging.</string>
-
-    <!-- Button text [CHAR LIMIT=NONE] -->
-    <string name="say_hello">Say Hello</string>
-
-    <!-- List view header text [CHAR LIMIT=NONE] -->
-    <string name="select_account">Select the account you wish to authorize:</string>
-
-    <!-- Dialog button text [CHAR LIMIT=NONE] -->
-    <string name="skip">Skip</string>
-
-    <!-- Notification message [CHAR LIMIT=NONE] -->
-    <string name="unregistration_succeeded">Unegistered %1$s for C2DM messaging.</string>
-    <string name="connect_with_facebook">Connect with Facebook</string>
-    <string name="loading">Loading. Please wait...</string>
+    <string name="loading">Caricamento. Per favore attendi&#8230;</string>
     <string name="loadingError">Error during loading</string>
     <string name="pref_category_notifications">Notifiche</string>
     <string name="pref_notification_activate">Ricevi notifiche</string>
     <string name="pref_notification_sound">Suoneria</string>
     <string name="pref_notification_vibration">Vibrazione</string>
-    <string name="pref_notification_distance">Distanza minima</string>
+    <string name="pref_notification_distance">Distanza massima</string>
     <string name="pref_notification_compatibility">Compatibilità minima</string>
     <string name="menu_show_map">Vista mappa</string>
     <string name="menu_show_list">Vista lista</string>
@@ -87,13 +27,10 @@
     <string name="menu_show_map_condensed">Mappa</string>
     <string name="menu_preferences">Preferenze</string>
     <string name="menu_profile">Profilo</string>
-    <string name="menu_quit">Esci</string>
     <string name="pref_category_filter">Filtri</string>
     <string name="pref_category_account">Account</string>
     <string name="pref_account_logout">Logout</string>
     <string name="pref_account_delete">Elimina</string>
-    <string name="pref_filter_defaultview">Vista di default</string>
-    <string name="menu_home">Home</string>
     <string name="pref_category_tracking">Tracciamento</string>
     <string name="pref_tracking_enabled">Traccia la mia posizione</string>
     <string name="dialog_ok">OK</string>
@@ -102,9 +39,9 @@
     <string name="dialog_retry">Riprova</string>
     <string name="dialog_exit">Esci</string>
     <string name="login_welcome_message">Ciao %s!</string>
-    <string name="login_waiting_position">In attesa di rilevare la posizione.</string>
-    <string name="login_facebook_import">Importazione dati da Facebook</string>
-    <string name="dialog_missingprovider_title">Rilevamento posizione</string>
+    <string name="login_waiting_position">In attesa di rilevare la posizione&#8230;</string>
+    <string name="login_facebook_import">Importazione dati da Facebook&#8230;</string>
+    <string name="dialog_missingprovider_title">Rilevamento posizione&#8230;</string>
     <string name="dialog_missingprovider_message">Non è disponibile un provider per la posizione. Per favore attivane uno dalle impostazioni.</string>
     <string name="dialog_settings">Impostazioni</string>
     <string name="login_loggingin">Login in corso</string>
@@ -112,5 +49,14 @@
     <string name="notif_contentTitle_sng">Una nuova persona da conoscere!</string>
     <string name="notif_contentTitle_plr">Nuove persone da conoscere!</string>
     <string name="notif_contentText">%d nuove persone nelle vicinanze!</string>
+    <string name="dialog_loadingerror_message">Problema di caricamento. Si vuole riprovare?</string>
+    <string name="dialog_import">Importa</string>
+    <string name="not_available">N/A</string>
+    <string name="distance_format">%d m</string>
+    <string name="compatibility_format">%d%%</string>
+    <string name="balloon_snippet_itsyou">Sei tu!</string>
+    <string name="balloon_snippet_format">Compatibile {0,choice,0#allo |0.01#all\'|0.08#all\'|0.08&lt;al }{0,number,percent}</string>
+    <string name="loading">Caricamento&#8230;</string>
+    <string name="interests">Interessi</string>
 
 </resources>

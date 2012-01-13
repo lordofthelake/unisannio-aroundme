@@ -38,12 +38,12 @@ public class UserItemizedOverlay extends
 	}
 	
 	public void add(User user) {
-		addOverlay(new UserOverlayItem(user));
+		addOverlay(new UserOverlayItem(getMapView().getContext(), user));
 	}
 	
 	public void addAll(Collection<User> users) {
 		for(User u : users) 
-			overlays.add(new UserOverlayItem(u));
+			overlays.add(new UserOverlayItem(getMapView().getContext(), u));
 		refresh();
 	}
 

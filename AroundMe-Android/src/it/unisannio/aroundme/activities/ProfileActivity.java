@@ -113,8 +113,7 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 		progress.dismiss();
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		
-		// FIXME Externalize strings
-		builder.setMessage("Problema di caricamento. Si vuole riprovare?")
+		builder.setMessage(R.string.dialog_loadingerror_message)
 		       .setCancelable(false)
 		       .setPositiveButton(R.string.dialog_retry, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {

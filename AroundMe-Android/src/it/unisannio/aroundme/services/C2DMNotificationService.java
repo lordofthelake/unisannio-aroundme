@@ -59,22 +59,19 @@ public class C2DMNotificationService extends IntentService{
 				contentTitle = getString(R.string.notif_contentTitle_plr);
 				contentText = String.format(getString(R.string.notif_contentText), unreadNotifications.size());
 				Intent listIntent = new Intent(context, ListViewActivity.class);
-				/*FIXME Le seguenti linee, che permettono alla listview di mostrare solo i nuovi uteni al clic della notifica,
-				 * sono state commentate perchè causano un IllegalArgumentException in
-				 * it.unisannio.aroundme.activities.UserQueryExecutorFragment.refresh(UserQueryExecutorFragment.java:84)
-				 * 
+
 				long[] userIds = new long[unreadNotifications.size()];
 				for(int i = 0; i<unreadNotifications.size(); i++)
 					userIds[i] = unreadNotifications.get(i);
 				listIntent.putExtra("userIds", userIds);
-				*/
+				
 				pendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, listIntent, 0);
 			}
 
 			
 			Notification notification = new Notification(R.drawable.ic_notification, getString(R.string.notif_tickerTitle), System.currentTimeMillis());
 
-			// Nasconde la notifica dopo che è stata selezionata
+			// Nasconde la notifica dopo che e' stata selezionata
 			notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -96,7 +93,7 @@ public class C2DMNotificationService extends IntentService{
 	}
 
 	/**
-	 * Segna tutte le notifiche come già lette.
+	 * Segna tutte le notifiche come gi&agrave; lette.
 	 * Utilizzato, di solito, dopo aver visualizzato l'intera
 	 * lista degli utenti nelle vicinanze.
 	 */
@@ -106,8 +103,8 @@ public class C2DMNotificationService extends IntentService{
 	}
 
 	/**
-	 * Segna la notifica relativa ud un certo User come già letta
-	 * @param userId L'id dell'User la cui notifica è stata letta
+	 * Segna la notifica relativa ud un certo User come gi&agrave; letta
+	 * @param userId L'id dell'User la cui notifica &egrave; stata letta
 	 */
 	public static void markAsRead(long userId){
 		unreadNotifications.remove(new Long(userId));

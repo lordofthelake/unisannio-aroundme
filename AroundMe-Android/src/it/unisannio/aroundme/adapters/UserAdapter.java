@@ -67,18 +67,17 @@ public class UserAdapter extends ArrayAdapter<User> {
 		view.setTag(R.id.tag_user, user);
 		
 		h.txtName.setText(user.getName());
-		// FIXME Externalize strings
 		int dist=(int) me.getDistance(user);
 		if (dist!=-1){
-			h.txtDistance.setText(String.format("%d m", dist));
+			h.txtDistance.setText(getContext().getString(R.string.distance_format, dist));
 		}else{
-			h.txtDistance.setText("N/A");
+			h.txtDistance.setText(R.string.not_available);
 		}		
 		int rank=Math.round(me.getCompatibilityRank(user) * 100);
 		if (rank!=-1){
-			h.txtCompatibility.setText(String.format("%d%%", rank));
+			h.txtCompatibility.setText(getContext().getString(R.string.compatibility_format, rank));
 		}else{
-			h.txtCompatibility.setText("N/A");
+			h.txtCompatibility.setText(R.string.not_available);
 		}
 		
 		Picture.get(user.getId()).asyncUpdate(async, h.imgPhoto, R.drawable.img_downloading, R.drawable.img_error);

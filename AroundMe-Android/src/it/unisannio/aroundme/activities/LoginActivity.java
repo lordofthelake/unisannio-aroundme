@@ -41,8 +41,6 @@ import android.widget.*;
  *
  */ 
 
-// FIXME Externalize strings
-// FIXME Lamentarsi se non si è connessi
 public class LoginActivity extends FragmentActivity 
 	implements FutureListener<Identity>, DialogListener, LocationListener {
 	private static final int ACTIVITY_LOCATION_SETTINGS_REQUEST = 0;
