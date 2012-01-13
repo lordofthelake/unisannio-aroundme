@@ -4,16 +4,26 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
+ * Modello per descrivere un "intorno" rispetto ad una posizione.
  * 
+ * Usato in un'interrogazione, specifica il raggio entro cui si vogliono filtrare i risultati rispetto ad una certa posizione geografica.
+ * 
+ * @see UserQuery#setNeighbourhood(Neighbourhood)
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class Neighbourhood implements Model {
 	
 	/**
-	 * <neighbourhood radius="0.0">
-	 * 	<position lat="0.0" lon="0.0" />
-	 * </neighbourhood>
+	 * Serializzatore di questo modello.
+	 * 
+	 * Il formato utilizzato nella codifica &egrave;:
+	 * <pre><code>
+	 * &lt;neighbourhood radius="0.0"&gt;
+	 * 	&lt;position lat="0.0" lon="0.0" /&gt;
+	 * &lt;/neighbourhood&gt;
+	 * </code></pre>
+	 * 
+	 * @see Serializer
 	 */
 	public static final Serializer<Neighbourhood> SERIALIZER = new Serializer<Neighbourhood>() {
 
@@ -49,6 +59,14 @@ public class Neighbourhood implements Model {
 	private final Position position;
 	private final int radius;
 	
+	/**
+	 * Inizializza un'istanza della classe con i parametri forniti.
+	 * 
+	 * @param position la posizione che si vuole utilizzare come centro
+	 * @param radius il raggio, in metri, dell'area
+	 * 
+	 * @throws IllegalArgumentException se la posizione &egrave; {@code null}
+	 */
 	public Neighbourhood(Position position, int radius) {
 		if(position == null)
 			throw new IllegalArgumentException("Position cannot be null");
@@ -57,10 +75,20 @@ public class Neighbourhood implements Model {
 		this.radius = radius;
 	}
 	
+	/**
+	 * Restituisce il punto che viene utilizzato come centro per l'intorno.
+	 * 
+	 * @return la posizione usata come centro dell'intorno
+	 */
 	public Position getPosition() {
 		return position;
 	}
 	
+	/**
+	 * Restituisce il raggio dell'intorno.
+	 * 
+	 * @return il raggio dell'intorno, espresso in metri
+	 */
 	public int getRadius() {
 		return radius;
 	}

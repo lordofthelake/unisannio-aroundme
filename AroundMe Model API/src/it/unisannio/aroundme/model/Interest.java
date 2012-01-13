@@ -4,15 +4,26 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
+ * Modello per rappresentare un interesse di un utente iscritto al network.
  * 
+ * Ogni interesse ha una corrispondenza univoca con una pagina di Facebook: ID, nome e categoria trovano una precisa corrispondenza con 
+ * quelli restituiti dalle Graph API di Facebook.
+ * 
+ * @see https://developers.facebook.com/docs/reference/api/
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public abstract class Interest implements Model {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * <interest id="123" name="Name" category="Category" />
+	 * Serializzatore di questo modello.
+	 * 
+	 * Il formato utilizzato nella codifica &egrave;:
+	 * <pre><code>
+	 * &lt;interest id="123" name="Name" category="Category" /&gt;
+	 * </code></pre>
+	 * 
+	 * @see Serializer
 	 */
 	public static final Serializer<Interest> SERIALIZER = new Serializer<Interest>() {
 
@@ -41,8 +52,24 @@ public abstract class Interest implements Model {
 		
 	};
 	
+	/**
+	 * Restituisce il nome dell'interesse.
+	 * 
+	 * @return Il nome dell'interesse, coerentemente con i dati di Facebook
+	 */
 	public abstract String getName();
+	
+	/**
+	 * Restituisce la categoria a cui l'interesse appartiene.
+	 * @return Il nome della categoria, coerentemente con quella assegnata da Facebook
+	 */
 	public abstract String getCategory();
+	
+	/**
+	 * Restituisce l'ID univoco dell'interesse.
+	 * 
+	 * @return L'ID interesse, corrispondente a quello utilizzato per identificare la pagina nelle Graph API
+	 */
 	public abstract long getId();
 	
 	@Override

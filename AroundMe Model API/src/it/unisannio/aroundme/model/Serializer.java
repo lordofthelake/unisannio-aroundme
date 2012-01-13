@@ -43,7 +43,7 @@ public abstract class Serializer<T> {
 	 * Restituisce un'istanza di {@code Serializer} in grado di gestire una collezione di oggetti a loro
 	 * volta serializzabili.
 	 * 
-	 * <p>Il formato utilizzato nella codifica &egrave;:
+	 * Il formato utilizzato nella codifica &egrave;:
 	 * <pre><code>
 	 * &lt;collection&gt;
 	 *   &lt;entity /&gt;
@@ -51,7 +51,7 @@ public abstract class Serializer<T> {
 	 *   &lt;entity /&gt;
 	 * &lt;/collection&gt;
 	 * </code></pre>
-	 * </p>
+	 * 
 	 * 
 	 * @param clazz La classe degli oggetti da serializzare. Deve essere provvista di serializzatore
 	 * @return Un serializzatore in grado di gestire una collezione di istanze di {@code clazz}

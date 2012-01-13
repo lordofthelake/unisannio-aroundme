@@ -9,22 +9,34 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
+ * Modello per un utente iscritto al network.
+ * 
+ * <p>Ogni utente &egrave; provvisto di un ID univoco corrispondente a quello utilizzato per la stessa persona da Facebook, di un
+ * nome (anch'esso creato utilizzando i dati di Facebook, nella forma di "Nome Cognome") e di un insieme di interessi.</p>
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
+ * 
+ * @see https://developers.facebook.com/docs/reference/api/
+ * @see UserQuery
  */
 public abstract class User implements Model {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * <user id="123" name="Name">
-	 * 	<position lat="0.0" lon="0.0" />
-	 * 	<picture>http://url.com/123</picture>
-	 *  <interests>
-	 *  	<interest id="123" />
-	 *  	<interest id="123" />
-	 *  </interests>
-	 * </user>
+	 * Serializzatore di questo modello.
+	 * 
+	 * <p>Il formato utilizzato nella codifica &egrave;:
+	 * <pre><code>
+	 * &lt;user id="123" name="Name"&gt;
+	 * 	&lt;position lat="0.0" lon="0.0" /&gt;
+	 *  &lt;interests&gt;
+	 *  	&lt;!-- lista degli interessi --&gt;
+	 *  &lt;/interests&gt;
+	 * &lt;/user&gt;
+	 * </code></pre>
+	 * </p>
+	 * 
+	 * @see Serializer
 	 */
 	public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
@@ -83,21 +95,48 @@ public abstract class User implements Model {
 		
 	};
 	
+	/**
+	 * Restituisce l'ID univoco di questo utente, corrispondente a quello assegnato da Facebook.
+	 * 
+	 * @return l'id dell'utente
+	 */
 	public abstract long getId();
 	
+	/**
+	 * Imposta la posizione corrente dell'utente.
+	 * 
+	 * @param position la posizione in cui si trova l'utente
+	 */
 	public abstract void setPosition(Position position);
 
+	/**
+	 * Restituisce il nome dell'utente, tipicamente nella forma "Nome Cognome"
+	 * 
+	 * @return il nome dell'utente
+	 */
 	public abstract String getName();
 	
+	/**
+	 * Restituisce la posizione corrente dell'utente.
+	 * 
+	 * @return la posizione dell'utente, o {@code null} se sconosciuta
+	 */
 	public abstract Position getPosition();
 	
+	/**
+	 * Restituisce una collezione degli interessi dell'utente.
+	 * 
+	 * @return una collezione di interessi
+	 */
 	public abstract Collection<Interest> getInterests();	
 	
 	/**
-	 * Il rank &egrave; una misura di compatibilit&agrave tra due utenti, espresso con un numero decimale tra 0 (nessun interesse comune) e 1 (tutti gli interessi in comune).
+	 * Restituisce il rank tra due utenti.
+	 * 
+	 * <p>Il rank &egrave; una misura di compatibilit&agrave tra due utenti, espresso con un numero decimale tra 0 (nessun interesse comune) e 1 (tutti gli interessi in comune).</p>
 	 * 
 	 * @param u l'utente su cui viene fatto il confronto
-	 * @return misura del rank, con 0 <= rank <= 1 o -1 se entrambi i set sono vuoti
+	 * @return misura del rank, con 0 <= rank <= 1, o -1 se entrambi i set sono vuoti
 	 * 
 	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
 	 * @author Danilo Iannelli <daniloiannelli6@gmail.com>
@@ -106,6 +145,15 @@ public abstract class User implements Model {
 		return getCompatibilityRank(getInterests(), u.getInterests());		
 	}
 	
+	/**
+	 * Effettua il calcolo del rank utilizzando come interessi insiemi generici ci oggetti.
+	 * 
+	 * @param myInterests primo insieme di interessi
+	 * @param otherInterests secondo insieme di interessi
+	 * @return il rank calcolato
+	 * 
+	 * @see #getCompatibilityRank(User)
+	 */
 	protected <E> float getCompatibilityRank(Collection<E> myInterests, Collection<E> otherInterests) {
 		if(myInterests.isEmpty() && otherInterests.isEmpty())
 			return -1;
@@ -131,6 +179,9 @@ public abstract class User implements Model {
 		return (mine == null || hers == null) ? -1 : mine.getDistance(hers);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null || !(obj instanceof User))
@@ -142,6 +193,9 @@ public abstract class User implements Model {
 				&& getInterests().equals(other.getInterests());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return getName() + "(#" + getId() + ") " + getInterests();
