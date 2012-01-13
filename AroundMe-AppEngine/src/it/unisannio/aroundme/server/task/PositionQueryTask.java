@@ -3,6 +3,7 @@ package it.unisannio.aroundme.server.task;
 import it.unisannio.aroundme.model.Compatibility;
 import it.unisannio.aroundme.model.Neighbourhood;
 import it.unisannio.aroundme.model.Position;
+import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.server.UserImpl;
@@ -32,7 +33,9 @@ public class PositionQueryTask extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = Logger.getLogger(PositionQueryTask.class.getName());
 
-	private final String REGISTRATION_ID = "c2dmRegistrationId";
+	private final String PREF_REGISTRATION_ID = "c2dmRegistrationId";
+	private final String PREF_QUERY_RADIUS = "query.radius";
+	private final String PREF_QUERY_RANK = "query.rank";
 
 	/**
 	 * L'URI utilizzata per poter raggiungere e  quindi eseguire il {@link PositionQueryTask}
@@ -47,16 +50,20 @@ public class PositionQueryTask extends HttpServlet{
 			Objectify ofy = ObjectifyService.begin();
 			UserImpl user = ofy.get(UserImpl.class, userId);
 			Position position = user.getPosition();
-			Neighbourhood neighbourhood = new Neighbourhood(position, 100);	
-			Compatibility compatibility = new Compatibility(user.getId(), 0.6f);
+			Preferences userPreferences = user.getPreferences();
+			Neighbourhood neighbourhood = new Neighbourhood(position, userPreferences.get(PREF_QUERY_RADIUS, 100));	
+			Compatibility compatibility = new Compatibility(user.getId(), userPreferences.get(PREF_QUERY_RANK, 0.6f));
 
 			UserQuery query = new UserQueryImpl();
 			query.setNeighbourhood(neighbourhood);
 			query.setCompatibility(compatibility);
 			Collection<User> users = query.call();
 			for(User u: users){
-				C2DMNotificationSender.sendWithRetry(((UserImpl)u).getPreferences().get(REGISTRATION_ID, null), userId);
-				C2DMNotificationSender.sendWithRetry(user.getPreferences().get(REGISTRATION_ID, null), u.getId());
+				if(userPreferences.get("notification.active", true))
+					C2DMNotificationSender.sendWithRetry(userPreferences.get(PREF_REGISTRATION_ID, null), u.getId());
+				if (isQueriedUserNotificable(u, user));
+					C2DMNotificationSender.sendWithRetry(((UserImpl)u).getPreferences().get(PREF_REGISTRATION_ID, null), userId);
+				
 			}
 		} catch (Exception e) {
 			resp.setStatus(200); //Ritornare un 200 serve per non forzare il retry del task
@@ -64,8 +71,28 @@ public class PositionQueryTask extends HttpServlet{
 			resp.getOutputStream().write(("Non-retriable error:" + e.toString()).getBytes());
 		}
 
-
-
-
 	}
+	
+	/**
+	 * Controlla che un utente risultante dalla query, sia notificabile.
+	 * Viene controllato se il queried user abbia disattivato le notifiche
+	 * e se risulta notificabile in base alle proprie preferenze
+	 * 
+	 * @param queriedUser L'utente, ottenuto dalla query, del quale si vuole
+	 * verificare la "notificabilit&agrave;"
+	 * @param myUser l'utente per cui &egrave; stata effettuata la query
+	 * @return true se queriedUser &egrave; notificabile
+	 */
+	private boolean isQueriedUserNotificable(User queriedUser, User myUser){
+		Preferences queriedUserPrefs = ((UserImpl) queriedUser).getPreferences();
+		if(queriedUserPrefs.get("notification.active", true)){
+			if(queriedUser.getCompatibilityRank(myUser) <  queriedUserPrefs .get(PREF_QUERY_RANK, 0.6f))
+				return false;
+			if(queriedUser.getDistance(myUser) < queriedUserPrefs.get(PREF_QUERY_RADIUS, 100))
+				return false;
+			return true;
+		}
+		return false;
+	}
+	
 }

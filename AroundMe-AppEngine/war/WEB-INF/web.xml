@@ -90,7 +90,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>C2DMSenderTask</servlet-name>
-		<url-pattern>/task/positionsender</url-pattern>
+		<url-pattern>/task/notificationsender</url-pattern>
 	</servlet-mapping>
 
 </web-app>

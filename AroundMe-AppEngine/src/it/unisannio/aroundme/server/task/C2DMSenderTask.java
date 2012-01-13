@@ -24,7 +24,7 @@ public class C2DMSenderTask extends HttpServlet {
 	/**
 	 * L'URI utilizzata per poter raggiungere e  quindi eseguire il {@link C2DMSenderTask}
 	 */
-	public static final String URI = "/task/positionsender";
+	public static final String URI = "/task/notificationsender";
 	
 	/**
 	 * L'header che contiene il numero di volte in cui una specifica task è stata invocata 

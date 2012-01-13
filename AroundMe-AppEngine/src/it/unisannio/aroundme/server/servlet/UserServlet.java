@@ -20,13 +20,27 @@ import com.googlecode.objectify.ObjectifyService;
 
 
 /**
+ * Servlet utilizzata per la gestione degli {@link User}
+ * 
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
 public class UserServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = Logger.getLogger(UserServlet.class.getName());
-
+	
+	/**
+	 * Uilizzato per effettuare una query sugli {@link User}
+	 * <br><br>
+	 * Richiesta:<br>
+	 * L'URI deve essere /user/<br>
+	 * Il body deve contenere l'xml che descrive la query da effettuare.
+		<br>
+	 * Risposta:<br>
+	 * Restituisce nel body l'xml che descrive una collezione degli
+	 * Utenti ottenuti dalla query;<br>
+	 * 500 - In caso di errori
+	 */
 	@Override
 	protected void doPost(HttpServletRequest req, final HttpServletResponse resp)	throws ServletException, IOException {
 		try {
@@ -41,6 +55,17 @@ public class UserServlet extends HttpServlet{
 		}				
 	}
 
+	/**
+	 * Utilizzato per la creazione di un User<br>
+	 * <br>
+	 * Richiesta:<br>
+	 * L'URI deve essere /user/<br>
+	 * Il body deve contenere lo xml che descrive l'user da creare.<br>
+	 * <br>
+	 * La risposta:<br>
+	 * 200 - Se l'operazione &egrave; andata a buon fine<br>
+	 * 500 - In caso di errori<br>
+	 */
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
@@ -54,7 +79,21 @@ public class UserServlet extends HttpServlet{
 			resp.sendError(500);
 		}
 	}
-
+	
+	/**
+	 * Utilizzato per eliminare un {@link User}
+	 * <br><br>
+	 * Richiesta:<br>
+	 * L'URI deve essere /user/[userId] <br>
+	 * dove [userId] &egrave; l'id dell'utente da eliminare
+	 * <br><br>
+	 * 
+	 * Risposta:<br>
+	 * 200 - Se l'operazione &egrave; andata a buon fine<br>
+	 * 401 - Se l'Id non &egrave; valido<br>
+	 * 404 - Se l'utente non &egrave; stato trovato<br>
+	 * 500 - In caso di errori
+	 */
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try{

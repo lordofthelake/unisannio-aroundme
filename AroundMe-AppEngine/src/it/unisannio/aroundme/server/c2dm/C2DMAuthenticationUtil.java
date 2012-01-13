@@ -8,8 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Utility utilizzata per richiedere il token di registrazione per l'utilizzo
- * del Server Cloud To Device Messaging Framework.
+ * Utility utilizzata per richiedere, contatando il server ClientLogin di Google,
+ * il token di registrazione per l'utilizzo del server Cloud To Device Messaging Framework.
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  */
 public class C2DMAuthenticationUtil {
@@ -26,7 +26,7 @@ public class C2DMAuthenticationUtil {
 	 * il server ClientLogin di Google
 	 * 
 	 * @return Una String contentente il token di registrazione
-	 * @throws IOException
+	 * @throws IOException se occore un errore di I/O
 	 */
 	public static String getToken()	throws IOException {
 		
