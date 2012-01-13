@@ -15,7 +15,7 @@ import com.googlecode.objectify.ObjectifyService;
 
 /**
  * {@link ServletContextListener} utilizzato per definire, in fase di caricamento del {@link ServletContext},
- * le impostazioni necessarie per l'utilizzo del Datastore. 
+ * le impostazioni necessarie per l'utilizzo del Datastore.
  * 
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  */

@@ -38,31 +38,10 @@ public class C2DMNotificationSender {
 	/* Massimo intervallo di tempo (in millisecondi) tra i vari
 	 * tentativi per la ripetizione di un Task della Google TaskQueue
 	 */
-	public static final int DATAMESSAGING_MAX_COUNTDOWN_MSEC = 3000;
+	private static final int DATAMESSAGING_MAX_COUNTDOWN_MSEC = 3000;
 	
 	private static final Logger log = Logger.getLogger(C2DMNotificationSender.class.getName());
 	
-	public static void sendWithRetry(String registrationId, long userId){
-		if(registrationId != null){
-			Queue queue = QueueFactory.getQueue("c2dm");
-			TaskOptions url = TaskOptions.Builder.withUrl(C2DMSenderTask.URI)
-												.param("registrationId", registrationId)
-												.param("userId", userId+"")
-												.method(Method.POST);
-			/*
-		 	* Viene definito a random il tempo tra un retry e un altro.
-		 	* I retry sono eventualmente necessari in caso di alcuni
-		 	* server error del C2DM per i quali riprovare ad eseguire la task,
-		 	* può risolvere il problema.
-		 	*/
-			long countdownMillis = (int) Math.random() * DATAMESSAGING_MAX_COUNTDOWN_MSEC;
-			url.countdownMillis(countdownMillis);
-			queue.add(url);	
-		}else{
-			log.warning("Warning: invalid device registrationId. Message won't be sent.");
-		}
-		
-	}
 	
 	/**
 	 * Invia, tramite C2DM, un messaggio al device indicato dal registrationId,
@@ -168,6 +147,36 @@ public class C2DMNotificationSender {
 		      log.warning("Invalid response from google " + responseLine + " " + responseCode);
 		      return false;
 		    }
+	}
+	
+	/**
+	 * Avvia la Task utilizzata per l'invio di notifiche tramite C2DM.
+	 * La task verrà riprovata in caso di errori recuperabili
+	 * 
+	 * @param registrationId
+	 *            L'id del device dell'utente che deve ricevere la notifica
+	 * @param userId
+	 *            L'id dell'utente la cui presenza deve essere segnalata
+	 */
+	public static void sendWithRetry(String registrationId, long userId){
+		if(registrationId != null){
+			Queue queue = QueueFactory.getQueue("c2dm");
+			TaskOptions url = TaskOptions.Builder.withUrl(C2DMSenderTask.URI)
+												.param("registrationId", registrationId)
+												.param("userId", userId+"")
+												.method(Method.POST);
+			/*
+		 	* Viene definito a random il tempo tra un retry e un altro.
+		 	* I retry sono eventualmente necessari in caso di alcuni
+		 	* server error del C2DM per i quali riprovare ad eseguire la task,
+		 	* può risolvere il problema.
+		 	*/
+			long countdownMillis = (int) Math.random() * DATAMESSAGING_MAX_COUNTDOWN_MSEC;
+			url.countdownMillis(countdownMillis);
+			queue.add(url);	
+		}else{
+			log.warning("Warning: invalid device registrationId. Message won't be sent.");
+		}
 		
 	}
 }

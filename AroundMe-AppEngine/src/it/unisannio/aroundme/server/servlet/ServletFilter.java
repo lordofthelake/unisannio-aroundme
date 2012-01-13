@@ -17,6 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
+/**
+ * {@link Filter} utilizzato per effettuare controlli preventivi per tutte le richieste ricevute
+ * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+ *
+ */
 public class ServletFilter implements Filter {
 	private static final Logger log = Logger.getLogger(ServletFilter.class.getName());
 	
@@ -28,16 +33,24 @@ public class ServletFilter implements Filter {
 		if (req.getProtocol().equals("HTTP/1.1")) {
 			HttpServletRequest request = (HttpServletRequest) req;
 			HttpServletResponse response = (HttpServletResponse) res;
+			//Le task per la Google Task Queue vengono lasciate passare direttamente
 			if(request.getRequestURI().startsWith("/task/")){
 				chain.doFilter(req, res);
 			}
 			else{
+				//Per tutte le altre richieste, è necessario l'header speceficante il
+				//token di Facebook
 				String facebookAuthToken = request.getHeader("X-AccessToken");
 				log.info("Request with X-AccessToken:\n"+facebookAuthToken);
 				if(facebookAuthToken != null){
 					if (request.getMethod().equalsIgnoreCase("PUT"))
 						chain.doFilter(req, res);
 					else {
+						/*
+						 * Per le richieste che non siano PUT (l'unico PUT implementato è quello di UserServlet
+						 * per la creazione un User), viene verificato che l'access token di Facebook appartenga 
+						 * effettivamente ad un User registrato.
+						 */
 						Objectify ofy = ObjectifyService.begin();
 						if(ofy.query(UserImpl.class).filter("authToken", facebookAuthToken).count()==1)
 							chain.doFilter(req, res);

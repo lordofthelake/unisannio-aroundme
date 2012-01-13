@@ -16,6 +16,10 @@ import it.unisannio.aroundme.model.*;
 
 
 /**
+ * Implementazione lato server di {@link UserQuery} utilizzata per eseguire
+ * la query sul Datastore.
+ *  
+ * @see UserQuery
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
@@ -124,6 +128,7 @@ public class UserQueryImpl extends UserQuery {
 			}
 		}
 		
+		//Passaggio da un Collezione di UserImpl ad una Collezione di User
 		Collection<User> results = new ArrayList<User>();
 		results.addAll(queriedUsers);
 		

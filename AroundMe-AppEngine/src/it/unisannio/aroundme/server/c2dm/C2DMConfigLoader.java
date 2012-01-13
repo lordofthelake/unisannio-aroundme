@@ -29,7 +29,10 @@ public class C2DMConfigLoader {
 	public static C2DMConfigLoader getInstance() {
         return C2DMConfigLoaderHolder.instance;
 	}
-
+	
+	/**
+	 * Costruttore privato per realizzare il SingletonPattern
+	 */
 	private C2DMConfigLoader(){}
 
 	/**

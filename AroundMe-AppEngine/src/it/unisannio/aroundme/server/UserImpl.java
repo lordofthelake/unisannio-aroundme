@@ -17,8 +17,11 @@ import com.googlecode.objectify.annotation.Unindexed;
 import it.unisannio.aroundme.model.*;
 
 /**
+ * Implementazione lato server di {@link User}.
+ * Utilizza le annotazioni necessarie per la persistenza sul Datastore
+ * 
+ * @see User
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
- *
  */
 @Entity(name="User")
 @Indexed
@@ -38,7 +41,14 @@ public class UserImpl extends User {
 	@Indexed
 	private String authToken;
 
-	public UserImpl(long id, String name) {
+	/**
+	 * Crea un nuovo {@link User}.
+	 * &Egrave dichiarato protected per evitare che
+	 * non venga creato tramite {@link ModelFactory}. 
+	 * @param l'id univoco dell'User
+	 * @param name il nome dell'User
+	 */
+	protected UserImpl(long id, String name) {
 		this.id = id;
 		this.name = name;
 		position = null;
@@ -46,40 +56,66 @@ public class UserImpl extends User {
 		interestsChache = new ArrayList<Interest>();
 	}
 	
-	public UserImpl(){
+	/**
+	 * Costruttore senza argomenti necessario per la persistenza dell'User sul Datastore
+	 */
+	protected UserImpl(){
 		interests = new ArrayList<Long>();
 		interestsChache = new ArrayList<Interest>();
 	}
-		
+	
+	/**
+	 * {@inheritDoc}	
+	 */
 	@Override
 	public long getId() {
 		return id;
 	}
 
-
+	/**
+	 * Aggiunge un {@link Interest} all'User
+	 * @param interest L'Interest da aggiungere all?user
+	 */
 	public void addInterest(Interest interest) {
 		interests.add(interest.getId());
 		interestsChache.add(interest);
 	}
 
+	/**
+	 * {@inheritDoc}	
+	 */
 	@Override
 	public String getName() {
 		return name;
 	}
-
+	
+	/**
+	 * {@inheritDoc}	
+	 */
 	@Override
 	public Position getPosition() {
 		return position;
 	}
 	
+	/**
+	 * Restituisce il token di registrazione di Facebook
+	 * @return Il token di registrazione di Facebook
+	 */
 	public String getAuthToken() {
 		return authToken;
 	}
-
+	
+	/**
+	 * Associa all'User il token di registrazione di Facebook
+	 * @param authToken Il token di registrazione di Facebook
+	 */
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
 
+	/**
+	 * {@inheritDoc}	
+	 */
 	@Override
 	public Collection<Interest> getInterests() {
 		if(interestsChache.size()==interests.size())
@@ -89,25 +125,40 @@ public class UserImpl extends User {
 		return interestsChache;
 	}
 	
+	/**
+	 * Restituisce una collezione contenente le chiavi degli interessi dell'User
+	 * @return una collezione contenente le chiavi degli interessi dell'User
+	 */
 	protected Collection<Long> getInterestKeys(){
 		return interests;
 	}
-
-	public void setPosition(Position p) {
-		if (p instanceof PositionImpl) {
-			position = (PositionImpl) p;
-		}
-		this.position = (PositionImpl) ModelFactory.getInstance().createPosition(p.getLatitude(), p.getLongitude());
+	
+	/**
+	 * {@inheritDoc}	
+	 */
+	public void setPosition(Position position) {
+		this.position = (PositionImpl) position;
 	}
 	
+	/**
+	 * Restituisce le {@link Preferences} associate all'User
+	 * @return le {@link Preferences} associate all'User
+	 */
 	public Preferences getPreferences() {
 		return preferences;
 	}
-
+	
+	/**
+	 * Associa {@link Preferences} all'User
+	 * @param preferences le {@link Preferences} da associare all'User
+	 */
 	public void setPreferences(Preferences preferences) {
 		this.preferences = (PreferencesImpl) preferences;
 	}
-
+	
+	/**
+	 * Esegue le operazioni da effettuare prima di persistere l'User sul Datastore
+	 */
 	@SuppressWarnings("unused")
 	@PrePersist
 	private void prePerist(){
