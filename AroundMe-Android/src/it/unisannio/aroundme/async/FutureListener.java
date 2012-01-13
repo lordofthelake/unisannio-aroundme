@@ -4,7 +4,7 @@ package it.unisannio.aroundme.async;
  * Oggetto che viene notificato nel momento in cui &egrave; terminata una richiesta in background.
  * 
  * Nel momento in cui i dati siano stati correttamente caricati (per esempio dalla rete o da un DB), 
- * viene richiamato il metodo {@link #onFuture(T)}. In caso di errori, viene notificato 
+ * viene richiamato il metodo {@link #onSuccess(V)}. In caso di errori, viene notificato 
  * {@link #onError(Throwable)}.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
