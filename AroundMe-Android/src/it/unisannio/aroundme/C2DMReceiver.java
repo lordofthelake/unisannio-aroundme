@@ -2,21 +2,18 @@ package it.unisannio.aroundme;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
 
-import it.unisannio.aroundme.client.HttpTask;
-import it.unisannio.aroundme.client.Identity;
-import it.unisannio.aroundme.model.ModelFactory;
-import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.services.C2DMNotificationService;
+import it.unisannio.aroundme.services.PreferencesSyncService;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Riceve un messaggio push message dal Cloud to Device Messaging (C2DM) service.
@@ -52,10 +49,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		edit.putString(Setup.C2DM_REGISTRATIONID, registrationId);
 		edit.commit();
 
-		final Preferences preferences = ModelFactory.getInstance().createPreferences();
-		preferences.putAll(prefs.getAll());
-		
-		sendC2DMPreferenceToServer(preferences);
+		startService(new Intent(this, PreferencesSyncService.class));
 
     }
 
@@ -72,23 +66,26 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Editor edit = prefs.edit();
 		edit.putString(Setup.C2DM_REGISTRATIONID, null);
 		edit.commit();
-
-		final Preferences preferences = ModelFactory.getInstance().createPreferences();
-		preferences.putAll(prefs.getAll());
-		
-		sendC2DMPreferenceToServer(preferences);
+		startService(new Intent(this, PreferencesSyncService.class));
     }
 
+
     /**
-     * Called on registration error. This is called in the context of a Service
-     * - no dialog or UI.
+     *  Chiamato in caso di errori.
      * 
-     * @param context the Context
-     * @param errorId an error message, defined in {@link C2DMBaseReceiver}
+     * @param context il Context
+     * @param errorId un messaggio di errore, definito in {@link C2DMBaseReceiver}
      */
     @Override
     public void onError(Context context, String errorId) {
-//        context.sendBroadcast(new Intent(Util.UPDATE_UI_INTENT));
+    	if(errorId.equals("ACCOUNT_MISSING")){
+    		Toast.makeText(context.getApplicationContext(), R.string.error_GoogleAccountNeeded, Toast.LENGTH_LONG).show();
+    		SharedPreferences prefs = PreferenceManager	.getDefaultSharedPreferences(context);
+    		Editor edit = prefs.edit();
+    		edit.putBoolean("notification.active", false);
+    		edit.commit();
+    		context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    	}
     }
 
     /**
@@ -103,25 +100,26 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		context.startService(notificationIntent);
     }
     
-    
-    private void sendC2DMPreferenceToServer(final Preferences preferences){
-    	try {
-			(new HttpTask<Void>("POST", Setup.BACKEND_PREFERENCES_URL, Identity.get().getId()) {
-
-				@Override
-				protected Void read(InputStream in) throws Exception {
-					return null;
-				}
-
-				@Override
-				protected void write(OutputStream out) throws Exception {
-					Preferences.SERIALIZER.write(preferences, out);
-				}
-
-			}).call();
-
-		} catch (Exception e) {
-			Log.d("C2DMPreferenceSender", "Http Error", e);
-		}
+    /**
+     * Registra il device per l'utilizzo del servizio C2DM
+     * @param context il Context
+     */
+    public static void register(Context context){
+    	Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0));
+		registrationIntent.putExtra("sender", Setup.SENDER_ID);
+		context.startService(registrationIntent);
     }
+    
+    /**
+     * Revoca la registrazione per l'utilizzo del servizio C2DM
+     * 
+     * @param context il Context
+     */
+    public static void unregister(Context context){
+    	Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
+    	unregIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0));
+    	context.startService(unregIntent);
+    }
+    
 }

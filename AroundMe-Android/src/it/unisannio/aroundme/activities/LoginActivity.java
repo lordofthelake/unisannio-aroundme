@@ -2,6 +2,7 @@ package it.unisannio.aroundme.activities;
 
 import java.util.NoSuchElementException;
 
+import it.unisannio.aroundme.C2DMReceiver;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.async.AsyncQueue;
@@ -258,10 +259,7 @@ public class LoginActivity extends FragmentActivity
 		
 		String c2dmRegistrationId = preferences.getString(Setup.C2DM_REGISTRATIONID, null);
 		if (c2dmRegistrationId == null){
-			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-			registrationIntent.putExtra("sender", Setup.SENDER_ID);
-			startService(registrationIntent);
+			C2DMReceiver.register(getApplicationContext());
 		}
 		
 		startActivity(new Intent(this, ListViewActivity.class));
