@@ -43,6 +43,8 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 	private UserItemizedOverlay myOverlay;
 	private UserItemizedOverlay nearbyOverlay;
 	
+	private long[] ids = null;
+	
     protected void onCreate(Bundle savedStateInstance) {
     	super.onCreate(savedStateInstance);
     	Identity me = Identity.get();
@@ -77,7 +79,7 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 		execFragment = new UserQueryExecutorFragment();
 		fragmentTransaction.add(R.id.mapview_layout, execFragment);
 		
-		long[] ids = getIntent().getLongArrayExtra("userIds");
+		ids = getIntent().getLongArrayExtra("userIds");
 		if(ids != null) {
     		userQuery = UserQuery.byId(ids);
 		} else {
@@ -88,7 +90,6 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 		fragmentTransaction.commit();
 
 		if(queryFragment == null) {
-			// FIXME Si deve aspettare che il fragment sia collegato all'activity
 			execFragment.onQueryChanged(userQuery);
 			execFragment.refresh();
 		} else {
@@ -130,10 +131,10 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 	    	startActivity(i);
 	    	return true;
 	    case R.id.toList:
-	    	startActivity(new Intent(this, ListViewActivity.class));
-	        return true;
-	    case R.id.toMap:
-	        startActivity(new Intent(this, MapViewActivity.class));
+	    	Intent i2 = new Intent(this, ListViewActivity.class);
+	    	if(ids != null)
+	    		i2.putExtra("userIds", ids);
+	        startActivity(i2);
 	        return true;
 	    case R.id.preferences:
 	    	startActivity(new Intent(this, PreferencesActivity.class));

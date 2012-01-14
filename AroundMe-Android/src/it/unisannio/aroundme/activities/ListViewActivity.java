@@ -48,12 +48,14 @@ public class ListViewActivity extends FragmentActivity
 	private UserQueryFragment queryFragment;
 	private UserQueryExecutorFragment execFragment; 
 	
+	private long[] ids = null;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	
     	if(Identity.get() == null) {
-    		// FIXME Si dovrebbe avviare l'attivita' di login per procedere all'autenticazione
+    		// FIXME Se l'utente non e' settato, redireziona al login
     	}
     	
     	setContentView(R.layout.listview);
@@ -76,7 +78,7 @@ public class ListViewActivity extends FragmentActivity
 		execFragment = new UserQueryExecutorFragment();
 		fragmentTransaction.add(R.id.listview_layout, execFragment);
 		
-		long[] ids = getIntent().getLongArrayExtra("userIds");
+		ids = getIntent().getLongArrayExtra("userIds");
 		if(ids != null) {
     		userQuery = UserQuery.byId(ids);
 		} else {
@@ -88,7 +90,6 @@ public class ListViewActivity extends FragmentActivity
 		fragmentTransaction.commit();
 
 		if(queryFragment == null) {
-			// FIXME Si deve aspettare che il fragment sia collegato all'activity
 			execFragment.onQueryChanged(userQuery);
 			execFragment.refresh();
 		} else {
@@ -137,7 +138,10 @@ public class ListViewActivity extends FragmentActivity
 	    	startActivity(i);
 	    	return true;
 	    case R.id.toMap:
-	        startActivity(new Intent(this, MapViewActivity.class));
+	    	Intent i2 = new Intent(this, MapViewActivity.class);
+	    	if(ids != null)
+	    		i2.putExtra("userIds", ids);
+	        startActivity(i2);
 	        return true;
 	    case R.id.preferences:
 	    	startActivity(new Intent(this, PreferencesActivity.class));

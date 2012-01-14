@@ -36,7 +36,9 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 	private AsyncQueue async;
 	
 	private UserQuery userQuery;
-	private boolean needsRefresh = true;
+	private boolean needsRefresh = false;
+	
+	private boolean ready = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,9 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 	public void onResume() {
 		super.onResume();
 		async.resume();
+		ready = true;
+		if(needsRefresh)
+			refresh();
 	}
 	
 	@Override
@@ -68,6 +73,7 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 		super.onDestroy();
 		async.shutdown();
 	}
+	
 	
 	private void notifyUserQueryExecutionListener(Collection<User> results) {
 		if(listener != null)
@@ -79,6 +85,10 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 	}
 
 	public void refresh() {
+		if(!ready) {
+			needsRefresh = true;
+			return;
+		}
 		progress = ProgressDialog.show(getActivity(), "", getString(R.string.loading), true, true);
     	progress.setOnCancelListener(this);
     	

@@ -135,6 +135,8 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
 	    menu.findItem(R.id.profile).setVisible(false);
+	    menu.findItem(R.id.toList).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+	    menu.findItem(R.id.toMap).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 	    return true;
 	}
 
