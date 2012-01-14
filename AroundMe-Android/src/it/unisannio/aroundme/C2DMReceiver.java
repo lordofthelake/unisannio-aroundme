@@ -1,18 +1,3 @@
-/*
- * Copyright 2010 Google Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package it.unisannio.aroundme;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
@@ -56,6 +41,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
      * 
      * @param context il Context
      * @param registrationId il registrationid per il  C2DM
+     * 
+     * @author Danilo Iannelli <daniloiannelli6@gmail.com>
      */
     @Override
     public void onRegistered(Context context, String registrationId) {
@@ -73,9 +60,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     }
 
     /**
-     * Chiamato quando viene revocata la registeazione al device.
+     * Chiamato quando viene revocata la registrazione al device.
      * 
      * @param context the Context
+     * 
+     * @author Danilo Iannelli <daniloiannelli6@gmail.com>
      */
     @Override
     public void onUnregistered(Context context) {
