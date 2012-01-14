@@ -54,19 +54,22 @@ public class LoginActivity extends FragmentActivity
 	private LocationManager locationManager;
 	private boolean otherLocationProviderExists = true;
 	private AlertDialog locationDialog = null;
+
+	private SharedPreferences loginPreferences;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		loginPreferences = getPreferences(MODE_PRIVATE);
 		facebook = new Facebook(Setup.FACEBOOK_APP_ID);
 		
 		this.async = new AsyncQueue();
 
 		setContentView(R.layout.login);
 		txtLoading= (TextView) findViewById(R.id.txtLoginWait);
-		final String accessToken = preferences.getString("access_token", null);
-		long expires = preferences.getLong("access_expires", 0);
+		final String accessToken = loginPreferences.getString("access_token", null);
+		long expires = loginPreferences.getLong("access_expires", 0);
 
 		if(accessToken != null) {
 			facebook.setAccessToken(accessToken);
@@ -153,7 +156,7 @@ public class LoginActivity extends FragmentActivity
 
 	@Override
 	public void onSuccess(Identity me) {
-		SharedPreferences.Editor editor = preferences.edit();
+		SharedPreferences.Editor editor = loginPreferences.edit();
 
 		editor.putString("access_token", facebook.getAccessToken());
 		editor.putLong("access_expires", facebook.getAccessExpires());
@@ -251,7 +254,7 @@ public class LoginActivity extends FragmentActivity
 	}
 	
 	private void startApplication() {
-		Log.d("LoginActivity", "Login ok! User in " + Identity.get().getPosition());
+		Log.i("LoginActivity", "Login ok! User #" + Identity.get().getId() + " in " + Identity.get().getPosition());
 		
 		String c2dmRegistrationId = preferences.getString(Setup.C2DM_REGISTRATIONID, null);
 		if (c2dmRegistrationId == null){
