@@ -2,6 +2,7 @@ package it.unisannio.aroundme.activities;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.services.PositionTrackingService;
+import it.unisannio.aroundme.services.PreferencesSyncService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -15,7 +16,6 @@ import android.support.v4.app.SherlockPreferenceActivity;
  *
  */
 
-// FIXME Invia tutto al server quando l'Activity termina
 public class PreferencesActivity extends SherlockPreferenceActivity {
 
 	@Override
@@ -45,5 +45,11 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 			}
 			
 		});
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		startService(new Intent(this, PreferencesSyncService.class));
 	}
 }

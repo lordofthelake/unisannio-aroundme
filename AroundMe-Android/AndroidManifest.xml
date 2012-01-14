@@ -60,7 +60,8 @@
 
    
         <service android:name=".services.PositionTrackingService" />
-        <service android:name=".services.C2DMNotificationService"/>
+        <service android:name=".services.C2DMNotificationService" />
+        <service android:name=".services.PreferencesSyncService" />
 		<service android:name=".C2DMReceiver" />
 
         <receiver android:name="com.google.android.c2dm.C2DMBroadcastReceiver"

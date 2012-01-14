@@ -36,7 +36,7 @@ public class Identity extends User {
 						throw e;
 					}
 				}
-		
+				
 				return instance;
 			}
 			
