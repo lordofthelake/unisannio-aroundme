@@ -10,8 +10,6 @@ import it.unisannio.aroundme.model.UserQuery;
 
 import java.util.Collection;
 
-import javax.xml.transform.TransformerException;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -84,9 +82,7 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 		progress = ProgressDialog.show(getActivity(), "", getString(R.string.loading), true, true);
     	progress.setOnCancelListener(this);
     	
-		try {
-			Log.d("UserQueryFragment", UserQuery.SERIALIZER.toString(userQuery));
-		} catch (TransformerException e1) {}
+		Log.d("UserQueryExecutorFragment", userQuery.toString());
 		
 		this.task = async.exec(userQuery, new FutureListener<Collection<User>>(){
         	@Override

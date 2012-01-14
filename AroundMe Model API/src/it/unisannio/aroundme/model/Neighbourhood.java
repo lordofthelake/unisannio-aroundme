@@ -101,4 +101,9 @@ public class Neighbourhood implements Model {
 		Neighbourhood other = (Neighbourhood) obj;
 		return other.getPosition().equals(getPosition()) && other.getRadius() == getRadius();
 	}
+	
+	@Override
+	public String toString() {
+		return "{" + getRadius() + "m from " + getPosition() + "}";
+	}
 }

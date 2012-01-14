@@ -103,4 +103,9 @@ public class Compatibility implements Model {
 		Compatibility c = (Compatibility) obj;
 		return getUserId() == c.getUserId() && getRank() == c.getRank();
 	}
+	
+	@Override
+	public String toString() {
+		return "{" + getRank() * 100 + "% like #" + getUserId() + "}";
+	}
 }

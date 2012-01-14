@@ -19,7 +19,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;

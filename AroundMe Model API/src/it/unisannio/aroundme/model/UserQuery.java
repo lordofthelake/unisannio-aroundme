@@ -411,4 +411,28 @@ public abstract class UserQuery implements Callable<Collection<User>>, Model {
 		return compatibilityEquals && neighbourhoodEquals && interestIdsEquals && idsEquals;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append("UserQuery (");
+		Compatibility c = getCompatibility();
+		if(c != null)
+			b.append(c).append(" ");
+		
+		Neighbourhood n = getNeighbourhood();
+		if(n != null)
+			b.append(n).append(" ");
+		
+		Collection<Long> iids = getInterestIds();
+		if(!iids.isEmpty())
+			b.append("interests:").append(iids).append(" ");
+		
+		Collection<Long> ids = getIds();
+		if(!ids.isEmpty())
+			b.append("ids:").append(ids).append(" ");
+		
+		b.append(")");
+		return b.toString();
+	}
+	
 }

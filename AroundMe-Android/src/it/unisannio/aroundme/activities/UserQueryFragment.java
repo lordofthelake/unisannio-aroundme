@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
@@ -99,7 +98,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 				Position position = Identity.get().getPosition();
 				Neighbourhood neighbourhood = new Neighbourhood(position, view.getMultipliedValue());	
 				userQuery.setNeighbourhood(neighbourhood);
-				notifyQueryChangeListener();
+				notifyQueryChanged();
 			}
 		});
         
@@ -112,24 +111,19 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 				long id = Identity.get().getId();
 				Compatibility compatibility = new Compatibility(id, view.getConvertedValue());
 				userQuery.setCompatibility(compatibility);
-				notifyQueryChangeListener();
+				notifyQueryChanged();
 			}
 		});
         
         ListView interestsFilter = (ListView) page2.findViewById(R.id.listInterestFilter);
-        interestFilterAdapter = new InterestFilterAdapter(getActivity(), this, myInterests, async, userQuery);
+        interestFilterAdapter = new InterestFilterAdapter(this, myInterests, async);
         interestsFilter.setAdapter(interestFilterAdapter); 
-        interestsFilter.setOnItemClickListener(new OnItemClickListener(){
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				CheckBox ck =(CheckBox) arg1.findViewById(R.id.checkUsed);
-				ck.setChecked(!ck.isChecked());
-			}
-        });
+        
         return drawer;
 	}
 	
-	public void notifyQueryChangeListener() {
+	public void notifyQueryChanged() {
+		interestFilterAdapter.notifyDataSetChanged();
     	if(onQueryChangeListener != null)
     		onQueryChangeListener.onQueryChanged(userQuery);
 	}
@@ -160,7 +154,7 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 			SharedPreferences.Editor editor = queryState.edit();
 			editor.putString("UserQuery", UserQuery.SERIALIZER.toString(userQuery));
 			editor.commit();
-			Log.d("UserQueryFragment", "Persisted UserQuery: " + UserQuery.SERIALIZER.toString(userQuery));
+			Log.d("UserQueryFragment", "Persisted UserQuery: " + userQuery);
 		} catch (Exception e) {
 			Log.w("UserQueryFragment", "UserQuery cannot be persisted", e);
 		}
@@ -185,10 +179,10 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
 				rank.setConvertedValue(c == null ? 0.0f : c.getRank());
 				
 				interestFilterAdapter.notifyDataSetChanged();
-				Log.d("UserQueryFragment", "Restored UserQuery: " + UserQuery.SERIALIZER.toString(userQuery));
+				Log.d("UserQueryFragment", "Restored UserQuery: " + userQuery);
 			}
 			
-			notifyQueryChangeListener();
+			notifyQueryChanged();
 		} catch (Exception e) {
 			Log.w("UserQueryFragment", "UserQuery cannot be restored", e);
 		}
