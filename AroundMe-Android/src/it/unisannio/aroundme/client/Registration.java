@@ -2,6 +2,7 @@ package it.unisannio.aroundme.client;
 
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
+import it.unisannio.aroundme.async.AsyncQueue;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.User;
@@ -31,11 +32,24 @@ import android.util.Log;
 import com.facebook.android.Facebook;
 
 /**
+ * Classe delegata all'importazione dei dati di un utente da Facebook.
+ * 
+ * La classe provvede alcuni metodi di utilit&agrave; per importare i dati necessari alla costituzione del profilo
+ * dalle Graph API di Facebook e per la costruzione di un'interfaccia grafica che permetta di modificare cosa includere nel profilo, 
+ * oltre che per registrare il nuovo profilo sul server di backend.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class Registration implements Callable<Identity> {
+	
+	/**
+	 * Restituisce un task in grado di importare i dati necessari alla registrazione da Facebook.
+	 * 
+	 * @param fb un client Facebook con le autorizzazioni necessarie ad effettuare l'operazione
+	 * @return un task in grado di importare i dati dalle Graph API
+	 * 
+	 * @see AsyncQueue#exec(Callable, it.unisannio.aroundme.async.FutureListener)
+	 */
 	public static Callable<Registration> create(final Facebook fb) {
 		return new Callable<Registration>() {
 
@@ -65,6 +79,16 @@ public class Registration implements Callable<Identity> {
 	private final LinkedHashMap<Interest, Boolean> interests;
 	private final String accessToken;
 	
+	/**
+	 * Crea un nuovo processo di registrazione con i dati indicati.
+	 * 
+	 * @param id l'ID utente
+	 * @param name il nome dell'utente
+	 * @param interests l'insieme degli interessi dell'utente
+	 * @param accessToken un token di autenticazione valido
+	 * 
+	 * @see #create(Facebook)
+	 */
 	protected Registration(long id, String name, Collection<Interest> interests, String accessToken) {
 		this.id = id;
 		this.name = name;
@@ -76,10 +100,20 @@ public class Registration implements Callable<Identity> {
 		}
 	}
 	
+	/**
+	 * Restituisce gli interessi importati durante la creazione del processo.
+	 * 
+	 * @return una collezione di tutti gli interessi importati
+	 */
 	public Collection<Interest> getInterests() {
 		return interests.keySet();
 	}
 	
+	/**
+	 * Restituisce il sottoinsieme degli interessi importati che l'utente ha deciso di includere nel suo profilo.
+	 *
+	 * @return una collezione degli interessi selezionati in fase di registrazione
+	 */
 	public Collection<Interest> getCheckedInterests() {
 		Collection<Interest> checked = new LinkedList<Interest>();
 		for(Map.Entry<Interest, Boolean> entry : interests.entrySet()) {
@@ -89,18 +123,40 @@ public class Registration implements Callable<Identity> {
 		return checked;
 	}
 	
+	/**
+	 * Restituisce il nome dell'utente importato, che verr&agrave; usato nella costituzione del suo profilo.
+	 * 
+	 * @return il nome dell'utente importato
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Restituisce la chiave d'accesso associata a questo utente.
+	 * 
+	 * @return la chiave d'accesso di questo utente
+	 */
 	public String getAccessToken() {
 		return accessToken;
 	}
 	
+	/**
+	 * Restituisce l'ID dell'utente importato.
+	 * 
+	 * @return l'ID dell'utente importato
+	 */
 	public long getId() {
 		return id;
 	}
 	
+	/**
+	 * Crea un Dialog per permettere all'utente di scegliere cosa includere nel proprio profilo tra i dati importati.
+	 * 
+	 * @param ctx l'Activity che ha avviato il Dialog.
+	 * @param onEditFinishListener un listener che ricever&agrave; la notifica che l'utente ha premuto il pulsante "Importa"
+	 * @return il Dialog per modificare le preferenze importate
+	 */
     public Dialog createInterestEditorDialog(final Activity ctx, OnClickListener onEditFinishListener) {
 
 		AlertDialog.Builder b = new AlertDialog.Builder(ctx);
@@ -140,6 +196,19 @@ public class Registration implements Callable<Identity> {
 		return b.create();
     }
 
+    /**
+     * Crea il profilo sul server di backend, usando i dati importati e approvati dall'utente.
+     * 
+     * In caso di successo, l'identit&agrave; in uso viene impostata a quella appena creata.
+     * <p>Essendo un'operazione bloccante, la modalit&agrave; d'uso &egrave; di utilizzare l'istanza
+     * come task in una {@link AsyncQueue}. </p>
+     * 
+     * @return l'identit&agrave; creata
+     * @throws Exception in caso di errori nella registrazione del profilo
+     * 
+     * @see Identity
+     * @see AsyncQueue#exec(Callable, it.unisannio.aroundme.async.FutureListener)
+     */
 	@Override
 	public Identity call() throws Exception {
 		final User user = ModelFactory.getInstance().createUser(id, name, getCheckedInterests());
