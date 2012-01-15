@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -28,14 +29,14 @@ public class PreferencesServlet extends HttpServlet{
 	/**
 	 * Utilizzato per assegnare le preferenze ad un utente <br>
 	 * <br>
-	 * Richiesta:<br>
+	 * @param req laichiesta:<br>
 	 * L'URI deve essere /user/[userId] <br>
 	 * dove [userId] &egrave; l'id dell'Utente al quale si vogliono assegnare le
 	 * preferenze<br>
 	 * Il body deve contenere l'xml che rappresenta le preferenze da attribuire
 	 * all'utente<br>
 	 * <br>
-	 * Risposta:<br>
+	 * @param resp la risposta:<br>
 	 * 200 - Se l'operazione va a buon fine<br>
 	 * 404 - Se l'utente non esiste<br>
 	 * 401 - Se l'userId non &egrave; valido<br>
@@ -53,6 +54,8 @@ public class PreferencesServlet extends HttpServlet{
 			ofy.put(user);
 		}catch (NumberFormatException e){
 			resp.sendError(401);
+		}catch (NotFoundException e){
+			resp.sendError(404);
 		}catch (NullPointerException e) {
 			resp.sendError(404);
 		} catch (Exception e) {
@@ -64,14 +67,14 @@ public class PreferencesServlet extends HttpServlet{
 	/**
 	 * Utilizzato per ottenere le preferenze di un User<br>
 	 * <br>
-	 * Richiesta:<br>
+	 * @param req la richiesta:<br>
 	 * L'URI deve essere /user/[userId]<br>
 	 * dove [userId] &egrave; l'id dell'Utente del quale si vogliono ottenere le
 	 * preference<br>
 	 * <br>
-	 * Risposta:<br>
+	 * @param resp la risposta:<br>
 	 * L'xml rappresentante le preferenze dell'utente<br>
-	 * 404 - Se l'utente non esiste o ha preferenze nulle<br>
+	 * 404 - Se l'utente non esiste o ha perenze nulle<br>
 	 * 401 - Se l'userId non &egrave; valido<br>
 	 * 500 - In caso di errori <br>
 	 */
@@ -85,8 +88,9 @@ public class PreferencesServlet extends HttpServlet{
 			Preferences.SERIALIZER.write(user.getPreferences(), resp.getOutputStream());
 		}catch (NumberFormatException e){
 			resp.sendError(401);
+		}catch (NotFoundException e){
+			resp.sendError(404);
 		}catch (NullPointerException e) {
-			e.printStackTrace();
 			resp.sendError(404);
 		} catch (Exception e) {
 			log.severe(e.toString());

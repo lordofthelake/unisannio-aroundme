@@ -1,6 +1,7 @@
 package it.unisannio.aroundme.server.task;
 
 import it.unisannio.aroundme.model.Compatibility;
+import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Neighbourhood;
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.Preferences;
@@ -45,25 +46,28 @@ public class PositionQueryTask extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)	throws ServletException, IOException {
 		try {
-			log.info("Excecuting PositionQuryTask");
+			log.info("Excecuting PositionQueryTask");
 			long userId = Long.parseLong(req.getParameter("userId"));
 			Objectify ofy = ObjectifyService.begin();
 			UserImpl user = ofy.get(UserImpl.class, userId);
 			Position position = user.getPosition();
-			Preferences userPreferences = user.getPreferences();
-			Neighbourhood neighbourhood = new Neighbourhood(position, userPreferences.get(PREF_QUERY_RADIUS, 100));	
-			Compatibility compatibility = new Compatibility(user.getId(), userPreferences.get(PREF_QUERY_RANK, 0.6f));
+			if(position != null){
+				Preferences userPreferences = user.getPreferences();
+				if(userPreferences == null) //Vengono ceate nuove preference vuote per fare in modo che vengano usati i valori di Default
+					userPreferences = ModelFactory.getInstance().createPreferences(); 
+				Neighbourhood neighbourhood = new Neighbourhood(position, userPreferences.get(PREF_QUERY_RADIUS, 100));	
+				Compatibility compatibility = new Compatibility(user.getId(), userPreferences.get(PREF_QUERY_RANK, 0.6f));
 
-			UserQuery query = new UserQueryImpl();
-			query.setNeighbourhood(neighbourhood);
-			query.setCompatibility(compatibility);
-			Collection<User> users = query.call();
-			for(User u: users){
-				if(userPreferences.get("notification.active", true))
-					C2DMNotificationSender.sendWithRetry(userPreferences.get(PREF_REGISTRATION_ID, null), u.getId());
-				if (isQueriedUserNotificable(u, user));
+				UserQuery query = new UserQueryImpl();
+				query.setNeighbourhood(neighbourhood);
+				query.setCompatibility(compatibility);
+				Collection<User> users = query.call();
+				for(User u: users){
+					if(userPreferences.get("notification.active", true))
+						C2DMNotificationSender.sendWithRetry(userPreferences.get(PREF_REGISTRATION_ID, null), u.getId());
+					if (isQueriedUserNotificable(u, user));
 					C2DMNotificationSender.sendWithRetry(((UserImpl)u).getPreferences().get(PREF_REGISTRATION_ID, null), userId);
-				
+				}
 			}
 		} catch (Exception e) {
 			resp.setStatus(200); //Ritornare un 200 serve per non forzare il retry del task
@@ -72,7 +76,7 @@ public class PositionQueryTask extends HttpServlet{
 		}
 
 	}
-	
+
 	/**
 	 * Controlla che un utente risultante dalla query, sia notificabile.
 	 * Viene controllato se il queried user abbia disattivato le notifiche
@@ -94,5 +98,5 @@ public class PositionQueryTask extends HttpServlet{
 		}
 		return false;
 	}
-	
+
 }
