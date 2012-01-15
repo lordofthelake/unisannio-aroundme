@@ -2,6 +2,7 @@ package it.unisannio.aroundme.activities;
 
 import java.util.ArrayList;
 
+import it.unisannio.aroundme.Application;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.adapters.InterestAdapter;
@@ -77,7 +78,13 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 		async = new AsyncQueue();
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
 		
-        asyncLoadUser();
+        
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		asyncLoadUser();
 	}
 	
 	private void asyncLoadUser() {
@@ -182,6 +189,14 @@ FutureListener<User>, OnCancelListener,OnClickListener, OnItemClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(Identity.get() == null) {
+			if(!((Application) getApplication()).isTerminated()) {
+				startActivity(new Intent(this, LoginActivity.class));
+			}
+			finish();
+			return;
+		}
+		
 		async.resume();
 		pictureAsync.resume();
 	}

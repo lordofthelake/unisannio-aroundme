@@ -46,7 +46,7 @@ public class PositionTrackingService extends Service {
 	/**
 	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
 	 */
-	protected static class TrackingLocationListener implements LocationListener {
+	protected class TrackingLocationListener implements LocationListener {
 		/**
 		 * Ultima posizione rilevata.
 		 */
@@ -75,36 +75,39 @@ public class PositionTrackingService extends Service {
 		 * @param Location la nuova posizione rilevata
 		 */
 		public void onLocationChanged(Location location) {
+			Identity me = Identity.get();
+			if(me == null) {
+				stopSelf();
+				return;
+			}
+			
 			if(location != null && isBetterLocation(location, last)) {
 				last = location;
 
 				final Position position = ModelFactory.getInstance().createPosition(
 						location.getLatitude(), location.getLongitude());
 
-				Identity me = Identity.get();
-				if(me != null) {
-					me.setPosition(position);
-	
-					try {
-						(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_URL, me.getId()) {
-	
-							@Override
-							protected Void read(InputStream in) throws Exception {
-								return null;
-							}
-	
-							@Override
-							protected void write(OutputStream out) throws Exception {
-								Position.SERIALIZER.write(position, out);
-							}
-						}).call();
-					} catch (Exception e) {
-						Log.w("PositionTrackingService", "Http Error", e);
-					}
-				} else {
-					Log.e("PositionTrackingService", "No Identity set!");
+				
+				
+				me.setPosition(position);
+
+				try {
+					(new HttpTask<Void>("POST", Setup.BACKEND_POSITION_URL, me.getId()) {
+
+						@Override
+						protected Void read(InputStream in) throws Exception {
+							return null;
+						}
+
+						@Override
+						protected void write(OutputStream out) throws Exception {
+							Position.SERIALIZER.write(position, out);
+						}
+					}).call();
+				} catch (Exception e) {
+					Log.w("PositionTrackingService", "Http Error", e);
 				}
-			}
+			} 
 		}
 	};	
 

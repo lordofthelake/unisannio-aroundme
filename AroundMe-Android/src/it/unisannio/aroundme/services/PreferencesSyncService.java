@@ -21,6 +21,9 @@ public class PreferencesSyncService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent arg0) {
+		if(Identity.get() == null)
+			return;
+		
 		try {
 			Log.i("PreferencesSyncService", "Service started");
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);

@@ -25,7 +25,7 @@ public class UserOverlayItem extends OverlayItem {
 				user.getName(), 
 				(user.equals(Identity.get()) 
 						? ctx.getString(R.string.balloon_snippet_itsyou) 
-						: MessageFormat.format(ctx.getString(R.string.balloon_snippet_format), Math.round(Identity.get().getCompatibilityRank(user)*100)/100f)
+						: MessageFormat.format(ctx.getString(R.string.balloon_snippet_format), Identity.get().getCompatibilityRank(user))
 				)
 				
 		);

@@ -20,9 +20,20 @@ import it.unisannio.aroundme.model.*;
 public class Application extends android.app.Application {
 	private static final LruCache<Long, User> cache = new LruCache<Long, User>(Setup.USER_CACHE_SIZE);
 	
-	public void addToCache(User u) {
-		cache.put(u.getId(), u);
-		
+	private boolean terminated = false;
+	
+	public void terminate() {
+		terminated = true;
+		cache.evictAll();
+		Picture.flushCache();
+	}
+	
+	public boolean isTerminated() {
+		return terminated;
+	}
+	
+	private void addToCache(User u) {
+		cache.put(u.getId(), u);	
 	}
 	
 	@Override
@@ -168,7 +179,7 @@ public class Application extends android.app.Application {
 							}
 						}
 
-						return (new HttpTask<Collection<User>>("POST", Setup.BACKEND_USER_URL) { 
+						return (new HttpTask<Collection<User>>("POST", Setup.BACKEND_USER_URL_SIMPLE) { 
 							
 								protected Collection<User> read(InputStream input) throws Exception {
 									@SuppressWarnings("unchecked")

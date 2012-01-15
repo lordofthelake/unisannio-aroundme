@@ -1,6 +1,7 @@
 package it.unisannio.aroundme.activities;
 
 
+import it.unisannio.aroundme.Application;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.Setup;
 import it.unisannio.aroundme.activities.UserQueryExecutorFragment.UserQueryExecutionListener;
@@ -54,10 +55,6 @@ public class ListViewActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	
-    	if(Identity.get() == null) {
-    		// FIXME Se l'utente non e' settato, redireziona al login
-    	}
-    	
     	setContentView(R.layout.listview);
 
     	pictureAsync = new AsyncQueue(Setup.PICTURE_CONCURRENCY, Setup.PICTURE_KEEPALIVE);
@@ -100,6 +97,21 @@ public class ListViewActivity extends FragmentActivity
 		
 		execFragment.setExecutionListener(this);
     }
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if(Identity.get() == null) {
+			if(!((Application) getApplication()).isTerminated()) {
+				startActivity(new Intent(this, LoginActivity.class));
+			}
+			finish();
+			return;
+		}
+		
+		pictureAsync.resume();
+	}
     
     @Override
 	public void onDrawerOpened() {
@@ -163,11 +175,6 @@ public class ListViewActivity extends FragmentActivity
 		pictureAsync.pause();
 	}
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		pictureAsync.resume();
-	}
 	
 	@Override
 	protected void onDestroy() {

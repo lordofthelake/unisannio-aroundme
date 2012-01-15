@@ -129,7 +129,7 @@ public abstract class HttpTask<T> implements Callable<T> {
 			for(Map.Entry<String, String> e : headers.entrySet())
 				urlConnection.setRequestProperty(e.getKey(), e.getValue());
 					
-			if(!method.equalsIgnoreCase("get")) {
+			if(!method.equalsIgnoreCase("get") && !method.equalsIgnoreCase("delete")) {
 				urlConnection.setDoOutput(true);
 			    urlConnection.setChunkedStreamingMode(Setup.NETWORK_CHUNCK_SIZE);
 			    
@@ -155,7 +155,8 @@ public abstract class HttpTask<T> implements Callable<T> {
 		    	in.close();
 		    }
 		} finally {
-			urlConnection.disconnect();
+			if(urlConnection != null)
+				urlConnection.disconnect();
 		}
 	}
 	

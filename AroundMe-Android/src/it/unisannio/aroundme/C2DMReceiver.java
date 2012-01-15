@@ -27,7 +27,7 @@ import android.widget.Toast;
 public class C2DMReceiver extends C2DMBaseReceiver {
 
     public C2DMReceiver() {
-        super("aroundmeproject@gmail.com");
+        super(Setup.C2DM_SENDER_ID);
     }
 
     /**
@@ -46,7 +46,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     	Log.i("C2DMRegistrationReceiver", "Received c2dmRegistrationId "+ registrationId);
 		SharedPreferences prefs = PreferenceManager	.getDefaultSharedPreferences(context);
 		Editor edit = prefs.edit();
-		edit.putString(Setup.C2DM_REGISTRATIONID, registrationId);
+		edit.putString(Setup.C2DM_REGISTRATIONID_KEY, registrationId);
 		edit.commit();
 
 		startService(new Intent(this, PreferencesSyncService.class));
@@ -64,7 +64,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     public void onUnregistered(Context context) {
     	SharedPreferences prefs = PreferenceManager	.getDefaultSharedPreferences(context);
 		Editor edit = prefs.edit();
-		edit.putString(Setup.C2DM_REGISTRATIONID, null);
+		edit.putString(Setup.C2DM_REGISTRATIONID_KEY, null);
 		edit.commit();
 		startService(new Intent(this, PreferencesSyncService.class));
     }
@@ -107,7 +107,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     public static void register(Context context){
     	Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0));
-		registrationIntent.putExtra("sender", Setup.SENDER_ID);
+		registrationIntent.putExtra("sender", Setup.C2DM_SENDER_ID);
 		context.startService(registrationIntent);
     }
     
