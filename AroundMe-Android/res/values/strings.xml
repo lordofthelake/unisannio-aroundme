@@ -28,10 +28,9 @@
     <string name="menu_preferences">Preferenze</string>
     <string name="menu_profile">Profilo</string>
     <string name="pref_category_filter">Filtri</string>
-    <string name="pref_category_account">Account</string>
-    <string name="pref_account_logout">Logout</string>
+    <string name="pref_category_account">Account &amp; Privacy</string>
+    <string name="pref_account_logout">Esci</string>
     <string name="pref_account_delete">Elimina</string>
-    <string name="pref_category_tracking">Tracciamento</string>
     <string name="pref_tracking_enabled">Traccia la mia posizione</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Annulla</string>
@@ -59,5 +58,11 @@
     <string name="loading">Caricamento&#8230;</string>
     <string name="interests">Interessi</string>
     <string name="error_GoogleAccountNeeded">Per ricevere le notifiche è necessario un Google Account. Notifiche temporaneamente disabilitate.</string>
+    <string name="dialog_delete_title">Cancellazione account</string>
+    <string name="dialog_delete_message">Sei sicuro di voler cancellare il tuo account?</string>
+    <string name="dialog_continue">Continua</string>
+    <string name="progress_deleting">Cancellazione in corso...</string>
+    <string name="toast_account_deleted">Il tuo account è stato eliminato correttamente.</string>
+    <string name="toast_deletion_error">Si è verificato un errore durante la rimozione del tuo account. Per favore riprova.</string>
 
 </resources>

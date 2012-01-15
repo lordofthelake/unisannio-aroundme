@@ -5,15 +5,12 @@
 	    <CheckBoxPreference android:title="@string/pref_notification_activate" android:key="notification.active" android:defaultValue="true" android:persistent="true"/>
 	    <RingtonePreference android:title="@string/pref_notification_sound" android:ringtoneType="notification|alarm" android:key="notification.sound" android:dependency="notification.active" android:defaultValue="content://settings/system/notification_sound"/>
 	    <CheckBoxPreference android:title="@string/pref_notification_vibration" android:key="notification.vibrate" android:dependency="notification.active" android:defaultValue="true"/>
-	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_category_filter">
-	    <it.unisannio.aroundme.widgets.RankSliderDialogPreference android:title="@string/pref_notification_compatibility" android:key="query.rank" android:persistent="true"/>
-	    <it.unisannio.aroundme.widgets.RadiusSliderDialogPreference android:title="@string/pref_notification_distance" android:key="query.radius" android:persistent="true"/>
-	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_category_tracking">
-		<CheckBoxPreference android:title="@string/pref_tracking_enabled" android:key="tracking.enabled" android:defaultValue="true" android:persistent="true" />
+	    <it.unisannio.aroundme.widgets.RankSliderDialogPreference android:title="@string/pref_notification_compatibility" android:key="query.rank" android:dependency="notification.active" android:persistent="true"/>
+	    <it.unisannio.aroundme.widgets.RadiusSliderDialogPreference android:title="@string/pref_notification_distance" android:key="query.radius" android:dependency="notification.active" android:persistent="true"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_category_account">
+		<CheckBoxPreference android:title="@string/pref_tracking_enabled" android:key="tracking.enabled" android:defaultValue="true" android:persistent="true" />
+		<Preference android:title="@string/pref_account_logout" android:persistent="false" android:key="logout"/>
 		<Preference android:title="@string/pref_account_delete" android:persistent="false" android:key="delete"/>
 	</PreferenceCategory>
 	

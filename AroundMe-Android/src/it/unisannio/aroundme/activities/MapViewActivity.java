@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
+import it.unisannio.aroundme.Application;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.activities.UserQueryExecutorFragment.UserQueryExecutionListener;
 import it.unisannio.aroundme.async.AsyncQueue;
@@ -49,10 +50,6 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
     protected void onCreate(Bundle savedStateInstance) {
     	super.onCreate(savedStateInstance);
     	Identity me = Identity.get();
-		if(me == null) {
-			// FIXME Se l'utente non e' settato, redireziona al login
-		}
-			
     	async = new AsyncQueue(); // 1 thread. Nelle mappe viene visualizzata un'immagine alla volta
 		
     	setContentView(R.layout.map_view);	
@@ -164,6 +161,14 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(Identity.get() == null) {
+			if(!((Application) getApplication()).isTerminated()) {
+				startActivity(new Intent(this, LoginActivity.class));
+			}
+			finish();
+			return;
+		}
+		
 		async.resume();
 	}
 	
