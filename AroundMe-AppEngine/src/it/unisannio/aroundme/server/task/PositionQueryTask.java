@@ -37,7 +37,8 @@ public class PositionQueryTask extends HttpServlet{
 	private final String PREF_REGISTRATION_ID = "c2dmRegistrationId";
 	private final String PREF_QUERY_RADIUS = "query.radius";
 	private final String PREF_QUERY_RANK = "query.rank";
-
+	private final String PREF_NOTIFICATION = "notification.active";
+	
 	/**
 	 * L'URI utilizzata per poter raggiungere e  quindi eseguire il {@link PositionQueryTask}
 	 */
@@ -50,25 +51,27 @@ public class PositionQueryTask extends HttpServlet{
 			long userId = Long.parseLong(req.getParameter("userId"));
 			Objectify ofy = ObjectifyService.begin();
 			UserImpl user = ofy.get(UserImpl.class, userId);
-			Position position = user.getPosition();
-			if(position != null){
-				Preferences userPreferences = user.getPreferences();
-				if(userPreferences == null) //Vengono ceate nuove preference vuote per fare in modo che vengano usati i valori di Default
-					userPreferences = ModelFactory.getInstance().createPreferences(); 
-				Neighbourhood neighbourhood = new Neighbourhood(position, userPreferences.get(PREF_QUERY_RADIUS, 100));	
-				Compatibility compatibility = new Compatibility(user.getId(), userPreferences.get(PREF_QUERY_RANK, 0.6f));
+			double lat = Double.parseDouble(req.getParameter("lat"));
+			double lon = Double.parseDouble(req.getParameter("lon"));
+			Position position = ModelFactory.getInstance().createPosition(lat, lon);
+			Preferences userPreferences = user.getPreferences();
+			if(userPreferences == null) //Vengono ceate nuove preference vuote per fare in modo che vengano usati i valori di Default
+				userPreferences = ModelFactory.getInstance().createPreferences(); 
+			Neighbourhood neighbourhood = new Neighbourhood(position, userPreferences.get(PREF_QUERY_RADIUS, 500));	
+			Compatibility compatibility = new Compatibility(user.getId(), userPreferences.get(PREF_QUERY_RANK, 0.6f));
 
-				UserQuery query = new UserQueryImpl();
-				query.setNeighbourhood(neighbourhood);
-				query.setCompatibility(compatibility);
-				Collection<User> users = query.call();
-				for(User u: users){
-					if(userPreferences.get("notification.active", true))
-						C2DMNotificationSender.sendWithRetry(userPreferences.get(PREF_REGISTRATION_ID, null), u.getId());
-					if (isQueriedUserNotificable(u, user));
+			UserQuery query = new UserQueryImpl();
+			query.setNeighbourhood(neighbourhood);
+			query.setCompatibility(compatibility);
+			Collection<User> users = query.call();
+			for(User u: users){
+				if(userPreferences.get(PREF_NOTIFICATION, true))
+					C2DMNotificationSender.sendWithRetry(userPreferences.get(PREF_REGISTRATION_ID, null), u.getId());
+				if (isQueriedUserNotifiable(u, user)){
 					C2DMNotificationSender.sendWithRetry(((UserImpl)u).getPreferences().get(PREF_REGISTRATION_ID, null), userId);
 				}
 			}
+
 		} catch (Exception e) {
 			resp.setStatus(200); //Ritornare un 200 serve per non forzare il retry del task
 			log.severe(e.toString());
@@ -87,12 +90,12 @@ public class PositionQueryTask extends HttpServlet{
 	 * @param myUser l'utente per cui &egrave; stata effettuata la query
 	 * @return true se queriedUser &egrave; notificabile
 	 */
-	private boolean isQueriedUserNotificable(User queriedUser, User myUser){
+	private boolean isQueriedUserNotifiable(User queriedUser, User myUser){
 		Preferences queriedUserPrefs = ((UserImpl) queriedUser).getPreferences();
-		if(queriedUserPrefs.get("notification.active", true)){
+		if(queriedUserPrefs != null && queriedUserPrefs.get(PREF_NOTIFICATION, true)){
 			if(queriedUser.getCompatibilityRank(myUser) <  queriedUserPrefs .get(PREF_QUERY_RANK, 0.6f))
 				return false;
-			if(queriedUser.getDistance(myUser) < queriedUserPrefs.get(PREF_QUERY_RADIUS, 100))
+			if(queriedUser.getDistance(myUser) > queriedUserPrefs.get(PREF_QUERY_RADIUS, 500))
 				return false;
 			return true;
 		}

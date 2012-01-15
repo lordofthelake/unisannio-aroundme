@@ -59,6 +59,8 @@ public class PositionServlet extends HttpServlet{
 			Queue queue = QueueFactory.getDefaultQueue();
 			TaskOptions url = TaskOptions.Builder.withUrl(PositionQueryTask.URI)
 					.param("userId", userId)
+					.param("lat", position.getLatitude()+"")
+					.param("lon", position.getLongitude()+"")
 					.method(Method.POST);
 			queue.add(url);
 		}catch (NumberFormatException e){

@@ -2,6 +2,7 @@ package it.unisannio.aroundme.activities;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
@@ -177,7 +178,30 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 	public void onUserQueryExecutionResults(Collection<User> results) {
 		nearbyOverlay.clear();
 		nearbyOverlay.addAll(results);
-		
-		mapView.getController().zoomToSpan(nearbyOverlay.getLatSpanE6(), nearbyOverlay.getLonSpanE6());
+		int minLat = 81 * (int) 1E6;
+	    int maxLat = -81 * (int) 1E6;
+	    int minLon = 181 * (int) 1E6;
+	    int maxLon = -181 * (int) 1E6;
+	    
+	    //Cerca le latitudini e longitudini minori e maggiori
+	    for (User u: results) {
+	    	GeoPoint gp = PositionUtils.toGeoPoint(u.getPosition());
+	    	minLat = (minLat > (gp.getLatitudeE6())) ? gp.getLatitudeE6() : minLat;
+	    	maxLat = (maxLat < (gp.getLatitudeE6())) ? gp.getLatitudeE6() : maxLat;
+	    	minLon = (minLon > (gp.getLongitudeE6())) ? gp.getLongitudeE6() : minLon;
+	    	maxLon = (maxLon < (gp.getLongitudeE6())) ? gp.getLongitudeE6() : maxLon;
+	    }		
+	    GeoPoint gp = PositionUtils.toGeoPoint(Identity.get().getPosition());
+	    minLat = (minLat > gp.getLatitudeE6()) ? gp.getLatitudeE6() : minLat;
+	    maxLat = (maxLat < gp.getLatitudeE6()) ? gp.getLatitudeE6() : maxLat;
+	    minLon = (minLon > gp.getLongitudeE6()) ? gp.getLongitudeE6() : minLon;
+	    maxLon = (maxLon < gp.getLongitudeE6()) ? gp.getLongitudeE6() : maxLon;
+
+	    //FIXME Il proprio user non si trova al centro
+	    mapView.getController().zoomToSpan((maxLat - minLat), (maxLon - minLon));
+	    mapView.getController().animateTo(new GeoPoint((maxLat + minLat) / 2, (maxLon + minLon) / 2));
+
+//		mapView.getController().zoomToSpan(nearbyOverlay.getLatSpanE6(), nearbyOverlay.getLonSpanE6());
+
 	}
 }
