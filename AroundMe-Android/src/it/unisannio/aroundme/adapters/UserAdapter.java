@@ -10,6 +10,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,8 @@ public class UserAdapter extends ArrayAdapter<User> {
 			h.txtDistance.setText(getContext().getString(R.string.distance_format, dist));
 		}else{
 			h.txtDistance.setText(R.string.not_available);
-		}		
+		}
+		Log.d("UserAdapter", "compatibility: "+user.getCompatibilityRank(me));
 		int rank=Math.round(me.getCompatibilityRank(user) * 100);
 		if (rank!=-1){
 			h.txtCompatibility.setText(getContext().getString(R.string.compatibility_format, rank));
