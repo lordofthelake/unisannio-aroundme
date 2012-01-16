@@ -15,10 +15,7 @@ import it.unisannio.aroundme.server.UserImpl;
 import it.unisannio.aroundme.server.c2dm.C2DMConfig;
 import it.unisannio.aroundme.server.servlet.ServletFilter;
 import it.unisannio.aroundme.server.servlet.UserServlet;
-import junit.extensions.TestSetup;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -37,28 +34,24 @@ import com.googlecode.objectify.ObjectifyService;
  */
 public class ServletFilterTest extends TestCase{
 	private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini"));
+			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini").setStoreDelayMs(10));
 	private Server server;
 	private int port;
 	private String fbAccessToken;
-
-	public static Test suite() {//Pattern per eseguire delle configurazioni una tantum
-		return new TestSetup(new TestSuite(ServletFilterTest.class)) {
-
-			protected void setUp() throws Exception {
-				ModelFactory.setInstance(new ServerModelFactory());
-				ObjectifyService.register(UserImpl.class);
-				ObjectifyService.register(InterestImpl.class);
-				ObjectifyService.register(C2DMConfig.class);
-			}
-		};
-	}
 
 	@Override
 	public void setUp() {
 		try {
 			helper.setUp();
 
+			ModelFactory.setInstance(new ServerModelFactory());
+			
+			try{
+				ObjectifyService.register(UserImpl.class);
+				ObjectifyService.register(InterestImpl.class);
+				ObjectifyService.register(C2DMConfig.class);
+			}catch(IllegalArgumentException e){}
+			
 			/*
 			 * Viene utilizzato Jetty v7.5.4 come Servlet Container
 			 * http://www.eclipse.org/jetty/
@@ -80,6 +73,7 @@ public class ServletFilterTest extends TestCase{
 			user1.setAuthToken(fbAccessToken);	
 			ObjectifyService.begin().put(user1);
 
+			Thread.sleep(15); //Ulizzato per assicurare che il tempo necessario per la persistenza sul Datatore sia passato
 
 		} catch (Exception e) {
 			e.printStackTrace();

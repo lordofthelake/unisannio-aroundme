@@ -32,6 +32,7 @@ public class FilterForTesting extends ServletFilter {
 		LocalDatastoreServiceTestConfig testConfig = new LocalDatastoreServiceTestConfig();
 		testConfig.setNoStorage(false);
 		testConfig.setBackingStoreLocation("local_db.ini");
+		testConfig.setStoreDelayMs(10);
 		helper = new LocalServiceTestHelper(testConfig);
 		super.init(arg0);
 	}

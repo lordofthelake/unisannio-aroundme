@@ -39,5 +39,14 @@ public class C2DMConfig {
 	public long getKey() {
 		return key;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof C2DMConfig) {
+			C2DMConfig c2dmConfig = (C2DMConfig) obj;
+			return c2dmConfig.getAuthKey().equals(this.getAuthKey());
+		}
+		return false;
+	}
 
 }

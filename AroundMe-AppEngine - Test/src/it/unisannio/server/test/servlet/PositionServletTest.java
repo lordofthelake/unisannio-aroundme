@@ -2,7 +2,6 @@ package it.unisannio.server.test.servlet;
 
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
-import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.server.InterestImpl;
 import it.unisannio.aroundme.server.ServerModelFactory;
@@ -14,19 +13,18 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * {@link TestCase} che verifica che la servlet {@link PositionServlet} restituisca risposte
@@ -35,31 +33,26 @@ import junit.framework.TestSuite;
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
-public class PositionServletTest extends TestCase {
+public class PositionServletTest extends TestCase{
 	private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini"));
+			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini").setStoreDelayMs(10));
 	private int port;
 	private Server server;
 	private String fbAccessToken;
 	private User userNullPosition, userNotNullPosition, user, unsavedUser;
-
-	public static Test suite() {//Pattern per eseguire delle configurazioni una tantum
-		return new TestSetup(new TestSuite(PreferencesServletTest.class)) {
-			
-			protected void setUp() throws Exception {
-				ModelFactory.setInstance(new ServerModelFactory());
-				ObjectifyService.register(UserImpl.class);
-				ObjectifyService.register(InterestImpl.class);
-				ObjectifyService.register(C2DMConfig.class);
-			}
-		};
-	}
 	
-	@Override
 	public void setUp() {
 		try {
 			helper.setUp();
 
+			ModelFactory.setInstance(new ServerModelFactory());
+			
+			try{
+				ObjectifyService.register(UserImpl.class);
+				ObjectifyService.register(InterestImpl.class);
+				ObjectifyService.register(C2DMConfig.class);
+			}catch(IllegalArgumentException e){}
+			
 			/*
 			 * Viene utilizzato Jetty v7.5.4 come Servlet Container
 			 * http://www.eclipse.org/jetty/
@@ -69,7 +62,7 @@ public class PositionServletTest extends TestCase {
 			context.setContextPath("/");
 			server.setHandler(context);
 			context.addFilter(new FilterHolder(new FilterForTesting()), "/*", 0);
-			context.addServlet(new ServletHolder(new PositionServlet()), "/preferences/*");
+			context.addServlet(new ServletHolder(new PositionServlet()), "/position/*");
 
 			server.start();
 			port = server.getConnectors()[0].getLocalPort();
@@ -84,21 +77,21 @@ public class PositionServletTest extends TestCase {
 			userNullPosition = ModelFactory.getInstance().createUser(125, "Marco Magnetti", null);
 			//User con Preferences non nulle utilizzato per testare il doGet
 			userNotNullPosition = ModelFactory.getInstance().createUser(126, "Giuseppe Fusco", null);
-			Preferences preferences = ModelFactory.getInstance().createPreferences();
-			preferences.put("Key", "value");
-			((UserImpl)userNotNullPosition).setPreferences(preferences); 
+			Position position = ModelFactory.getInstance().createPosition(41.5, 14.1);
+			userNotNullPosition.setPosition(position); 
 			ObjectifyService.begin().put(user1, user , userNullPosition, userNotNullPosition);
 			
 			//User non presente sul datastore utilizzato per testare il 404 del doGet
 			unsavedUser = ModelFactory.getInstance().createUser(567, "Giovanni", null);
+			
+			Thread.sleep(15); //Ulizzato per assicurare che il tempo necessario per la persistenza sul Datatore sia passato
 	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		helper.tearDown();
 		server.stop();
 	}
@@ -112,7 +105,7 @@ public class PositionServletTest extends TestCase {
 	public void testPostSuccess(){
 		try {
 			Position position = ModelFactory.getInstance().createPosition(14.4, 41.5);
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/123").openConnection();
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/"+user.getId()).openConnection();
 			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
@@ -134,7 +127,7 @@ public class PositionServletTest extends TestCase {
 	 */
 	public void testPostFail(){
 		try {
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/123").openConnection();
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/"+user.getId()).openConnection();
 			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
@@ -180,7 +173,7 @@ public class PositionServletTest extends TestCase {
 	public void testPostUserNotFound(){
 		try {
 			Position position = ModelFactory.getInstance().createPosition(14.4, 41.5);
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/987123").openConnection();
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/"+unsavedUser.getId()).openConnection();
 			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
@@ -198,14 +191,13 @@ public class PositionServletTest extends TestCase {
 
 	// GET TESTING//
 
-
 	/**
 	 * Testa che una richiesta GET ben formata, restituisca una
 	 * risposta con statuscode 200 e, nel body, un Position serializzato
 	 */
 	public void testGetSuccess(){
 		try {
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/"+user.getId()).openConnection();
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/"+userNotNullPosition.getId()).openConnection();
 			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(false);
@@ -274,7 +266,7 @@ public class PositionServletTest extends TestCase {
 	public void testGetPositionNotFound(){
 		try {
 			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/position/"+userNullPosition.getId()).openConnection();
-			conn.setRequestProperty("X-AccessToken", "desf");
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(false);
 			conn.setRequestMethod("GET");
