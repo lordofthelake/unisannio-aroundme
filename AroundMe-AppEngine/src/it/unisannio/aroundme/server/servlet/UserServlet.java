@@ -51,7 +51,6 @@ public class UserServlet extends HttpServlet{
 			resp.setContentType("text/xml");
 			Serializer.ofCollection(User.class).write(users, resp.getOutputStream());
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.severe(e.toString());
 			resp.sendError(500);
 		}				

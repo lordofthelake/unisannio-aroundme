@@ -7,14 +7,19 @@ import it.unisannio.aroundme.server.InterestImpl;
 import it.unisannio.aroundme.server.ServerModelFactory;
 import it.unisannio.aroundme.server.UserImpl;
 import it.unisannio.aroundme.server.c2dm.C2DMConfig;
+import it.unisannio.aroundme.server.servlet.PreferencesServlet;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.xml.transform.TransformerException;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 
 import junit.extensions.TestSetup;
@@ -22,14 +27,24 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+/**
+ * {@link TestCase} che verifica che la servlet {@link PreferencesServlet} restituisca risposte
+ * coerenti alle richiste che vi vengono indirizzate
+ * 
+ * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+ *
+ */
 public class PreferencesServletTest extends TestCase{
+	private LocalServiceTestHelper helper = new LocalServiceTestHelper(
+			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini"));
+	private int port;
+	private Server server;
+	private String fbAccessToken;
+	private User userNullPreferences, userNotNullPreferences, user, unsavedUser;
 
-	private int port = 8888;
-
-
-	public static Test suite() {
+	public static Test suite() {//Pattern per eseguire delle configurazioni una tantum
 		return new TestSetup(new TestSuite(PreferencesServletTest.class)) {
-
+			
 			protected void setUp() throws Exception {
 				ModelFactory.setInstance(new ServerModelFactory());
 				ObjectifyService.register(UserImpl.class);
@@ -38,43 +53,55 @@ public class PreferencesServletTest extends TestCase{
 			}
 		};
 	}
-
-	//FIXME Bruttezza a palate
-	/**
-	 * Esegue una richiesta put all'UserServlet per la crezione di un User con un
-	 * dato X-AccessToken. Restituisce lo status code della risposta.
-	 * @param user l'User da persistere sul server
-	 * @param accessToken l'X-AccessToken di facebook
-	 * @return Lo status code della risposta.
-	 */
-	public int doPutUser(User user, String accessToken){
+	
+	@Override
+	public void setUp() {
 		try {
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/").openConnection();
-			conn.setRequestProperty("X-AccessToken", accessToken);
-			conn.setUseCaches(false);
-			conn.setDoOutput(true);
-			conn.setRequestMethod("PUT");
-			OutputStream out = conn.getOutputStream();
-			User.SERIALIZER.write(user, out);
-			out.flush();
-			out.close();
-			return conn.getResponseCode();
+			helper.setUp();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (TransformerException e) {
+			/*
+			 * Viene utilizzato Jetty v7.5.4 come Servlet Container
+			 * http://www.eclipse.org/jetty/
+			 */
+			server = new Server(0); 
+			ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+			context.setContextPath("/");
+			server.setHandler(context);
+			context.addFilter(new FilterHolder(new FilterForTesting()), "/*", 0);
+			context.addServlet(new ServletHolder(new PreferencesServlet()), "/preferences/*");
+
+			server.start();
+			port = server.getConnectors()[0].getLocalPort();
+
+			//User utilizzato col solo scopo di ottenere un X-AccessToken valido per effettuare le richieste
+			UserImpl user1 = (UserImpl) ModelFactory.getInstance().createUser(12345, "Michele Piccirillo", null);
+			fbAccessToken = "accessToken";
+			user1.setAuthToken(fbAccessToken);
+			//User al quale verrà aggiunta un oggetto Preferences
+			user = ModelFactory.getInstance().createUser(123, "Danilo Iannelli", null);
+			//User con Preferences null utilizzato per testare il 404 del doGet
+			userNullPreferences = ModelFactory.getInstance().createUser(125, "Marco Magnetti", null);
+			//User con Preferences non nulle utilizzato per testare il doGet
+			userNotNullPreferences = ModelFactory.getInstance().createUser(126, "Giuseppe Fusco", null);
+			Preferences preferences = ModelFactory.getInstance().createPreferences();
+			preferences.put("Key", "value");
+			((UserImpl)userNotNullPreferences).setPreferences(preferences); 
+			ObjectifyService.begin().put(user1, user , userNullPreferences, userNotNullPreferences);
+			
+			//User non presente sul datastore utilizzato per testare il 404 del doGet
+			unsavedUser = ModelFactory.getInstance().createUser(567, "Giovanni", null);
+	
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return -1;
 	}
-
+	
 	@Override
-	protected void setUp() throws Exception {
-		User user1 = ModelFactory.getInstance().createUser(123, "Danilo", null);
-		User user2 = ModelFactory.getInstance().createUser(125, "Marco", null);
-		doPutUser(user1, "abc");
-		doPutUser(user2, "def");
+	protected void tearDown() throws Exception {
+		helper.tearDown();
+		server.stop();
 	}
+	
 
 	// POST TESTING//
 
@@ -86,8 +113,8 @@ public class PreferencesServletTest extends TestCase{
 		try {
 			Preferences preferences = ModelFactory.getInstance().createPreferences();
 			preferences.put("key", "value");
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/123").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/"+user.getId()).openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
@@ -109,7 +136,7 @@ public class PreferencesServletTest extends TestCase{
 	public void testPostFail(){
 		try {
 			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/123").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
@@ -132,7 +159,7 @@ public class PreferencesServletTest extends TestCase{
 		try {
 			Preferences preferences = ModelFactory.getInstance().createPreferences();
 			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/1f2a3").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
@@ -155,7 +182,7 @@ public class PreferencesServletTest extends TestCase{
 		try {
 			Preferences preferences = ModelFactory.getInstance().createPreferences();
 			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/987123").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
@@ -179,9 +206,8 @@ public class PreferencesServletTest extends TestCase{
 	 */
 	public void testGetSuccess(){
 		try {
-			testPostSuccess(); //FIXME Non è bello.
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/123").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/"+userNotNullPreferences.getId()).openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(false);
 			conn.setRequestMethod("GET");
@@ -209,9 +235,8 @@ public class PreferencesServletTest extends TestCase{
 	public void testGetInvalidId(){
 
 		try {
-			testPostSuccess(); 
 			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/1f2df3").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(false);
 			conn.setRequestMethod("GET");
@@ -230,9 +255,8 @@ public class PreferencesServletTest extends TestCase{
 	public void testGetUserNotFound(){
 
 		try {
-			testPostSuccess(); 
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/6578").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/"+unsavedUser.getId()).openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(false);
 			conn.setRequestMethod("GET");
@@ -249,12 +273,9 @@ public class PreferencesServletTest extends TestCase{
 	 * restituisca una risposta con statuscode 404
 	 */
 	public void testGetPreferencesNotFound(){
-		User user2 = ModelFactory.getInstance().createUser(125, "Marco", null);
-		doPutUser(user2, "desf");
-
 		try {
-			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/125").openConnection();
-			conn.setRequestProperty("X-AccessToken", "desf");
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/preferences/"+userNullPreferences.getId()).openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(false);
 			conn.setRequestMethod("GET");

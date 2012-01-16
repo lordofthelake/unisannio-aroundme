@@ -2,7 +2,6 @@ package it.unisannio.aroundme.server.servlet;
 
 import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.server.UserImpl;
-import it.unisannio.aroundme.server.c2dm.C2DMNotificationSender;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -98,9 +97,4 @@ public class PreferencesServlet extends HttpServlet{
 		}
 	}
 	
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		C2DMNotificationSender.send("APA91bE2n_R4zROR6_SRnE3QkZRpZ1Q7ykAx8pcfFomj6IK1t-nrpAJPHdahAcis-drrq2CcNUWnxT-S4xSi-jPRjszQM6Wp9Lglloz4d47QU4hRPP1ssRqUi5BPTVkul3pgD6miHHHDk3_4TP6_aS5uql2svPPgag", 100001053949157L);
-	}
 }

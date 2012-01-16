@@ -43,7 +43,7 @@ public class ServletFilter implements Filter {
 				String facebookAuthToken = request.getHeader("X-AccessToken");
 				log.info("Request with X-AccessToken:\n"+facebookAuthToken);
 				if(facebookAuthToken != null){
-					if (request.getMethod().equalsIgnoreCase("PUT"))
+					if (request.getMethod().equalsIgnoreCase("PUT") && request.getRequestURI().startsWith("/user/"))
 						chain.doFilter(req, res);
 					else {
 						/*

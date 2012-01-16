@@ -28,16 +28,21 @@ import com.google.appengine.tools.development.testing.*;
 import com.googlecode.objectify.ObjectifyService;
 
 /**
+ * {@link TestCase} che verifica che la servlet {@link UserServlet} restituisca risposte
+ * coerenti alle richiste che vi vengono indirizzate
  * 
  * @author Danilo Iannelli <daniloiannelli6@gmail.com>
  *
  */
 public class UserServletTest extends TestCase{
-	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-	private int port = 8888; //Togliere l'assegnazione per usare Jetty
-	Server server;
-
-	public static Test suite() {
+	private LocalServiceTestHelper helper = new LocalServiceTestHelper(
+			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini"));
+	private int port;
+	private Server server;
+	private String fbAccessToken;
+	private User userToDelete, unsavedUser;
+	
+	public static Test suite() {//Pattern per eseguire delle configurazioni una tantum
 		return new TestSetup(new TestSuite(UserServletTest.class)) {
 
 			protected void setUp() throws Exception {
@@ -53,63 +58,55 @@ public class UserServletTest extends TestCase{
 	public void setUp() {
 		try {
 			helper.setUp();
-			
+
 			/*
 			 * Viene utilizzato Jetty v7.5.4 come Servlet Container
 			 * http://www.eclipse.org/jetty/
 			 */
-			/* Decommentare per usare Jetty
-			server = new Server(0);
+			server = new Server(0); 
 			ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 			context.setContextPath("/");
 			server.setHandler(context);
-			context.addFilter(new FilterHolder(new ServletFilterForTesting()), "/*", 0);
+			context.addFilter(new FilterHolder(new FilterForTesting()), "/*", 0);
 			context.addServlet(new ServletHolder(new UserServlet()), "/user/*");
 
 			server.start();
 			port = server.getConnectors()[0].getLocalPort();
-			*/
 
+			//User utilizzato col solo scopo di ottenere un X-AccessToken valido per effettuare le richieste 
+			UserImpl user1 = (UserImpl) ModelFactory.getInstance().createUser(12345, "Michele Piccirillo", null);
+			fbAccessToken = "accessToken";
+			user1.setAuthToken(fbAccessToken);
+			
+			//User presente sul datastore utilizzato per testare il doDelete
+			userToDelete = ModelFactory.getInstance().createUser(444, "Giuseppe Fusco", null);
+			ObjectifyService.begin().put(user1, userToDelete);
+
+			//User non presente sul datastore utilizzato per testare il 404 del doDelete
+			unsavedUser = ModelFactory.getInstance().createUser(567, "Giovanni", null);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void tearDown(){
-		try {
-			helper.tearDown();
-//			server.stop();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	// PUT TESTING//
-
-	/**
-	 * Testa che una richiesta PUT ben formata, restituisca una
-	 * risposta con statuscode 200
-	 */
-	public void testPutSuccess() {
-		User user = ModelFactory.getInstance().createUser(123, "Danilo", null);
-		String accessToken = "abc";
-		int responseStatusCode = doPut(user, accessToken);
-		assertEquals(200, responseStatusCode);
+	protected void tearDown() throws Exception {
+		helper.tearDown();
+		server.stop();
 	}
 
+	// PUT TESTING //
+
 	/**
-	 * Esegue una richiesta put all'UserServlet per la crezione di un User con un
-	 * dato X-AccessToken. Restituisce lo status code della risposta.
-	 * @param user l'User da persistere sul server
-	 * @param accessToken l'X-AccessToken di facebook
-	 * @return Lo status code della risposta.
+	 *	Testa che una richiesta PUT ben formata, restituisca una
+	 * isposta con statuscode 200
 	 */
-	public int doPut(User user, String accessToken){
+	public void testPutSuccess(){
 		try {
+			User user = ModelFactory.getInstance().createUser(123, "Danilo Iannelli", null);
 			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/").openConnection();
-			conn.setRequestProperty("X-AccessToken", accessToken);
+			conn.setRequestProperty("X-AccessToken", "userAccessToken");
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("PUT");
@@ -117,14 +114,13 @@ public class UserServletTest extends TestCase{
 			User.SERIALIZER.write(user, out);
 			out.flush();
 			out.close();
-			return conn.getResponseCode();
+			assertEquals(200, conn.getResponseCode());
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-		return -1;
 	}
 
 	/**
@@ -133,9 +129,8 @@ public class UserServletTest extends TestCase{
 	 */
 	public void testPutFail(){
 		try {
-
 			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/").openConnection();
-			conn.setRequestProperty("X-AccessToken", "abc");
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
 			conn.setUseCaches(false);
 			conn.setDoOutput(true);
 			conn.setRequestMethod("PUT");
@@ -149,6 +144,7 @@ public class UserServletTest extends TestCase{
 			e.printStackTrace();
 		} 
 	}
+
 	
 	// DELETE  TESTING//
 
@@ -158,123 +154,104 @@ public class UserServletTest extends TestCase{
 	 */
 	public void testDeleteSuccess(){
 		try {
-			User user = ModelFactory.getInstance().createUser(123, "Danilo", null);
-			if(doPut(user, "abc")==200){
-				HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/"+user.getId()).openConnection();
-				conn.setRequestProperty("X-AccessToken", "abc");
-				conn.setUseCaches(false);
-				conn.setRequestMethod("DELETE");
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/"+userToDelete.getId()).openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
+			conn.setUseCaches(false);
+			conn.setRequestMethod("DELETE");
 
-				int statusCode = conn.getResponseCode();
-				assertEquals(200, statusCode);
-			}
+			int statusCode = conn.getResponseCode();
+			assertEquals(200, statusCode);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Testa che una richiesta DELETE con id non valido, restituisca una
 	 * risposta con statuscode 401
 	 */
 	public void testDeleteInvalidId(){
 		try {
-			User user = ModelFactory.getInstance().createUser(123, "Danilo", null);
-			if(doPut(user, "abc")==200){
-				HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/abecedario").openConnection();
-				conn.setRequestProperty("X-AccessToken", "abc");
-				conn.setUseCaches(false);
-				conn.setRequestMethod("DELETE");
-				int statusCode = conn.getResponseCode();
-				assertEquals(401, statusCode);
-			}
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/abecedario").openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
+			conn.setUseCaches(false);
+			conn.setRequestMethod("DELETE");
+			int statusCode = conn.getResponseCode();
+			assertEquals(401, statusCode);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Testa che una richiesta DELETE con id di un utente non trovato, restituisca una
 	 * risposta con statuscode 404
 	 */
 	public void testDeleteNotFound(){
 		try {
-			User user = ModelFactory.getInstance().createUser(123, "Danilo", null);
-			if(doPut(user, "abc")==200){
-				HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/345").openConnection();
-				conn.setRequestProperty("X-AccessToken", "abc");
-				conn.setUseCaches(false);
-				conn.setRequestMethod("DELETE");
-				int statusCode = conn.getResponseCode();
-				assertEquals(404, statusCode);
-			}
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/"+unsavedUser.getId()).openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
+			conn.setUseCaches(false);
+			conn.setRequestMethod("DELETE");
+			int statusCode = conn.getResponseCode();
+			assertEquals(404, statusCode);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// POST TESTING//
-	
+
 	/**
 	 * Testa che una richiesta POST ben formata, restituisca una
 	 * risposta con statuscode 200 e, nel body, una collezione di User serializzata
 	 */
 	public void testPostSuccess(){
 		try {
-			User user = ModelFactory.getInstance().createUser(123, "Danilo", null);
-			if(doPut(user, "abc")==200){
-				UserQuery query = ModelFactory.getInstance().createUserQuery();
-				HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/").openConnection();
-				conn.setRequestProperty("X-AccessToken", "abc");
-				conn.setUseCaches(false);
-				conn.setDoOutput(true);
-				conn.setRequestMethod("POST");
-				OutputStream out = conn.getOutputStream();
-				UserQuery.SERIALIZER.write(query, out);
-				out.flush();
-				out.close();
-				assertEquals(200, conn.getResponseCode());
+			UserQuery query = ModelFactory.getInstance().createUserQuery();
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/").openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
+			conn.setUseCaches(false);
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			OutputStream out = conn.getOutputStream();
+			UserQuery.SERIALIZER.write(query, out);
+			out.flush();
+			out.close();
+			assertEquals(200, conn.getResponseCode());
 
-				Exception ex = null;
-				try {
-					Serializer.ofCollection(User.class).read(conn.getInputStream());
-				} catch (Exception e) {
-					ex = e;
-				}
-				assertNull(ex);
+			Exception ex = null;
+			try {
+				Serializer.ofCollection(User.class).read(conn.getInputStream());
+			} catch (Exception e) {
+				ex = e;
 			}
-
+			assertNull(ex);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 	}
-	
-	
+
 	/**
 	 * Testa che una richiesta POST mal formata, restituisca una
 	 * risposta con statuscode 500
 	 */
 	public void testPostFail(){
 		try {
-			User user = ModelFactory.getInstance().createUser(123, "Danilo", null);
-			if(doPut(user, "abc")==200){
-				HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/").openConnection();
-				conn.setRequestProperty("X-AccessToken", "abc");
-				conn.setUseCaches(false);
-				conn.setDoOutput(true);
-				conn.setRequestMethod("POST");
-				conn.getOutputStream().close();
-				
-				//Non viene inserito nel body l'xml che descrive la query da eseguire
-				
-				assertEquals(500, conn.getResponseCode());
-			}
+			HttpURLConnection conn = (HttpURLConnection) new URL("HTTP","127.0.0.1", port , "/user/").openConnection();
+			conn.setRequestProperty("X-AccessToken", fbAccessToken);
+			conn.setUseCaches(false);
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.getOutputStream().close();
 
+			//Non viene inserito nel body l'xml che descrive la query da eseguire
+
+			assertEquals(500, conn.getResponseCode());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 	}
-	
 
 }
