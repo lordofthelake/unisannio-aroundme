@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 /**
+ * Tipo di preferenza utilizzato per modificare la distanza di rilevamento dei filtri.
+ * 
+ * Viene utilizzato uno {@link SliderView} opportunamente configurato come widget di configurazione.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class RadiusSliderDialogPreference extends DialogPreference {
 

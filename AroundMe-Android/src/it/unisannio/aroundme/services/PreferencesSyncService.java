@@ -3,6 +3,7 @@ package it.unisannio.aroundme.services;
 import java.io.InputStream;
 
 import it.unisannio.aroundme.Setup;
+import it.unisannio.aroundme.activities.PreferencesActivity;
 import it.unisannio.aroundme.client.HttpTask;
 import it.unisannio.aroundme.client.Identity;
 import it.unisannio.aroundme.model.ModelFactory;
@@ -13,6 +14,16 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+/**
+ * Servizio che si occupa di mandare una copia delle preferenze del client al server di backend.
+ * 
+ * Viene richiamato tipicamente dopo ogni modifica delle preferenze che riguardano anche il lato server (es. impostazioni delle notifiche).
+ * 
+ * @see Preferences
+ * @see PreferencesActivity
+ * 
+ * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ */
 public class PreferencesSyncService extends IntentService {
 
 	public PreferencesSyncService() {

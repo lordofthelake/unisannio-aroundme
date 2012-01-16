@@ -26,12 +26,27 @@ import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
 /**
+ * Fragment con il compito di permettere l'editing di una {@link UserQuery}.
+ * 
+ * Graficamente, si presenta come un "cassetto" ({@code SlidingDrawer}) che permette di modificare i parametri della query attraverso
+ * vari slider e una lista di interessi.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
  */
 public class UserQueryFragment extends Fragment implements OnDrawerCloseListener, OnDrawerOpenListener {
+	
+	/**
+	 * Listener che viene notificato quando la query viene modificata dall'utente.
+	 * 
+	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+	 */
 	public static interface OnQueryChangeListener {
+		/**
+		 * Metodo che viene notificato a seguito di una modifica alla query.
+		 * 
+		 * @param query la UserQuery modificata
+		 */
 		void onQueryChanged(UserQuery query);
 	};
 	
@@ -122,24 +137,50 @@ public class UserQueryFragment extends Fragment implements OnDrawerCloseListener
         return drawer;
 	}
 	
+	/**
+	 * Segnala al fragment che &egrave; avvenuta una modifica alla query e che pertanto deve aggiornare il proprio stato
+	 * e notificare i listener eventualmente associati
+	 * 
+	 * @see OnQueryChangeListener
+	 */
 	public void notifyQueryChanged() {
 		interestFilterAdapter.notifyDataSetChanged();
     	if(onQueryChangeListener != null)
     		onQueryChangeListener.onQueryChanged(userQuery);
 	}
 	
+	/**
+	 * Restituisce la UserQuery associata a questo Fragment nel suo stato corrente.
+	 * 
+	 * @return la query nel suo stato attuale
+	 */
 	public UserQuery getUserQuery() {
 		return userQuery;
 	}
 	
+	/**
+	 * Imposta il listener che ricver&agrave; le notifiche a seguito dei cambiamenti della UserQuery.
+	 * 
+	 * @param l il listener da associare a questo fragment
+	 */
 	public void setOnQueryChangeListener(OnQueryChangeListener l) {
 		this.onQueryChangeListener = l;
 	}
 	
+	/**
+	 * Imposta un listener che ricever&agrave; le notifiche a seguito dell'apertura del cassetto.
+	 * 
+	 * @param l il listener da associare all'apertura del cassetto
+	 */
 	public void setOnDrawerOpenListener(OnDrawerOpenListener l) {
 		this.onDrawerOpenListener = l;
 	}
 	
+	/**
+	 * Imposta un listener che ricever&agrave; le notifiche a seguito della chiusura del cassetto.
+	 * 
+	 * @param l il listener da associare alla chiusura del cassetto
+	 */
 	public void setOnDrawerCloseListener(OnDrawerCloseListener l) {
 		this.onDrawerCloseListener = l;
 	}

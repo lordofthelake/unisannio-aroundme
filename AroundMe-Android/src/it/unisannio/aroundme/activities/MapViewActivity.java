@@ -28,9 +28,13 @@ import it.unisannio.aroundme.model.UserQuery;
 import it.unisannio.aroundme.overlay.UserItemizedOverlay;
 
 /**
+ * Activity che visualizza un insieme di utenti su una mappa.
+ * 
+ * Se l'{@code Intent} che l'ha avviata contiene un extra di tipo {@code long[]} chiamato {@code userIds}, essa funziona come semplice
+ * visualizzatore di utenti (senza possibilit&agrave; di cambiare i parametri di ricerca). Senza extra, viene avviata in modalit&agrave;
+ * interattiva, con uno {@link UserQueryFragment} che permette il cambiamento dei criteri di ricerca.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpenListener, OnDrawerCloseListener, UserQueryExecutionListener  {
 	private MapView mapView;

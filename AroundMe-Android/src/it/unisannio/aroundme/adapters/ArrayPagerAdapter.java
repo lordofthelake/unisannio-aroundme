@@ -1,16 +1,23 @@
 package it.unisannio.aroundme.adapters;
 
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
+ * Adapter per {@link ViewPager}, che mantiene in memoria un array di {@code View} da usare come pagine per il widget.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class ArrayPagerAdapter extends PagerAdapter {
 	private View[] views;
+	
+	/**
+	 * Crea un nuovo adapter.
+	 * 
+	 * @param views array di {@code View} da usare come pagine 
+	 */
 	public ArrayPagerAdapter(View... views) {
 		this.views = views;
 	}

@@ -17,14 +17,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
+ * Adapter per mostrare una lista di interessi.
  * 
  * @author Marco Magnetti <marcomagnetti@gmail.com>
- *
  */
 public class InterestAdapter extends ArrayAdapter<Interest> {
 	private static final int ITEM_RESOURCE = R.layout.like_grid_elem;
+	private static final int MAX_CHARS = 10;
+	
 	private AsyncQueue async;
 
+	/**
+	 * Crea una nuova istanza associata alla lista indicata e con una {@link AsyncQueue} per il download delle immagini.
+	 * 
+	 * @param context un Context per il recupero delle risorse
+	 * @param interests la lista di interessi da mostrare
+	 * @param async una {@link AsyncQueue} per il download delle immagini
+	 */
 	public InterestAdapter(Context context, List<Interest> interests, AsyncQueue async) {
 		super(context, ITEM_RESOURCE, interests);
 		this.async = async;
@@ -65,5 +74,4 @@ public class InterestAdapter extends ArrayAdapter<Interest> {
 		
 		return view;
 	}
-	private final int MAX_CHARS=10;
 }

@@ -29,11 +29,15 @@ import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
 /**
+ * Activity che visualizza un insieme di utenti su in una lista.
  * 
- * @author Marco Magnetti <marcomagnetti@gmail.com>
+ * Se l'{@code Intent} che l'ha avviata contiene un extra di tipo {@code long[]} chiamato {@code userIds}, essa funziona come semplice
+ * visualizzatore di utenti (senza possibilit&agrave; di cambiare i parametri di ricerca). Senza extra, viene avviata in modalit&agrave;
+ * interattiva, con uno {@link UserQueryFragment} che permette il cambiamento dei criteri di ricerca.
+ * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ * @author Marco Magnetti <marcomagnetti@gmail.com>
  */
-
 public class ListViewActivity extends FragmentActivity 
 		implements OnItemClickListener, OnDrawerOpenListener, OnDrawerCloseListener, UserQueryExecutionListener {
 	private AsyncQueue pictureAsync;

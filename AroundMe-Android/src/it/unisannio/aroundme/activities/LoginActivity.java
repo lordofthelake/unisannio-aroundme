@@ -36,11 +36,24 @@ import android.util.Log;
 import android.widget.*;
 
 /**
+ * Activity che viene avviata all'apertura dell'applicazione; gestisce il login e la registrazione degli utenti.
  * 
+ * <p>Il processo di login procede secondo il seguente algoritmo:
+ * <ol>
+ * 		<li>Si controlla se esiste un Access Token in memoria. Se esiste, si passa al punto 3</li>
+ * 		<li>Si richiede all'utente di autorizzare l'applicazione su Facebook</li>
+ * 		<li>Si tenta di recuperare il profilo dal server di backend. Se la richiesta ha successo, si passa al punto 6.</li>
+ * 		<li>Si importano i dati da Facebook. All'utente viene richiesto quali interessi includere nel proprio profilo.</li>
+ * 		<li>Viene creato un profilo sul server di backend e viene impostato come identit&agrave; dell'utente</li>
+ * 		<li>Si controlla se l'utente ha una posizione gi&agrave; conosciuta. Se esiste gi&agrave;, si passa al punto 8</li>
+ * 		<li>Si tenta di avere l'ultima posizione memorizzata nel dispositivo. Se non ne esiste una, si mette in attesa l'utente
+ * 			finch&eacute; non ne viene rilevata una. Nel caso in cui non sia attivo alcun provider per la posizione, si chiede all'utente
+ * 			di attivarne uno dalle impostazioni.</li>
+ * 		<li>Viene avviata la {@link ListViewActivity} in modalit&agrave; interattiva.</li>
+ * </ol>
+ * </p>
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */ 
-
 public class LoginActivity extends FragmentActivity 
 	implements FutureListener<Identity>, DialogListener, LocationListener {
 	private static final int ACTIVITY_LOCATION_SETTINGS_REQUEST = 0;

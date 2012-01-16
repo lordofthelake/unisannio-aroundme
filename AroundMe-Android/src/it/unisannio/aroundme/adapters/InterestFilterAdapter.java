@@ -23,17 +23,23 @@ import android.widget.TextView;
 
 
 /**
+ * Adapter per mostrare in una {@code ListView} una lista di interessi da usare come filtri in una query.
  * 
  * @author Marco Magnetti <marcomagnetti@gmail.com>
- *
  */
-
 public class InterestFilterAdapter extends ArrayAdapter<Interest> {
 	private static final int ITEM_RESOURCE = R.layout.interest_filter_entry;
 	
 	private AsyncQueue async;
 	private UserQueryFragment fragment;
 	
+	/**
+	 * Crea una nuova istanza associata alla lista indicata e con una {@link AsyncQueue} per il download delle immagini.
+	 * 
+	 * @param fragment lo {@link UserQueryFragment} responsabile di comporre la query
+	 * @param interests la lista di interessi da mostrare
+	 * @param async una {@link AsyncQueue} per il download delle immagini
+	 */
 	public InterestFilterAdapter(UserQueryFragment fragment, List<Interest> interests, AsyncQueue async) {
 		super(fragment.getActivity(), ITEM_RESOURCE, interests);
 		this.async = async;
