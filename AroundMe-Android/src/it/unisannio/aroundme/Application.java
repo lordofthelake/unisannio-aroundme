@@ -13,6 +13,11 @@ import it.unisannio.aroundme.client.Picture;
 import it.unisannio.aroundme.model.*;
 
 /**
+ * Classe che mantiene uno stato globale dell'applicazione.
+ * 
+ * Essendo la prima classe che viene istanziata all'avvio dell'applicazione, viene 
+ * utilizzata per effettuare operazioni di setup iniziale. Viene utilizzata inoltre per segnalare a tutte le attivitˆ avviate
+ * quando dovrebbero terminare se stesse (es. per un logout o cancellazione dell'account).
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
@@ -22,12 +27,22 @@ public class Application extends android.app.Application {
 	
 	private boolean terminated = false;
 	
+	/**
+	 * Imposta un flag per segnalare a tutte le componenti avviate che dovrebbero terminare.
+	 * 
+	 * @see #isTerminated()
+	 */
 	public void terminate() {
 		terminated = true;
 		cache.evictAll();
 		Picture.flushCache();
 	}
 	
+	/**
+	 * Restituisce un flag indicante se le componenti avviate dovrebbero esaurire il loro ciclo di vita.
+	 * 
+	 * @return {@code true} se le componenti dovrebbero terminare la loro vita, {@code false} altrimenti
+	 */
 	public boolean isTerminated() {
 		return terminated;
 	}
@@ -36,6 +51,13 @@ public class Application extends android.app.Application {
 		cache.put(u.getId(), u);	
 	}
 	
+	/**
+	 * Richiamato quando il sistema ha poca memoria a disposizione.
+	 * 
+	 * Una chiamata a questo metodo risulta nello svuotamento delle cache dell'applicazione in memoria
+	 * 
+	 * @see Picture#flushCache()
+	 */
 	@Override
 	public void onLowMemory() {
 		super.onLowMemory();
@@ -43,6 +65,21 @@ public class Application extends android.app.Application {
 		Picture.flushCache();
 	}
 	
+	/**
+	 * Effettua operazioni di setup all'avvio dell'applicazione.
+	 * 
+	 * In questa sede viene istanziata un'opportuna implementazione della {@link ModelFactory}, i cui {@link Model} sono gi&agrave;
+	 * configurati per interagire con il server di backend.
+	 * 
+	 * <p>Per migliorare l'efficienza, sono utilizzati meccanismi di caching: per API Level 13 e superiori viene installata una cache
+	 * che usa la memoria interna del dispositivo, principalmente usata per un caching pi&ugrave; duraturo delle immagini. Per tutte
+	 * le versioni invece viene aggiunta una cache degli utenti, in grado di risolvere (parzialmente o completamente) in locale UserQuery
+	 * che utilizzino solo gli ID utente come criteri di ricerca.</p>
+	 * 
+	 * @see android.net.http.HttpResponseCache
+	 * @see UserQuery#byId(long...)
+	 * @see UserQuery#single(long)
+	 */
 	@Override
 	public void onCreate() {
 		

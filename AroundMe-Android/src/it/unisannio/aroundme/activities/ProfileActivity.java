@@ -37,6 +37,11 @@ import android.widget.TextView;
 
 
 /**
+ * Activity che mostra il profilo di un singolo utente.
+ * 
+ * &Egrave; necessario avviarla con un {@code Intent} che abbia un extra di tipo {@code long} chiamato {@code userId}, contenente
+ * l'ID dell'utente da visualizzare.
+ * 
  * @author Marco Magnetti <marcomagnetti@gmail.com>
  */
 public class ProfileActivity extends FragmentActivity implements 

@@ -12,6 +12,7 @@ import android.content.Context;
 import com.google.android.maps.OverlayItem;
 
 /**
+ * Un item sulla mappa rappresentante un utente.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
  *
@@ -19,6 +20,12 @@ import com.google.android.maps.OverlayItem;
 public class UserOverlayItem extends OverlayItem {
 	private final User user;
 	
+	/**
+	 * Crea un nuovo item, associato all'utente indicato.
+	 * 
+	 * @param ctx un Context, necessario per poter accedere alle risorse dell'applicazione
+	 * @param user l'utente a cui l'item &egrave; associato
+	 */
 	public UserOverlayItem(Context ctx, User user) {
 		super(
 				PositionUtils.toGeoPoint(user.getPosition()), 
@@ -33,6 +40,11 @@ public class UserOverlayItem extends OverlayItem {
 		this.user = user;
 	}
 	
+	/**
+	 * Restituisce l'utente associato a questo item.
+	 * 
+	 * @return l'utente associato a questo item
+	 */
 	public User getUser() {
 		return user;
 	}

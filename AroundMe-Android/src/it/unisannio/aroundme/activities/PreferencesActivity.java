@@ -28,9 +28,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
+ * Activity che permette di cambiare le preferenze dell'applicazione.
+ * 
+ * Al termine della sua esecuzione, avvia il {@link PreferencesSyncService} per sincronizzare le modifiche effettuate con il server
+ * di backend.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class PreferencesActivity extends SherlockPreferenceActivity {
 

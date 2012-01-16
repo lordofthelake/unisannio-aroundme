@@ -19,12 +19,26 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
+ * Fragment con il compito di eseguire una {@link UserQuery} e di notificare l'Activity ospitante dei risultati.
+ * 
+ * @see MapViewActivity
+ * @see ListViewActivity
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class UserQueryExecutorFragment extends Fragment implements OnCancelListener, OnQueryChangeListener {
+	
+	/**
+	 * Listener che viene notificato qualora la query termini con esito positivo.
+	 * 
+	 * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+	 */
 	public static interface UserQueryExecutionListener {
+		/**
+		 * Metodo che viene notificato dell'avvenuta esecuzione della query.
+		 * 
+		 * @param results i risultati dell'esecuzione
+		 */
 		void onUserQueryExecutionResults(Collection<User> results);
 	}
 	
@@ -80,10 +94,22 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 			listener.onUserQueryExecutionResults(results);
 	}
 	
+	/**
+	 * Imposta il listener che verr&agrave; notificato dell'avvenuta esecuzione di ogni query.
+	 * 
+	 * @param listener il listener da usare
+	 * @see UserQueryExecutionListener
+	 */
 	public void setExecutionListener(UserQueryExecutionListener listener) {
 		this.listener = listener;
 	}
 
+	/**
+	 * Richiede al Fragment di eseguire l'ultima query impostata.
+	 * 
+	 * Un listener, se impostato con {@link #setExecutionListener(UserQueryExecutionListener)}, verr&agrave; notificato
+	 * con i risultati in caso di completamento corretto della stessa.
+	 */
 	public void refresh() {
 		if(!ready) {
 			needsRefresh = true;
@@ -113,11 +139,21 @@ public class UserQueryExecutorFragment extends Fragment implements OnCancelListe
 		
 	}
 	
+	/**
+	 * Richiede al Fragment di eseguire l'ultima query impostata, se questa &egrave; cambiata dall'ultima 
+	 * chiamata di {@link #refresh()}.
+	 * 
+	 * @see #refresh()
+	 */
 	public void refreshIfChanged() {
 		if(needsRefresh)
 			refresh();
 	}
 	
+	/**
+	 * Riceve una notifica in caso di cambiamenti della query da eseguire, ad esempio in seguito di modifiche
+	 * effettuate da uno {@link UserQueryFragment}.
+	 */
 	@Override
 	public void onQueryChanged(UserQuery query) {
 		boolean needsRefreshNow = (userQuery == null);

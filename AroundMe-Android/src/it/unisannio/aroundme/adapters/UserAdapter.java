@@ -19,9 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
+ * Adapter per mostrare in una {@code ListView} una lista di utenti.
  * 
- * @author Marco Magnetti <marcomagnetti@gmail.com>
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
+ * @author Marco Magnetti <marcomagnetti@gmail.com>
  */
 public class UserAdapter extends ArrayAdapter<User> {
 	private static final int ITEM_RESOURCE = R.layout.list_entry;
@@ -29,6 +30,14 @@ public class UserAdapter extends ArrayAdapter<User> {
 	private User me;
 	private AsyncQueue async; 
 
+	/**
+	 * Crea una nuova istanza associata alla lista indicata e con una {@link AsyncQueue} per il download delle immagini.
+	 * 
+	 * @param context un Context per il recupero delle risorse
+	 * @param me l'identi&agrave; da usare per il calcolo della distanza e compatibilit&agrave;
+	 * @param users la lista di utenti da mostrare
+	 * @param async una {@link AsyncQueue} per il download delle immagini
+	 */
 	public UserAdapter(Context context, User me, List<User> users, AsyncQueue async) {
 		super(context, ITEM_RESOURCE, users);
 		this.async = async;

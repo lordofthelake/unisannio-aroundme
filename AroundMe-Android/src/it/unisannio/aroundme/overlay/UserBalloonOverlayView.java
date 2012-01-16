@@ -14,9 +14,9 @@ import android.widget.TextView;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
 /**
+ * View da usare come contenuto del balloon quando viene fatto il tapping su un marker.
  * 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class UserBalloonOverlayView extends BalloonOverlayView<UserOverlayItem> {
 
@@ -26,6 +26,13 @@ public class UserBalloonOverlayView extends BalloonOverlayView<UserOverlayItem> 
 	
 	private AsyncQueue async;
 	
+	/**
+	 * Crea una nuova istanza
+	 * 
+	 * @param context un Context per accedere alle risorse dell'applicazione
+	 * @param balloonBottomOffset
+	 * @param async una {@link AsyncQueue}, utilizzata per il download delle immagini
+	 */
 	public UserBalloonOverlayView(Context context, int balloonBottomOffset, AsyncQueue async) {
 		super(context, balloonBottomOffset);
 		this.async = async;
