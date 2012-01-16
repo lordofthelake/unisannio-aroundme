@@ -175,7 +175,7 @@ public class C2DMNotificationSender {
 			url.countdownMillis(countdownMillis);
 			queue.add(url);	
 		}else{
-			log.warning("Warning: invalid device registrationId. Message won't be sent.");
+			log.info( userId + " registrationId is missing. Message won't be sent.");
 		}
 		
 	}

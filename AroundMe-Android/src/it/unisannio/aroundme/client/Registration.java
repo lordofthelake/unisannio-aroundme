@@ -19,10 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.util.Log;
@@ -100,7 +101,7 @@ public class Registration implements Callable<Identity> {
 		return id;
 	}
 	
-    public Dialog createInterestEditorDialog(Context ctx, OnClickListener onEditFinishListener) {
+    public Dialog createInterestEditorDialog(final Activity ctx, OnClickListener onEditFinishListener) {
 
 		AlertDialog.Builder b = new AlertDialog.Builder(ctx);
 		
@@ -117,7 +118,7 @@ public class Registration implements Callable<Identity> {
 		}
 
 		b.setTitle(getName());
-		b.setCancelable(false);
+		b.setCancelable(true);
 		b.setPositiveButton(R.string.dialog_import, onEditFinishListener);
 		
 		b.setMultiChoiceItems(names, checked, new OnMultiChoiceClickListener() {
@@ -125,6 +126,14 @@ public class Registration implements Callable<Identity> {
 			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 				checked[which] = isChecked;
 				interests.put(items[which], isChecked);
+			}
+		});
+		
+		b.setOnCancelListener(new OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				ctx.finish();
 			}
 		});
 		
@@ -136,7 +145,7 @@ public class Registration implements Callable<Identity> {
 		final User user = ModelFactory.getInstance().createUser(id, name, getCheckedInterests());
 		final Identity identity = new Identity(user, accessToken);
 		
-		return (new HttpTask<Identity>(identity, "PUT", Setup.BACKEND_USER_URL) {
+		return (new HttpTask<Identity>(identity, "PUT", Setup.BACKEND_USER_URL_SIMPLE) {
 
 			@Override
 			protected Identity read(InputStream in) throws Exception {

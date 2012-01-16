@@ -2,6 +2,7 @@ package it.unisannio.aroundme.activities;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
+import it.unisannio.aroundme.Application;
 import it.unisannio.aroundme.R;
 import it.unisannio.aroundme.activities.UserQueryExecutorFragment.UserQueryExecutionListener;
 import it.unisannio.aroundme.async.AsyncQueue;
@@ -48,10 +50,6 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
     protected void onCreate(Bundle savedStateInstance) {
     	super.onCreate(savedStateInstance);
     	Identity me = Identity.get();
-		if(me == null) {
-			// FIXME Se l'utente non e' settato, redireziona al login
-		}
-			
     	async = new AsyncQueue(); // 1 thread. Nelle mappe viene visualizzata un'immagine alla volta
 		
     	setContentView(R.layout.map_view);	
@@ -163,6 +161,14 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(Identity.get() == null) {
+			if(!((Application) getApplication()).isTerminated()) {
+				startActivity(new Intent(this, LoginActivity.class));
+			}
+			finish();
+			return;
+		}
+		
 		async.resume();
 	}
 	
@@ -177,7 +183,30 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 	public void onUserQueryExecutionResults(Collection<User> results) {
 		nearbyOverlay.clear();
 		nearbyOverlay.addAll(results);
-		
-		mapView.getController().zoomToSpan(nearbyOverlay.getLatSpanE6(), nearbyOverlay.getLonSpanE6());
+		int minLat = 81 * (int) 1E6;
+	    int maxLat = -81 * (int) 1E6;
+	    int minLon = 181 * (int) 1E6;
+	    int maxLon = -181 * (int) 1E6;
+	    
+	    //Cerca le latitudini e longitudini minori e maggiori
+	    for (User u: results) {
+	    	GeoPoint gp = PositionUtils.toGeoPoint(u.getPosition());
+	    	minLat = (minLat > (gp.getLatitudeE6())) ? gp.getLatitudeE6() : minLat;
+	    	maxLat = (maxLat < (gp.getLatitudeE6())) ? gp.getLatitudeE6() : maxLat;
+	    	minLon = (minLon > (gp.getLongitudeE6())) ? gp.getLongitudeE6() : minLon;
+	    	maxLon = (maxLon < (gp.getLongitudeE6())) ? gp.getLongitudeE6() : maxLon;
+	    }		
+	    GeoPoint gp = PositionUtils.toGeoPoint(Identity.get().getPosition());
+	    minLat = (minLat > gp.getLatitudeE6()) ? gp.getLatitudeE6() : minLat;
+	    maxLat = (maxLat < gp.getLatitudeE6()) ? gp.getLatitudeE6() : maxLat;
+	    minLon = (minLon > gp.getLongitudeE6()) ? gp.getLongitudeE6() : minLon;
+	    maxLon = (maxLon < gp.getLongitudeE6()) ? gp.getLongitudeE6() : maxLon;
+
+	    //FIXME Il proprio user non si trova al centro
+	    mapView.getController().zoomToSpan((maxLat - minLat), (maxLon - minLon));
+	    mapView.getController().animateTo(new GeoPoint((maxLat + minLat) / 2, (maxLon + minLon) / 2));
+
+//		mapView.getController().zoomToSpan(nearbyOverlay.getLatSpanE6(), nearbyOverlay.getLonSpanE6());
+
 	}
 }

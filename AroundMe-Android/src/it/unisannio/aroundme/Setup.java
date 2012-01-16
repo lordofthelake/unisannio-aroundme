@@ -87,21 +87,25 @@ public interface Setup {
 	 * @see HttpTask
 	 */
 	final int NETWORK_CHUNCK_SIZE = 1024; // 1 KiB
-	/**
-	 * Indirizzo del server backend.
-	 * 
-	 * @see #BACKEND_USER_URL	
-	 * @see #BACKEND_POSITION_URL
-	 */
-	final String BACKEND_HOST = "https://aroundme-backend.appspot.com";
-	//final String BACKEND_HOST = "http://localhost:8888";
 	
 	/**
-	 * Path della risorsa "User"
+	 * Indirizzo del server backend.
+	 */
+	final String BACKEND_HOST = "https://aroundme-backend.appspot.com";
+	
+	/**
+	 * Path della risorsa "User" (versione non parametrizzabile)
 	 * 
 	 * @see User
 	 */
-	final String BACKEND_USER_PATH = "/user/";
+	final String BACKEND_USER_PATH_SIMPLE = "/user/";
+	
+	/**
+	 * Path della risorsa "User" (versione parametrizzabile)
+	 * 
+	 * @see User
+	 */
+	final String BACKEND_USER_PATH_PARAMETRIC = "/user/%d";
 	
 	/**
 	 * Path della risorsa "Position"
@@ -118,13 +122,21 @@ public interface Setup {
 	final String BACKEND_PREFERENCES_PATH = "/preferences/%d";
 	
 	/**
-	 * URL completo per il backend degli utenti.
+	 * URL completo per il backend degli utenti (versione non parametrizzabile).
 	 * 
 	 * @see #BACKEND_HOST
-	 * @see #BACKEND_USER_PATH
+	 * @see #BACKEND_USER_PATH_SIMPLE
 	 */
-	final String BACKEND_USER_URL = BACKEND_HOST + BACKEND_USER_PATH;
+	final String BACKEND_USER_URL_SIMPLE = BACKEND_HOST + BACKEND_USER_PATH_SIMPLE;
 
+	/**
+	 * URL completo per il backend degli utenti (versione non parametrizzabile).
+	 * 
+	 * @see #BACKEND_HOST
+	 * @see #BACKEND_USER_PATH_PARAMETRIC
+	 */
+	final String BACKEND_USER_URL_PARAMETRIC = BACKEND_HOST + BACKEND_USER_PATH_PARAMETRIC;
+	
 	/**
 	 * URL completo per il backend delle posizioni.
 	 * 
@@ -196,10 +208,10 @@ public interface Setup {
 	/**
 	 * L'Id per il C2DM con quale possiamo ricevere notifiche 
 	 */
-	final String SENDER_ID = "aroundmeproject@gmail.com";
+	final String C2DM_SENDER_ID = "aroundmeproject@gmail.com";
 	
 	/**
 	 * Il nome della SharedPreference contenente il registrationId per il C2DM
 	 */
-	final String C2DM_REGISTRATIONID = "c2dmRegistrationId";
+	final String C2DM_REGISTRATIONID_KEY = "c2dmRegistrationId";
 }

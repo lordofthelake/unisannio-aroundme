@@ -103,7 +103,7 @@ public class ListenableFuture<V> extends FutureTask<V> {
 				}
 			} catch(InterruptedException iEx) {
 				Thread.currentThread().interrupt();
-				Log.d("ListenableFuture", "Interrupted task " + callable, iEx);
+				Log.d("ListenableFuture", "Interrupted task " + callable);
 				
 			} catch(final Throwable e) {
 

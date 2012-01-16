@@ -19,8 +19,8 @@ import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.PendingIntent;
+
+import android.app.Dialog;	
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -257,7 +257,7 @@ public class LoginActivity extends FragmentActivity
 	private void startApplication() {
 		Log.i("LoginActivity", "Login ok! User #" + Identity.get().getId() + " in " + Identity.get().getPosition());
 		
-		String c2dmRegistrationId = preferences.getString(Setup.C2DM_REGISTRATIONID, null);
+		String c2dmRegistrationId = preferences.getString(Setup.C2DM_REGISTRATIONID_KEY, null);
 		if (c2dmRegistrationId == null){
 			C2DMReceiver.register(getApplicationContext());
 		}
