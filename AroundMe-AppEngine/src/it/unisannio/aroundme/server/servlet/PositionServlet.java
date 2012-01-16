@@ -17,6 +17,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -33,12 +34,12 @@ public class PositionServlet extends HttpServlet{
 	 * avviata la Task che notifica la presenza utenti compatibili nelle
 	 * vicinanze <br>
 	 * <br>
-	 * Richiesta:<br>
+	 * @param req laichiesta:<br>
 	 * L'URI deve essere /user/[userId] dove [userId]<br>
 	 * &egrave l'id dell'Utente del quale si aggiornare la posizione<br>
 	 * Il body deve contentere l'xml che rappresenta la posizione da attribuire
 	 * all'utente<br><br>
-	 * Risposta:<br>
+	 * @param resp la risposta:<br>
 	 * 200 - Se la psozione &egrave stata agiornata e la task "PositionQueryTask" &egrave
 	 * stata avviata correttanente<br>
 	 * 401 - Se l'userId non &egrave valido<br>
@@ -58,10 +59,14 @@ public class PositionServlet extends HttpServlet{
 			Queue queue = QueueFactory.getDefaultQueue();
 			TaskOptions url = TaskOptions.Builder.withUrl(PositionQueryTask.URI)
 					.param("userId", userId)
+					.param("lat", position.getLatitude()+"")
+					.param("lon", position.getLongitude()+"")
 					.method(Method.POST);
 			queue.add(url);
 		}catch (NumberFormatException e){
 			resp.sendError(401);
+		}catch(NotFoundException e){
+			resp.sendError(404);
 		}catch (NullPointerException e) {
 			resp.sendError(404);
 		} catch (Exception e) {
@@ -74,12 +79,12 @@ public class PositionServlet extends HttpServlet{
 	/**
 	 * Usato per ottenere la posizione di un {@link User}<br>
 	 * <br>
-	 * Richiesta:<br>
+	 * @param req la richiesta:<br>
 	 * L'URI deve essere /user/[userId]<br>
 	 * dove [userId] &egrave l'id dell'Utente del quale si vuole conoscere la
 	 * posizione<br>
 	 * <br>
-	 * Risposta:<br>
+	 * @param resp la risposta:<br>
 	 * L'xml rappresentante la posizione dell'utente<br>
 	 * 404 - Se l'utente non esiste o ha posizione nulla<br>
 	 * 401 - Se l'userId non &egrave valido<br>
@@ -95,6 +100,8 @@ public class PositionServlet extends HttpServlet{
 			Position.SERIALIZER.write(user.getPosition(), resp.getOutputStream());
 		}catch (NumberFormatException e){
 			resp.sendError(401);
+		}catch(NotFoundException e){
+			resp.sendError(404);
 		}catch (NullPointerException e) {
 			resp.sendError(404);
 		} catch (Exception e) {

@@ -1,8 +1,10 @@
 package it.unisannio.aroundme.model;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -154,14 +156,24 @@ public abstract class User implements Model {
 	 * 
 	 * @see #getCompatibilityRank(User)
 	 */
+	@SuppressWarnings("unchecked")
 	protected <E> float getCompatibilityRank(Collection<E> myInterests, Collection<E> otherInterests) {
 		if(myInterests.isEmpty() && otherInterests.isEmpty())
 			return -1;
 		
-		Collection<E> commonInterests = new HashSet<E>(myInterests);
-		commonInterests.retainAll(otherInterests);
 		
-		return 2.0f * commonInterests.size() / (myInterests.size() + otherInterests.size());
+		/*TODO FIXED Ritornava sempre 0.0
+		 * Collection<E> commonInterests= new HashSet<E>(myInterests);
+		 * commonInterests.retainAll(otherInterests);
+		*/
+		ArrayList<E> commonInterests=new ArrayList<E>();
+		ArrayList<E> myInterestsList=new ArrayList<E>(myInterests);
+		ArrayList<E> otherInterestsList=new ArrayList<E>(otherInterests);
+		for (int i=0;i<myInterests.size();i++){
+			if (otherInterestsList.contains(myInterestsList.get(i)))
+				commonInterests.add(myInterestsList.get(i));
+		}
+		return 2.0f * commonInterests.size() / (myInterestsList.size() + otherInterestsList.size());
 	}
 	
 	/**

@@ -43,12 +43,12 @@ public class ServletFilter implements Filter {
 				String facebookAuthToken = request.getHeader("X-AccessToken");
 				log.info("Request with X-AccessToken:\n"+facebookAuthToken);
 				if(facebookAuthToken != null){
-					if (request.getMethod().equalsIgnoreCase("PUT"))
+					if (request.getMethod().equalsIgnoreCase("PUT") && request.getRequestURI().startsWith("/user/"))
 						chain.doFilter(req, res);
 					else {
 						/*
-						 * Per le richieste che non siano PUT (l'unico PUT implementato è quello di UserServlet
-						 * per la creazione un User), viene verificato che l'access token di Facebook appartenga 
+						 * Per le richieste che non siano PUT su UserServlet,
+						 * viene verificato che l'access token di Facebook appartenga 
 						 * effettivamente ad un User registrato.
 						 */
 						Objectify ofy = ObjectifyService.begin();
