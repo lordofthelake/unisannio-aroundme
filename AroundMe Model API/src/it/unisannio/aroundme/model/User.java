@@ -4,7 +4,6 @@ package it.unisannio.aroundme.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -196,7 +195,7 @@ public abstract class User implements Model {
 		User other = (User) obj;
 		return getId() == other.getId() 
 				&& getName().equals(other.getName())
-				&& new HashSet<Interest>(getInterests()).equals(new HashSet<Interest>(other.getInterests()));
+				&& getInterests().containsAll(other.getInterests());
 	}
 	
 	/**
