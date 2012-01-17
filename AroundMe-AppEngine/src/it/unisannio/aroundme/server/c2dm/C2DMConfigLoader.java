@@ -83,6 +83,7 @@ public class C2DMConfigLoader {
 	 * un nuovo token al server ClientLogin di Google 
 	 */
 	public void regenerateAuthToken(){
+		authKey = null;
 		setAuthKey(null);
 	}
 

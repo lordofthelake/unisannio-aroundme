@@ -43,7 +43,8 @@ public class C2DMNotificationService extends IntentService{
 	protected void onHandleIntent(Intent intent) {
 		try {
 			long userId = intent.getLongExtra("userId", 0);
-			unreadNotifications.add(userId);
+			if(!unreadNotifications.contains(userId))
+				unreadNotifications.add(userId);
 			Context context = getApplicationContext();
 			String contentTitle, contentText;
 			PendingIntent pendingIntent;

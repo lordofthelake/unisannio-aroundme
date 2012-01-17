@@ -160,6 +160,7 @@ public class C2DMNotificationSender {
 	 */
 	public static void sendWithRetry(String registrationId, long userId){
 		if(registrationId != null){
+			log.info("Sending message notification to " + registrationId);
 			Queue queue = QueueFactory.getQueue("c2dm");
 			TaskOptions url = TaskOptions.Builder.withUrl(C2DMSenderTask.URI)
 												.param("registrationId", registrationId)

@@ -54,7 +54,7 @@
     <string name="distance_format">%d m</string>
     <string name="compatibility_format">%d%%</string>
     <string name="balloon_snippet_itsyou">Sei tu!</string>
-    <string name="balloon_snippet_format">Compatibile {0,choice,0#allo |0.01#all\'|0.08#all\'|0.08&lt;al }{0,number,percent}</string>
+    <string name="balloon_snippet_format">Compatibile al {0,number,percent}</string>
     <string name="loading">Caricamento&#8230;</string>
     <string name="interests">Interessi</string>
     <string name="error_GoogleAccountNeeded">Per ricevere le notifiche è necessario un Google Account. Notifiche temporaneamente disabilitate.</string>
