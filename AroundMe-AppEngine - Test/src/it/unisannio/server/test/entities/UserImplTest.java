@@ -1,11 +1,4 @@
-package it.unisannio.server.test.datastore;
-
-import java.io.IOException;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+package it.unisannio.server.test.entities;
 
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
@@ -13,8 +6,6 @@ import it.unisannio.aroundme.model.Preferences;
 import it.unisannio.aroundme.server.InterestImpl;
 import it.unisannio.aroundme.server.ServerModelFactory;
 import it.unisannio.aroundme.server.UserImpl;
-import it.unisannio.aroundme.server.c2dm.C2DMConfig;
-import it.unisannio.aroundme.server.c2dm.C2DMConfigLoader;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -22,62 +13,76 @@ import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
-public class SimpleDatastoreTest extends TestCase{
+import junit.framework.TestCase;
+
+/**
+ * {@link TestCase} che verifica che un oggetto di tipo {@link UserImpl} sia regolarmente
+ * reso persistente sul Datastore
+ * 
+ * @author Danilo Iannelli <daniloiannelli6@gmail.com>
+ */
+public class UserImplTest extends TestCase{
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 	private static Objectify ofy = ObjectifyService.begin();
-
-	public static Test suite() {
-		return new TestSetup(new TestSuite(SimpleDatastoreTest.class)) {
-
-			protected void setUp() throws Exception {
-				ModelFactory.setInstance(new ServerModelFactory());
-				ObjectifyService.register(UserImpl.class);
-				ObjectifyService.register(InterestImpl.class);
-				ObjectifyService.register(C2DMConfig.class);
-			}
-		};
-	}
- 
+	private UserImpl user;
 	
 	@Override
 	public void setUp() {
 		helper.setUp();
+
+		ModelFactory.setInstance(new ServerModelFactory());
+		
+		try{
+			ObjectifyService.register(UserImpl.class);
+			ObjectifyService.register(InterestImpl.class);
+		}catch(IllegalArgumentException e){}
+		
+		//L'User da persistere nel datastore
+		user = (UserImpl) ModelFactory.getInstance().createUser(123, "Danilo", null);
+		user.setPosition(ModelFactory.getInstance().createPosition(41.1315992, 14.7779900));
+		Interest intTheWho = ModelFactory.getInstance().createInterest(5, "The Who", "Musica");
+		Interest intAndroid = ModelFactory.getInstance().createInterest(6, "Android", "Tecnologia");
+		user.addInterest(intTheWho);
+		user.addInterest(intAndroid);
+		String facebookAuthToken = "123456";
+		user.setAuthToken(facebookAuthToken);
+		Preferences pr = ModelFactory.getInstance().createPreferences();
+		pr.put("Prova", "pippo");
+		user.setPreferences(pr);
 	}
 	
 	@Override
 	public void tearDown(){
 		helper.tearDown();
 	}
+	
+	/**
+	 * Testa che un {@link UserImpl} reso persistente sul datastore, conservi tutti i suoi attributi
+	 */
+	public void testUserPersistence(){
+				
+		ofy.put(user); //Salva un User sul datastore
 		
-	public void testUserPersistence() throws Exception{
-		UserImpl user = (UserImpl) ModelFactory.getInstance().createUser(123, "Danilo", null);
-		
-		user.setPosition(ModelFactory.getInstance().createPosition(41.1315992, 14.7779900));
-		
-		Interest intTheWho = ModelFactory.getInstance().createInterest(5, "The Who", "Musica");
-		Interest intAndroid = ModelFactory.getInstance().createInterest(6, "Android", "Tecnologia");
-		user.addInterest(intTheWho);
-		user.addInterest(intAndroid);
-		
-		String facebookAuthToken = "123456";
-		user.setAuthToken(facebookAuthToken);
-		
-		Preferences pr = ModelFactory.getInstance().createPreferences();
-		pr.put("Prova", "pippo");
-		user.setPreferences(pr);
-		
-		ofy.put(user);
-		
-		UserImpl retrievedUser = ofy.get(UserImpl.class, user.getId());
+		UserImpl retrievedUser = ofy.get(UserImpl.class, user.getId()); //Recupera l'user dal Datastore
 		
 		assertEquals(user, retrievedUser);
 		assertEquals(user.getPosition(), retrievedUser.getPosition());
 		assertEquals(user.getInterests(), retrievedUser.getInterests());
-		assertEquals(facebookAuthToken, retrievedUser.getAuthToken());
+		assertEquals(user.getAuthToken(), retrievedUser.getAuthToken());
 		assertEquals(user.getPreferences(), retrievedUser.getPreferences());
 		
-		
-		ofy.delete(user);
+	
+	}
+	
+	/**
+	 * Testa che un la cancellazione di un {@link UserImpl} dal datastore vada a buon fine.
+	 * Verifica che sia stata lanciata l'eccezione {@link NotFoundException} se si tenta di accedere
+	 * ad un {@link UserImpl} precedentemente eliminato
+	 */
+	public void testUserDelete(){
+		ofy.put(user); //Salva un User sul datastore
+	
+		ofy.delete(user); //Cancella l'User dal datastore
 		
 		Exception notFoundException = null;
 		try{ 
@@ -86,22 +91,7 @@ public class SimpleDatastoreTest extends TestCase{
 			notFoundException = e;
 		}
 		assertNotNull(notFoundException);
-		
 	}
 	
-	public void testInterestPersistence() {
-		// TODO testInterestPersistence
-	}
-	
-	public void testC2DMConfigPersistence() throws IOException {
-		String mockToken = "prova";
-		C2DMConfigLoader.getInstance().setAuthKey(mockToken);
-		C2DMConfigLoader.getInstance().invalidateAuthToken();
-		String retrievedToken = C2DMConfigLoader.getInstance().getAuthKey();
-		assertEquals(mockToken, retrievedToken);
-	}
-	
-	
-
 	
 }

@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -22,10 +24,6 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * {@link TestCase} che verifica che la servlet {@link PreferencesServlet} restituisca risposte
@@ -36,29 +34,25 @@ import junit.framework.TestSuite;
  */
 public class PreferencesServletTest extends TestCase{
 	private LocalServiceTestHelper helper = new LocalServiceTestHelper(
-			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini"));
+			new LocalDatastoreServiceTestConfig().setNoStorage(false).setBackingStoreLocation("local_db.ini").setStoreDelayMs(10));
 	private int port;
 	private Server server;
 	private String fbAccessToken;
 	private User userNullPreferences, userNotNullPreferences, user, unsavedUser;
 
-	public static Test suite() {//Pattern per eseguire delle configurazioni una tantum
-		return new TestSetup(new TestSuite(PreferencesServletTest.class)) {
-			
-			protected void setUp() throws Exception {
-				ModelFactory.setInstance(new ServerModelFactory());
-				ObjectifyService.register(UserImpl.class);
-				ObjectifyService.register(InterestImpl.class);
-				ObjectifyService.register(C2DMConfig.class);
-			}
-		};
-	}
-	
 	@Override
 	public void setUp() {
 		try {
 			helper.setUp();
-
+			
+			ModelFactory.setInstance(new ServerModelFactory());
+			
+			try{
+				ObjectifyService.register(UserImpl.class);
+				ObjectifyService.register(InterestImpl.class);
+				ObjectifyService.register(C2DMConfig.class);
+			}catch(IllegalArgumentException e){}
+			
 			/*
 			 * Viene utilizzato Jetty v7.5.4 come Servlet Container
 			 * http://www.eclipse.org/jetty/
@@ -90,6 +84,8 @@ public class PreferencesServletTest extends TestCase{
 			
 			//User non presente sul datastore utilizzato per testare il 404 del doGet
 			unsavedUser = ModelFactory.getInstance().createUser(567, "Giovanni", null);
+			
+			Thread.sleep(15); //Ulizzato per assicurare che il tempo necessario per la persistenza sul Datatore sia passato
 	
 		} catch (Exception e) {
 			e.printStackTrace();

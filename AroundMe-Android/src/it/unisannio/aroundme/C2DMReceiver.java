@@ -13,7 +13,6 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Riceve un messaggio push message dal Cloud to Device Messaging (C2DM) service.
@@ -79,7 +78,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
     @Override
     public void onError(Context context, String errorId) {
     	if(errorId.equals("ACCOUNT_MISSING")){
-    		Toast.makeText(context.getApplicationContext(), R.string.error_GoogleAccountNeeded, Toast.LENGTH_LONG).show();
+//    		Toast.makeText(getApplicationContext(), R.string.error_GoogleAccountNeeded, Toast.LENGTH_LONG).show();
     		SharedPreferences prefs = PreferenceManager	.getDefaultSharedPreferences(context);
     		Editor edit = prefs.edit();
     		edit.putBoolean("notification.active", false);
