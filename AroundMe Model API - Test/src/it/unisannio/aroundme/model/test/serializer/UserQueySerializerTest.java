@@ -14,12 +14,10 @@ import junit.framework.TestCase;
 import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.model.*;
-import it.unisannio.aroundme.model.test.MockHelper;
+import it.unisannio.aroundme.model.test.helpers.MockHelper;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class UserQueySerializerTest extends TestCase {
 	private Serializer<UserQuery> serializer;

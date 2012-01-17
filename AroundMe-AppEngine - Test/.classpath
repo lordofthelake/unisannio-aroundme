@@ -25,5 +25,6 @@
 	<classpathentry kind="lib" path="lib/test-jetty-servlet-8.0.4.v20111024.jar"/>
 	<classpathentry kind="lib" path="lib/appengine-local-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/appengine-tools-api.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AroundMe Model API - Test"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

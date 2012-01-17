@@ -4,15 +4,13 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
-public class SerializerTests extends TestCase {
+public class AllTests extends TestCase {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(SerializerTests.class.getName());
+		TestSuite suite = new TestSuite(AllTests.class.getName());
 		//$JUnit-BEGIN$
 		suite.addTestSuite(CompatibilitySerializerTest.class);
 		suite.addTestSuite(InterestSerializerTest.class);

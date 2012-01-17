@@ -1,10 +1,10 @@
-package it.unisannio.aroundme.model.test;
+package it.unisannio.aroundme.model.test.helpers;
 
 
 import java.util.Collection;
 import java.util.HashSet;
 
-import junit.framework.TestCase;
+import static junit.framework.TestCase.*;
 
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.ModelFactory;
@@ -14,23 +14,12 @@ import it.unisannio.aroundme.model.User;
 import it.unisannio.aroundme.model.UserQuery;
 
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
-public abstract class AbstractModelFactoryTest extends TestCase {
-	private ModelFactory factory;
+public abstract class ModelFactoryTestHelper {
 	
-	protected AbstractModelFactoryTest(ModelFactory f) {
-		this.factory = f;
-	}
-
-	public void testInstance() {
-		assertNotNull(factory);
-	}
-
-	public void testCreateUser() {
+	public static void testCreateUser(ModelFactory factory) {
 		long id = Math.round(Math.random()*10000);
 		String name = String.valueOf(Math.random()*1000000);
 		Collection<Interest> interests = new HashSet<Interest>();
@@ -46,10 +35,12 @@ public abstract class AbstractModelFactoryTest extends TestCase {
 		assertNotNull(user);
 		assertEquals(user.getId(), id);
 		assertEquals(user.getName(), name);
-		assertEquals(user.getInterests(), interests);
+		assertEquals(user.getInterests().size(), interests.size());
+		assertNull(user.getPosition());
+		assertTrue(user.getInterests().containsAll(interests));
 	}
 
-	public void testCreateInterest() {
+	public static void testCreateInterest(ModelFactory factory) {
 		long id = Math.round(Math.random()*10000);
 		String name = String.valueOf(Math.random()*1000000);
 		String category = String.valueOf(Math.random()*1000000);
@@ -62,7 +53,7 @@ public abstract class AbstractModelFactoryTest extends TestCase {
 		assertEquals(i.getCategory(), category);
 	}
 
-	public void testCreatePosition() {
+	public static void testCreatePosition(ModelFactory factory) {
 		double latitude = Math.random() * 10;
 		double longitude = Math.random() * 10;
 		
@@ -74,16 +65,21 @@ public abstract class AbstractModelFactoryTest extends TestCase {
 		assertEquals(p.getLongitude(), longitude, 0);
 	}
 
-	public void testCreateUserQuery() {
+	public static void testCreateUserQuery(ModelFactory factory) {
 		UserQuery query = factory.createUserQuery();
 		
 		assertNotNull(query);
+		assertNull(query.getCompatibility());
+		assertNull(query.getNeighbourhood());
+		assertTrue(query.getInterestIds().isEmpty());
+		assertTrue(query.getIds().isEmpty());
 	}
 	
-	public void testCreatePreferences() {
+	public static void testCreatePreferences(ModelFactory factory) {
 		Preferences preferences = factory.createPreferences();
 		
 		assertNotNull(preferences);
+		assertTrue(preferences.getAll().isEmpty());
 	}
 
 }

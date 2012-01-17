@@ -156,16 +156,10 @@ public abstract class User implements Model {
 	 * 
 	 * @see #getCompatibilityRank(User)
 	 */
-	@SuppressWarnings("unchecked")
 	protected <E> float getCompatibilityRank(Collection<E> myInterests, Collection<E> otherInterests) {
 		if(myInterests.isEmpty() && otherInterests.isEmpty())
 			return -1;
 		
-		
-		/*TODO FIXED Ritornava sempre 0.0
-		 * Collection<E> commonInterests= new HashSet<E>(myInterests);
-		 * commonInterests.retainAll(otherInterests);
-		*/
 		ArrayList<E> commonInterests=new ArrayList<E>();
 		ArrayList<E> myInterestsList=new ArrayList<E>(myInterests);
 		ArrayList<E> otherInterestsList=new ArrayList<E>(otherInterests);
@@ -202,7 +196,7 @@ public abstract class User implements Model {
 		User other = (User) obj;
 		return getId() == other.getId() 
 				&& getName().equals(other.getName())
-				&& getInterests().equals(other.getInterests());
+				&& new HashSet<Interest>(getInterests()).equals(new HashSet<Interest>(other.getInterests()));
 	}
 	
 	/**

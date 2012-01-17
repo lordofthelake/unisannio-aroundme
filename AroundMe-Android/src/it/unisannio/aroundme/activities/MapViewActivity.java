@@ -206,7 +206,7 @@ public class MapViewActivity extends FragmentMapActivity implements OnDrawerOpen
 	    minLon = (minLon > gp.getLongitudeE6()) ? gp.getLongitudeE6() : minLon;
 	    maxLon = (maxLon < gp.getLongitudeE6()) ? gp.getLongitudeE6() : maxLon;
 
-	    //FIXME Il proprio user non si trova al centro
+	    // XXX Il proprio user non si trova al centro
 	    mapView.getController().zoomToSpan((maxLat - minLat), (maxLon - minLon));
 	    mapView.getController().animateTo(new GeoPoint((maxLat + minLat) / 2, (maxLon + minLon) / 2));
 

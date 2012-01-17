@@ -16,10 +16,8 @@ import org.xml.sax.SAXException;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class PreferencesSerializerTest extends TestCase {
 	private Serializer<Preferences> serializer;

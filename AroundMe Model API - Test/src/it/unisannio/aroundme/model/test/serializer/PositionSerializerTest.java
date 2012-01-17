@@ -4,7 +4,7 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import it.unisannio.aroundme.model.ModelFactory;
 import it.unisannio.aroundme.model.Position;
 import it.unisannio.aroundme.model.Serializer;
-import it.unisannio.aroundme.model.test.MockHelper;
+import it.unisannio.aroundme.model.test.helpers.MockHelper;
 
 import java.io.IOException;
 
@@ -15,10 +15,8 @@ import org.xml.sax.SAXException;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class PositionSerializerTest extends TestCase {
 	private Serializer<Position> serializer;

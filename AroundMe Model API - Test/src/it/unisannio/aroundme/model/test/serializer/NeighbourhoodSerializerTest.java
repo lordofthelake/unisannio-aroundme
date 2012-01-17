@@ -13,12 +13,10 @@ import org.xml.sax.SAXException;
 import static org.easymock.EasyMock.*;
 
 import it.unisannio.aroundme.model.*;
-import it.unisannio.aroundme.model.test.MockHelper;
+import it.unisannio.aroundme.model.test.helpers.MockHelper;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class NeighbourhoodSerializerTest extends TestCase {
 	private Serializer<Neighbourhood> serializer;

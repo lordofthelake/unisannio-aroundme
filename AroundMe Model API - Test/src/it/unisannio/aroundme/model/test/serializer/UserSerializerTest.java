@@ -15,12 +15,10 @@ import org.easymock.Capture;
 import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.model.*;
-import it.unisannio.aroundme.model.test.MockHelper;
+import it.unisannio.aroundme.model.test.helpers.MockHelper;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class UserSerializerTest extends TestCase {
 	private Serializer<User> serializer;

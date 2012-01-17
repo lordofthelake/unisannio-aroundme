@@ -1,13 +1,11 @@
-package it.unisannio.aroundme.model.test;
+package it.unisannio.aroundme.model.test.helpers;
 
 import static org.easymock.EasyMock.*;
 import it.unisannio.aroundme.model.Interest;
 import it.unisannio.aroundme.model.Position;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class MockHelper {
 	public static Interest createMockInterest(long id, String name, String category) {

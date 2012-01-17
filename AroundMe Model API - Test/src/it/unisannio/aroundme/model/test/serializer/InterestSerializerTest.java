@@ -9,15 +9,13 @@ import junit.framework.TestCase;
 import org.xml.sax.SAXException;
 
 import it.unisannio.aroundme.model.*;
-import it.unisannio.aroundme.model.test.MockHelper;
+import it.unisannio.aroundme.model.test.helpers.MockHelper;
 
 import static org.easymock.EasyMock.*;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;;
 
-/**
- * 
+/** 
  * @author Michele Piccirillo <michele.piccirillo@gmail.com>
- *
  */
 public class InterestSerializerTest extends TestCase {
 	private Serializer<Interest> serializer;
